@@ -15,3 +15,7 @@ check if docker is running
 if it is innactive, run
 
 ```sudo systemctl enable docker```
+
+to see local images
+
+```sudo docker images```

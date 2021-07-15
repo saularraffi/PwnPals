@@ -1,0 +1,23 @@
+{
+  "name": "pwnpals",
+  "version": "1.0.0",
+  "description": "This is a website that allows hackers and app developers to come together and challenge each other's skills.  Programmers and developers can upload their web/mobile apps and hackers can attempt to exploit those apps.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saularraffi/PwnPals.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saularraffi/PwnPals/issues"
+  },
+  "homepage": "https://github.com/saularraffi/PwnPals#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}

@@ -1,0 +1,3 @@
+the header of the website will have the title in the middle, Pwn Pals, and behind it 2 figures: on the left, a ninja looking person (colors black, white, and red) and on the right, a person witch an armor helmet on and they are staring each other down
+
+on the left, it will have written "Prove your hacking skills" and on the right it will have written "Prove your app dev skills"

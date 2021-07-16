@@ -64,3 +64,21 @@ install the compass
 ```
 $ sudo dpkg -i /opt/mongodb-compass_1.28.1_amd64.deb
 ```
+
+# Notes
+
+docker commands
+
+```
+$ sudo docker run <image>
+$ sudo start <name|id>
+$ sudo docker stop <name|id>
+$ sudo docker ps [-a include stopped containers]
+$ sudo docker rm <name|id>
+```
+
+to start an interactive shell with your running docker container 
+
+```
+$ sudo docker exec -it <container-id> sh
+```

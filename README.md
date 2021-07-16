@@ -53,7 +53,7 @@ build environment:
     target_arch: x86_64
 ```
 
-## download and install mongodb compass
+## Download and install mongodb compass
 
 download package (.dep) from https://www.mongodb.com/try/download/compass?tck=docs_compass
 

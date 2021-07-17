@@ -1,8 +1,8 @@
-const Tests = require("../../models/Test")
+const Test = require("../../models/Test")
 
 // handle mass object retrieval 
 function getTests(req, res) {
-    Tests.find({}, function(err, users) {
+    Test.find({}, function(err, users) {
         console.log(users)
 
         if (err) { console.log(err) }
@@ -15,7 +15,7 @@ function getTest(req, res) { res.send("GET test") }
 
 // handle single object creation
 function postTest(req, res) {
-    const test = new Tests({ name: "testyyyy" })
+    const test = new Test({ name: "testyyyy" })
     test.save(function(err) {
         if (err) { console.log(err) }
     })

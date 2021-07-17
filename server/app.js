@@ -4,17 +4,19 @@ const mongoose = require('mongoose')
 const http = require('http');
 const path = require('path');
 
+// requiring routes
+const test = require("./api/routes/test")
+const build = require("./api/routes/build")
+
 // variable declarations
 const app = express()
 const basePath = "/api"
 const hostname = '127.0.0.1';
-const port = 3000;
-
-// requiring routes
-const test = require("./api/routes/test")
+const port = 5000;
 
 // using routes in app
 app.use(basePath, test)
+app.use(basePath, build)
 
 // set up root route
 app.get('/', (req, res) => {

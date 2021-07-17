@@ -107,3 +107,7 @@ to see docker container logs
 ```
 $ sudo docker logs <id>
 ```
+
+# Helpful Resources
+
+- [exposing docker container app to host](https://stackoverflow.com/questions/57773604/connection-reset-by-peer-when-when-hitting-docker-container)

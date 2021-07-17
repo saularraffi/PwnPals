@@ -100,7 +100,7 @@ $ sudo docker rmi <name>
 
 to start an interactive shell with your running docker container 
 ```
-$ sudo docker exec -it <id> sh
+$ sudo docker exec -it <id> sh [or bash]
 ```
 
 to see docker container logs 

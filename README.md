@@ -67,18 +67,27 @@ $ sudo dpkg -i /opt/mongodb-compass_1.28.1_amd64.deb
 
 # Notes
 
-docker commands
-
+basic docker commands
 ```
-$ sudo docker run <image>
-$ sudo start <name|id>
-$ sudo docker stop <name|id>
+$ sudo docker run -db <in-port>:<ext-port> <image>
+$ sudo start <id>
+$ sudo docker stop <id>
 $ sudo docker ps [-a include stopped containers]
-$ sudo docker rm <name|id>
+$ sudo docker rm <id-1> <id-2> ...
+```
+
+remove docker image 
+```
+$ sudo docker rmi <name>
 ```
 
 to start an interactive shell with your running docker container 
+```
+$ sudo docker exec -it <id> sh
+```
 
+to see docker container logs 
 ```
-$ sudo docker exec -it <container-id> sh
+$ sudo docker logs <id>
 ```
+

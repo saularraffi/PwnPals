@@ -74,7 +74,7 @@ $ sudo docker build -t <name> .
 
 run docker container
 ```
-$ sudo docker run -db <in-port>:<ext-port> <image>
+$ sudo docker run -db <in-port>:<ext-port> --network host <image>
 ```
 
 docker start/stop container

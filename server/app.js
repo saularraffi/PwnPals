@@ -5,8 +5,8 @@ const http = require('http');
 const path = require('path');
 
 // requiring routes
-const test = require("./api/routes/test")
-const build = require("./api/routes/build")
+const testRoute = require("./api/routes/test")
+const buildRoute = require("./api/routes/build")
 
 // variable declarations
 const app = express()
@@ -15,8 +15,8 @@ const hostname = '127.0.0.1';
 const port = 5000;
 
 // using routes in app
-app.use(basePath, test)
-app.use(basePath, build)
+app.use(basePath, testRoute)
+app.use(basePath, buildRoute)
 
 // set up root route
 app.get('/', (req, res) => {

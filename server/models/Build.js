@@ -1,9 +1,10 @@
 const mongoose = require("mongoose")
 
 const build = mongoose.Schema({
-    user: String,
+    owner: String,
     repo: String,
-    branch: String
+    branch: String,
+    appName: String
 })
 
 module.exports = mongoose.model("build", build)

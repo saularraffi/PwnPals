@@ -4,6 +4,6 @@ const router = express.Router()
 
 const endpoint = "/build"
 
-router.post(endpoint, buildController.build)
+router.post(endpoint, buildController.build_container)
 
 module.exports = router

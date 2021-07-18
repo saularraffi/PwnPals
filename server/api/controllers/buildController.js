@@ -1,10 +1,11 @@
 const Build = require("../../models/Build")
 
-function build(req, res) {
+function build_container(req, res) {
     const build = new Build({ 
-        user: "user123",
+        owner: "user123",
         repo: "https://github.com/saularraffi/test-app.git",
-        branch: "main"
+        branch: "main",
+        appName: "testApp"
     })
     build.save(function(err) {
         if (err) { console.log(err) }
@@ -12,4 +13,4 @@ function build(req, res) {
     res.send("Building container") 
 }
 
-module.exports.build = build
+module.exports.build_container = build_container

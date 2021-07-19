@@ -1,12 +1,12 @@
 // required libraries
 const express = require('express')
 const mongoose = require('mongoose')
-const http = require('http');
 const path = require('path');
 
 // requiring routes
 const testRoute = require("./api/routes/test")
 const buildRoute = require("./api/routes/build")
+const containerRoute = require("./api/routes/container")
 
 // variable declarations
 const app = express()
@@ -17,6 +17,7 @@ const port = 5000;
 // using routes in app
 app.use(basePath, testRoute)
 app.use(basePath, buildRoute)
+app.use(basePath, containerRoute)
 
 // set up root route
 app.get('/', (req, res) => {

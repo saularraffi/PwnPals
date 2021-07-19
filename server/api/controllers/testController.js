@@ -1,4 +1,7 @@
 const Test = require("../../models/Test")
+const http = require('http');
+const https = require('https');
+const axios = require('axios')
 
 // handle single object retrieval
 function getTest(req, res) { 
@@ -12,11 +15,15 @@ function getTest(req, res) {
 
 // handle single object creation
 function postTest(req, res) {
-    const test = new Test({ name: "testyyyy" })
-    test.save(function(err) {
-        if (err) { console.log(err) }
+    axios.post("http://localhost:5000/api/container")
+    .then(response => {
+        res.send("Success")
+        console.log(res.statusCode)
     })
-    res.send("POST test") 
+    .catch(err => {
+        res.send("Failed")
+        console.log(err)
+    })
 }
 
 // handle single object update

@@ -12,7 +12,13 @@ app_dir="$pwnpals_apps_dir"/"$app_name"
 [ ! -d "$app_dir" ] && mkdir "$app_dir" && echo [+] Creating "$app_dir"
 
 # clone app repo
-git clone "$repo" "$app_dir"
+if [ ! -d "$app_dir" ]; then
+    echo [+] cloning repository
+    git clone "$repo" "$app_dir"
+else
+    echo [+] pulling repository changes
+    git pull origin "$branch"
+fi
 
 # build docker image and run container
 sudo docker build -t "$app_name" "$app_dir"

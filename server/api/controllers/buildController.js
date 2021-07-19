@@ -1,5 +1,5 @@
-const Build = require("../../models/Build")
 const { spawn } = require('child_process');
+const axios = require('axios')
 
 function build_and_run(repo, branch, appName) {
     const build = spawn('scripts/docker_build.sh', [repo, branch, appName]);
@@ -18,7 +18,6 @@ function build_and_run(repo, branch, appName) {
 
     build.on('close', (code) => {
         console.log(`[+] child process exited with code ${code}`);
-        return 0
     });
 }
 
@@ -28,24 +27,18 @@ function build_container(req, res) {
     const branch = "main"
     const appName = "testApp"
 
-    const build_successul = build_and_run(repo, branch, appName)
+    const build_status_code = build_and_run(repo, branch, appName)   
 
-    if (build_successul) {
-        const build = new Build({ 
-            owner: owner,
-            repo: repo,
-            branch: branch,
-            appName: appName
+    if (true) {
+        axios.post("http://localhost:5000/api/container")
+        .then(response => {
+            res.send("Container built successfully")
+            console.log(`Connecting to db - ${res.statusCode}`)
         })
-        build.save(function(err) {
-            if (err) { 
-                console.log(err) 
-            }
-            else {
-                console.log("[+] Successfully saved build to database")
-            }
+        .catch(err => {
+            res.send("Database connection failed after build")
+            console.log(err)
         })
-        res.send("Building container")
     }
     else {
         res.send("Failed to build container")

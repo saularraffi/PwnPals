@@ -1,14 +1,36 @@
-const Container = require("../../models/Container")
+const Container = require("../models/Container")
+const { spawn } = require('child_process');
+
+function delete_container(id) {
+    console.log(`deleting ${id}`)
+    const build = spawn('sudo', ["docker", "rm", id]);
+
+    build.stdout.on('data', (data) => {
+        console.log(`${data}`);
+    });
+
+    build.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    build.on('error', (err) => {
+        console.log(err)
+    })
+
+    build.on('close', (code) => {
+        console.log(`[+] child process exited with code ${code}`);
+    });
+}
 
 function getContainer(req, res) {
     res.send("GET container")
 }
 
 function postContainer(req, res) {
-    const owner = "user123"
-    const appName = "testApp"
-    const appID = "43c2f7354ff5"
-    const status = "down"
+    const owner = req.body.owner
+    const appName = req.body.appName
+    const appID = req.body.appID
+    const status = req.body.status
 
     const container = new Container({ 
         owner: owner,
@@ -22,16 +44,23 @@ function postContainer(req, res) {
             res.send("POST failed")
         }
         else {
-            res.send("POST success")
+            res.json(req.body)
         }
     })
 }
 
 function updateContainer(req, res) {
-    res.send("PUT container")
+    const owner = req.body.owner
+    const appName = req.body.appName
+    const appID = req.body.appID
+    const status = req.body.status
+
+    res.json(req.body)
 }
 
 function deleteContainer(req, res) {
+    const id = req.body.id
+    const status_code = delete_container(id)
     res.send("DELETE container")
 }
 

@@ -1,3 +1,4 @@
 - capture return status of child processes
 - finish the routes for builds and containers
 - create custom libraries around the bash scripts 
+- create a library function that acts as a wrapper around child processes

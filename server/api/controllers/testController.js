@@ -1,4 +1,4 @@
-const Test = require("../../models/Test")
+const Test = require("../models/Test")
 const http = require('http');
 const https = require('https');
 const axios = require('axios')

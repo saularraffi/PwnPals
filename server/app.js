@@ -1,6 +1,7 @@
 // required libraries
 const express = require('express')
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
 const path = require('path');
 
 // requiring routes
@@ -13,6 +14,10 @@ const app = express()
 const basePath = "/api"
 const hostname = '127.0.0.1';
 const port = 5000;
+
+// using body parser
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json())
 
 // using routes in app
 app.use(basePath, testRoute)

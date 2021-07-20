@@ -1,8 +1,7 @@
+const Build = require("../models/Build")
 const { spawn } = require('child_process');
-const Build = require("../../models/Build")
-const axios = require('axios')
 
-function build_and_run(repo, branch, app_name) {
+function build_image(repo, branch, app_name) {
     const build = spawn('scripts/docker_build.sh', [repo, branch, app_name]);
 
     build.stdout.on('data', (data) => {
@@ -27,13 +26,13 @@ function getBuild(req, res) {
 }
 
 function postBuild(req, res) {
-    const owner = "user123"
-    const repo = "https://github.com/saularraffi/test-app.git"
-    const branch = "main"
-    const app_name = "testApp" 
+    const owner = req.body.owner
+    const repo = req.body.repo
+    const branch = req.body.branch
+    const app_name = req.body.app_name
 
     // can't access return value because process is async
-    const build_status_code = build_and_run(repo, branch, app_name)  
+    const status_code = build_image(repo, branch, app_name)  
 
     // save to database
     if (true) {
@@ -59,8 +58,14 @@ function postBuild(req, res) {
 }
 
 function updateBuild(req, res) {
-    res.send("PUT build")
+    const owner = req.body.owner
+    const repo = req.body.repo
+    const branch = req.body.branch
+    const app_name = req.body.app_name
+
+    res.json(req.body)
 }
+
 function deleteBuild(req, res) {
     res.send("DELETE build")
 }

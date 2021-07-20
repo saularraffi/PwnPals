@@ -1,10 +1,10 @@
 const mongoose = require("mongoose")
 
-const container = mongoose.Schema({
+const Container = mongoose.Schema({
     owner: String,
-    repo: String,
-    branch: String,
-    appName: String
+    appName: String,
+    appID: String,
+    status: String
 })
 
-module.exports = mongoose.model("container", container)
+module.exports = mongoose.model("container", Container)

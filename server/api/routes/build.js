@@ -4,6 +4,9 @@ const router = express.Router()
 
 const endpoint = "/build"
 
-router.post(endpoint, buildController.build_container)
+router.get(endpoint, buildController.getBuild)
+router.post(endpoint, buildController.postBuild)
+router.put(endpoint, buildController.updateBuild)
+router.delete(endpoint, buildController.deleteBuild)
 
 module.exports = router

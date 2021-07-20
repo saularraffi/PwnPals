@@ -1,8 +1,9 @@
 const { spawn } = require('child_process');
+const Build = require("../../models/Build")
 const axios = require('axios')
 
-function build_and_run(repo, branch, appName) {
-    const build = spawn('scripts/docker_build.sh', [repo, branch, appName]);
+function build_and_run(repo, branch, app_name) {
+    const build = spawn('scripts/docker_build.sh', [repo, branch, app_name]);
 
     build.stdout.on('data', (data) => {
         console.log(`${data}`);
@@ -21,28 +22,50 @@ function build_and_run(repo, branch, appName) {
     });
 }
 
-function build_container(req, res) {
+function getBuild(req, res) {
+    res.send("GET build")
+}
+
+function postBuild(req, res) {
     const owner = "user123"
     const repo = "https://github.com/saularraffi/test-app.git"
     const branch = "main"
-    const appName = "testApp"
+    const app_name = "testApp" 
 
-    const build_status_code = build_and_run(repo, branch, appName)   
+    // can't access return value because process is async
+    const build_status_code = build_and_run(repo, branch, app_name)  
 
+    // save to database
     if (true) {
-        axios.post("http://localhost:5000/api/container")
-        .then(response => {
-            res.send("Container built successfully")
-            console.log(`Connecting to db - ${res.statusCode}`)
+        const build = new Build({ 
+            owner: owner,
+            repo: repo,
+            branch: branch,
+            app_name: app_name
         })
-        .catch(err => {
-            res.send("Database connection failed after build")
-            console.log(err)
+        build.save(function(err) {
+            if (err) { 
+                console.log(err)
+                res.send("Failed to save build to database")
+            }
+            else {
+                res.send("Successfully built image")
+            }
         })
     }
     else {
-        res.send("Failed to build container")
+        res.send("Failed to build image")
     }
 }
 
-module.exports.build_container = build_container
+function updateBuild(req, res) {
+    res.send("PUT build")
+}
+function deleteBuild(req, res) {
+    res.send("DELETE build")
+}
+
+module.exports.getBuild = getBuild
+module.exports.postBuild = postBuild
+module.exports.updateBuild = updateBuild
+module.exports.deleteBuild = deleteBuild

@@ -22,15 +22,15 @@ sudo docker build -t "$app_name" "$app_dir"
 
 # run docker container
 app_port=$(cat $app_dir/Dockerfile  | grep EXPOSE | awk -F ' ' '{print $2}')
-echo docker --> sudo docker run -dp 8080:$app_port --network host "$app_name"
 sudo docker run -dp 8080:$app_port --network host "$app_name"
 [ $? == 0 ] && echo [+] docker contianer ran successfully
 [ $? == 1 ] && echo [-] failed to run docker container && exit 1
 
 # stop container
 container_id=$(sudo docker ps | grep $app_name | awk -F ' ' '{print $1}')
-echo docker --> sudo docker stop $container_id
 sudo docker stop $container_id
+[ $? == 0 ] && echo [+] docker contianer stopped successfully
+[ $? == 1 ] && echo [-] failed to stop docker container
 
 # clean up
 rm -rf "$app_dir"

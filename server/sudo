@@ -1,1 +1,1 @@
-docker -- docker stop 8617c37c69f7
+docker -- docker build -t test-app /home/saular/tmp/pwnpals/test-app

@@ -48,7 +48,7 @@ function postBuild(req, res) {
                 res.send("Failed to save build to database")
             }
             else {
-                res.send("Successfully built image")
+                res.send(req.body)
             }
         })
     }

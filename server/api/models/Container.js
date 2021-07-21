@@ -4,6 +4,7 @@ const Container = mongoose.Schema({
     owner: String,
     appName: String,
     appID: String,
+    port: Number,
     status: String
 })
 

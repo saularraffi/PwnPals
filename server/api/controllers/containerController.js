@@ -1,29 +1,17 @@
 const Container = require("../models/Container")
 const docker = require("../../lib/docker.js")
+const axios = require('axios')
 
 function getContainer(req, res) {
-    res.send("GET container")
-}
+    Container.find({}, function(err, containers) {
+        console.log(containers)
 
-function postContainer(req, res) {
-    const owner = req.body.owner
-    const appName = req.body.appName
-    const appID = req.body.appID
-    const status = req.body.status
-
-    const container = new Container({ 
-        owner: owner,
-        appName: appName,
-        appID: appID,
-        status: status
-    })
-    container.save(function(err) {
         if (err) { 
-            console.log(err)
-            res.send("POST failed")
+            console.log(err) 
+            res.send("Failed to get containers")
         }
         else {
-            res.json(req.body)
+            res.json(containers)
         }
     })
 }
@@ -32,11 +20,27 @@ function runContainer(req, res) {
     const owner = req.body.owner
     const appName = req.body.appName
     const appID = req.body.appID
+    const port = req.body.port
     const status = req.body.status
 
-    const status_code = docker.run_container(appName, 8080, 8080)
+    const status_code = docker.run_container(appName, 8080, port)
 
-    res.send("Running container")
+    const container = new Container({ 
+        owner: owner,
+        appName: appName,
+        appID: appID,
+        port: port,
+        status: status
+    })
+    container.save(function(err) {
+        if (err) { 
+            console.log(err)
+            res.send("Failed to save container to database")
+        }
+        else {
+            res.json(req.body)
+        }
+    })
 }
 
 function startContainer(req, res) {
@@ -55,15 +59,6 @@ function stopContainer(req, res) {
     res.send("Stopping container")
 }
 
-function updateContainer(req, res) {
-    const owner = req.body.owner
-    const appName = req.body.appName
-    const appID = req.body.appID
-    const status = req.body.status
-
-    res.json(req.body)
-}
-
 function deleteContainer(req, res) {
     const id = req.body.id
     const status_code = delete_container(id)
@@ -71,9 +66,7 @@ function deleteContainer(req, res) {
 }
 
 module.exports.getContainer = getContainer
-module.exports.postContainer = postContainer
 module.exports.runContainer = runContainer
 module.exports.startContainer = startContainer
 module.exports.stopContainer = stopContainer
-module.exports.updateContainer = updateContainer
 module.exports.deleteContainer = deleteContainer

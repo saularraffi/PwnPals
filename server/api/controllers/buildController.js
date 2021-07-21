@@ -2,7 +2,17 @@ const Build = require("../models/Build")
 const docker = require("../../lib/docker.js")
 
 function getBuild(req, res) {
-    res.send("GET build")
+    Build.find({}, function(err, builds) {
+        console.log(builds)
+
+        if (err) { 
+            console.log(err) 
+            res.send("Failed to get builds")
+        }
+        else {
+            res.json(builds)
+        }
+    })
 }
 
 function postBuild(req, res) {

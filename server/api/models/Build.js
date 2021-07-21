@@ -4,7 +4,7 @@ const Build = mongoose.Schema({
     owner: String,
     repo: String,
     branch: String,
-    appName: String
+    imageName: String
 })
 
 module.exports = mongoose.model("build", Build)

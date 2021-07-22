@@ -25,6 +25,14 @@ function runContainer(req, res) {
 
     const status_code = docker.run_container(appName, 8080, port)
 
+    if (status_code !== 0 ) {
+        console.log(`\n[-] Process exited with status code ${status_code}`)
+        res.send("Failed to run container")
+        return
+    }
+
+    console.log(`\n[+] Process exited with status code ${status_code}`)
+
     const container = new Container({ 
         owner: owner,
         appName: appName,
@@ -48,6 +56,14 @@ function startContainer(req, res) {
 
     const status_code = docker.start_container(id)
 
+    if (status_code !== 0 ) {
+        console.log(`\n[-] Process exited with status code ${status_code}`)
+        res.send("Failed to start container")
+        return
+    }
+
+    console.log(`\n[+] Process exited with status code ${status_code}`)
+
     res.send("Starting container")
 }
 
@@ -55,6 +71,14 @@ function stopContainer(req, res) {
     const id = req.body.id
 
     const status_code = docker.stop_container(id)
+    
+    if (status_code !== 0 ) {
+        console.log(`\n[-] Process exited with status code ${status_code}`)
+        res.send("Failed to stop container")
+        return
+    }
+
+    console.log(`\n[+] Process exited with status code ${status_code}`)
 
     res.send("Stopping container")
 }
@@ -65,11 +89,20 @@ function deleteContainer(req, res) {
 
     const status_code = docker.delete_container(id)
 
+    if (status_code !== 0 ) {
+        console.log(`\n[-] Process exited with status code ${status_code}`)
+        res.send("Failed to delete container")
+        return
+    }
+
+    console.log(`\n[+] Process exited with status code ${status_code}`)
+
     Container.findOneAndDelete(_id, (err, doc) => {
         if (err) {
             console.log(err)
         }
         else {
+            console.log("\n")
             console.log(doc)
         }
     })

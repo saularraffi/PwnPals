@@ -50,6 +50,6 @@ exports.stop_container = function(container_id) {
     spawn_process("scripts/docker_container.sh", "stop_container", [container_id])
 }
 
-exports.test = function () {
-    spawn_process("scripts/docker_build.sh", "test", ["arg1", "arg2", "arg3"])
+exports.delete_container = function (container_id) {
+    spawn_process("scripts/docker_container.sh", "delete_container", [container_id])
 }

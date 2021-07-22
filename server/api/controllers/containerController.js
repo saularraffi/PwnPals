@@ -61,7 +61,19 @@ function stopContainer(req, res) {
 
 function deleteContainer(req, res) {
     const id = req.body.id
-    const status_code = delete_container(id)
+    const _id = req.body._id
+
+    const status_code = docker.delete_container(id)
+
+    Container.findOneAndDelete(_id, (err, doc) => {
+        if (err) {
+            console.log(err)
+        }
+        else {
+            console.log(doc)
+        }
+    })
+
     res.send("DELETE container")
 }
 

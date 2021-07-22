@@ -49,7 +49,19 @@ function postBuild(req, res) {
 
 function deleteBuild(req, res) {
     const imageName = req.body.imageName
+    const _id = req.body._id
+
     const status_code = docker.destroy_image(imageName)
+
+    Build.findOneAndDelete(_id, (err, doc) => {
+        if (err) {
+            console.log(err)
+        }
+        else {
+            console.log(doc)
+        }
+    })
+
     res.send("DELETE build")
 }
 

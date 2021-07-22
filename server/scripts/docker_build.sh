@@ -1,12 +1,5 @@
 #!/bin/bash
 
-function test() {
-    echo this is a test
-    echo $1
-    echo $2
-    echo $3
-}
-
 function build_image() {
     # initializing variables
     repo=$1

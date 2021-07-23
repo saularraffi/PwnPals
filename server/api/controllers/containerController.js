@@ -23,7 +23,10 @@ function runContainer(req, res) {
     const port = req.body.port
     const status = req.body.status
 
-    const status_code = docker.run_container(appName, 8080, port)
+    const run_result = docker.run_container(appName, 8080, port)
+    const status_code = run_result.status
+
+    console.log(run_result.container_info)
 
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)

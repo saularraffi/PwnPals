@@ -4,7 +4,7 @@ function run_container() {
     app_name=$1
     app_port=$2
     visible_port=$3
-
+    
     sudo docker run -dp "$visible_port":"$app_port" --network host "$app_name"
     echo
     [ $? == 0 ] && echo [+] docker contianer ran successfully && exit 0
@@ -33,6 +33,16 @@ function delete_container() {
     echo
     [ $? == 0 ] && echo [+] docker contianer deleted successfully && exit 0
     [ $? == 1 ] && echo [-] failed to delete docker container && exit 1
+}
+
+function get_container_info() {
+    container_id=$1
+    sudo docker inspect "$container_id" 2>/dev/null
+}
+
+function get_container_id() {
+    image_name=$1
+    sudo docker ps -a | grep "$image_name" | awk -F ' ' '{print $1}' 2>/dev/null
 }
 
 # allows to run specific functions from command line with arguments

@@ -21,8 +21,10 @@ function postBuild(req, res) {
     const branch = req.body.branch
     const imageName = req.body.imageName
 
-    // can't access return value because process is async
-    const status_code = docker.build_image(repo, branch, imageName)  
+    const build_result = docker.build_image(repo, branch, imageName)
+    const status_code = build_result.status
+
+    console.log(build_result.image_info)
 
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)

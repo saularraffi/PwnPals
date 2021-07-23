@@ -11,37 +11,69 @@ function spawn_process(script, func, args) {
         stdio: 'pipe',
         encoding: 'utf-8'
     });
+
+    const return_data = {
+        "stdout": String(result.stdout),
+        "stderr": String(result.stderr),
+        "status": result.status
+    }
+
+    console.log(return_data.stdout)
+    console.log(return_data.stderr)
     
-    console.log(String(result.stdout));
-    console.log(String(result.stderr));
-    
-    return result.status
+    return return_data
+}
+
+function get_image_info(image_name) {
+    const result = spawn_process("scripts/docker_build.sh", "get_image_info", [image_name])
+    return result.stdout
+}
+
+function get_container_info(container_id) {
+    const result = spawn_process("scripts/docker_container.sh", "get_container_info", [container_id])
+    return result.stdout
+}
+
+function get_container_id(image_name) {
+    const result = spawn_process("scripts/docker_container.sh", "get_container_id", [image_name])
+    return result.stdout
 }
 
 exports.build_image = function (repo, branch, image_name) {
-    return spawn_process('scripts/docker_build.sh', "build_image", [repo, branch, image_name])
+    const result = spawn_process('scripts/docker_build.sh', "build_image", [repo, branch, image_name])
+    const image_info = get_image_info(image_name)
+    return { "status": result.status, "image_info": image_info }
 }
 
 exports.destroy_image = function(image_name) {
-    return spawn_process("scripts/docker_build.sh", "destroy_image", [image_name])
+    const result = spawn_process("scripts/docker_build.sh", "destroy_image", [image_name, "-f"])
+    return result.status
 }
 
 exports.run_container = function(image_name, app_port, visible_port) {
-    return spawn_process("scripts/docker_container.sh", "run_container", [
+    const result = spawn_process("scripts/docker_container.sh", "run_container", [
         image_name, 
         app_port, 
         visible_port
     ])
+    const container_id = get_container_id(image_name)
+    const container_info = get_container_info(container_id)
+
+    // console.log(`this is the container info ${container_info}`)
+    return { "status": result.status, "container_info": container_info }
 }
 
 exports.start_container = function(container_id) {
-    return spawn_process("scripts/docker_container.sh", "start_container", [container_id])
+    const result = spawn_process("scripts/docker_container.sh", "start_container", [container_id])
+    return result.status
 }
 
 exports.stop_container = function(container_id) {
-    return spawn_process("scripts/docker_container.sh", "stop_container", [container_id])
+    const result = spawn_process("scripts/docker_container.sh", "stop_container", [container_id])
+    return result.status
 }
 
 exports.delete_container = function (container_id) {
-    return spawn_process("scripts/docker_container.sh", "delete_container", [container_id])
+    const result = spawn_process("scripts/docker_container.sh", "delete_container", [container_id])
+    return result.status
 }

@@ -37,5 +37,10 @@ function destroy_image() {
     [ $? == 1 ] && echo [-] failed to destroyed docker image && exit 1
 }
 
+function get_image_info() {
+    image_name=$1
+    sudo docker image inspect "$image_name" 2>/dev/null
+}
+
 # allows to run specific functions from command line with arguments
 "$@"

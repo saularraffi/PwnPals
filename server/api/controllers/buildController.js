@@ -34,10 +34,10 @@ async function postBuild(req, res) {
 
     // remove any previous build(s) from database
     await Build.deleteMany({ imageName: imageName })
-    .then(function(){
+    .then(function() {
         console.log("Previous build(s) deleted"); // Success
     })
-    .catch(function(error){
+    .catch(function(error) {
         console.log(error); // Failure
     });
 
@@ -63,7 +63,6 @@ async function postBuild(req, res) {
 
 function deleteBuild(req, res) {
     const imageName = req.body.imageName
-    const _id = req.body._id
 
     const status_code = docker.destroy_image(imageName)
 
@@ -75,15 +74,23 @@ function deleteBuild(req, res) {
 
     console.log(`\n[+] Process exited with status code ${status_code}`)
 
-    Build.findOneAndDelete(_id, (err, doc) => {
-        if (err) {
-            console.log(err)
-        }
-        else {
-            console.log("\n")
-            console.log(doc)
-        }
+    // Build.findOneAndDelete(_id, (err, doc) => {
+    //     if (err) {
+    //         console.log(err)
+    //     }
+    //     else {
+    //         console.log("\n")
+    //         console.log(doc)
+    //     }
+    // })
+
+    Build.deleteMany({ imageName: imageName })
+    .then(function() {
+        console.log("\n[+] Image deleted successfully"); // Success
     })
+    .catch(function(error) {
+        console.log(error); // Failure
+    });
 
     res.send("DELETE build")
 }

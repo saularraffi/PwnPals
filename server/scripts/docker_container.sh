@@ -9,15 +9,29 @@ function run_container() {
 
     if [ ! -z "$currently_running" ]; then
         sudo docker stop $currently_running >>/dev/null && echo stopping $currently_running 
-        [ $? == 1 ] && echo [-] failed to stop docker container && exit 1
+        if [ $? == 1 ]; then
+            echo [-] failed to stop docker container
+            exit 1
+        fi
+        
         sudo docker rm $currently_running >>/dev/null && echo removing $currently_running 
-        [ $? == 1 ] && echo [-] failed to remove docker container && exit 1
+        if [ $? == 1 ]; then
+            echo [-] failed to remove docker container
+            exit 1
+        fi
     fi
 
     sudo docker run -dp "$visible_port":"$app_port" --network host "$image_name"
-    echo
-    [ $? == 0 ] && echo [+] docker contianer ran successfully && exit 0
-    [ $? == 1 ] && echo [-] failed to run docker container && exit 1
+
+    if [ $? == 0 ]; then 
+        echo
+        echo [+] docker contianer ran successfully
+        exit 0
+    elif [ $? == 1 ]; then
+        echo
+        echo [-] failed to run docker container
+        exit 1
+    fi
 }
 
 function start_container() {
@@ -26,9 +40,15 @@ function start_container() {
     container_id=$(sudo docker ps -a | grep -w "$image_name" | awk -F ' ' '{print $1}')
     sudo docker start "$container_id"
 
-    echo
-    [ $? == 0 ] && echo [+] docker contianer started successfully && exit 0
-    [ $? == 1 ] && echo [-] failed to start docker container && exit 1
+    if [ $? == 0 ]; then
+        echo
+        echo [+] docker contianer started successfully
+        exit 0
+    elif [ $? == 1 ]; then 
+        echo
+        echo [-] failed to start docker container
+        exit 1
+    fi
 }
 
 function stop_container() {
@@ -37,9 +57,15 @@ function stop_container() {
     container_id=$(sudo docker ps | grep -w "$image_name" | awk -F ' ' '{print $1}')
     sudo docker stop "$container_id"
 
-    echo
-    [ $? == 0 ] && echo [+] docker contianer stopped successfully && exit 0
-    [ $? == 1 ] && echo [-] failed to stop docker container && exit 1
+    if [ $? == 0 ]; then 
+        echo
+        echo [+] docker contianer stopped successfully
+        exit 0
+    elif [ $? == 1 ]; then
+        echo
+        echo [-] failed to stop docker container
+        exit 1
+    fi
 }
 
 function delete_container() {
@@ -50,9 +76,15 @@ function delete_container() {
     sudo docker stop $container_id >>/dev/null && echo stopping $container_id 
     sudo docker rm "$container_id"
 
-    echo
-    [ $? == 0 ] && echo [+] docker contianer deleted successfully && exit 0
-    [ $? == 1 ] && echo [-] failed to delete docker container && exit 1
+    if [ $? == 0 ]; then
+        echo
+        echo [+] docker contianer deleted successfully
+        exit 0
+    elif [ $? == 1 ]; then
+        echo
+        echo [-] failed to delete docker container
+        exit 1
+    fi
 }
 
 function get_container_info() {

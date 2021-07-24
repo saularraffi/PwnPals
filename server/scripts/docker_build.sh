@@ -17,9 +17,14 @@ function build_image() {
     # build docker image
     echo
     sudo docker build -t "$image_name" "$app_dir"
-    echo
-    [ $? == 0 ] && echo [+] docker image built successfully
-    [ $? == 1 ] && echo [-] failed to build docker image && exit 1
+
+    if [ $? == 0 ]; then 
+        echo
+        echo [+] docker image built successfully
+    elif [ $? == 1 ]; then
+        echo [-] failed to build docker image
+        exit 1
+    fi
 
     # clean up
     rm -rf "$app_dir"
@@ -32,9 +37,15 @@ function destroy_image() {
 
     echo
     sudo docker rmi "$image_name"
-    echo
-    [ $? == 0 ] && echo [+] docker image destroyed successfully && exit 0
-    [ $? == 1 ] && echo [-] failed to destroyed docker image && exit 1
+
+    if [ $? == 0 ]; then
+        echo
+        echo [+] docker image destroyed successfully
+        exit 0
+    elif [ $? == 1 ]; then
+        echo [-] failed to destroyed docker image
+        exit 1
+    fi
 }
 
 function get_image_info() {

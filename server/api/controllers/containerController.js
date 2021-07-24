@@ -39,10 +39,10 @@ async function runContainer(req, res) {
 
     // remove any previous containers(s) from database
     await Container.deleteMany({ imageName: imageName })
-    .then(function(){
+    .then(function() {
         console.log("Previous container(s) deleted"); // Success
     })
-    .catch(function(error){
+    .catch(function(error) {
         console.log(error); // Failure
     });
 
@@ -99,7 +99,6 @@ function stopContainer(req, res) {
 
 function deleteContainer(req, res) {
     const imageName = req.body.imageName
-    const _id = req.body._id
 
     const status_code = docker.delete_container(imageName)
 
@@ -111,15 +110,23 @@ function deleteContainer(req, res) {
 
     console.log(`\n[+] Process exited with status code ${status_code}`)
 
-    Container.findOneAndDelete(_id, (err, doc) => {
-        if (err) {
-            console.log(err)
-        }
-        else if (doc) {
-            console.log("\n")
-            console.log(doc)
-        }
+    // Container.findOneAndDelete(_id, (err, doc) => {
+    //     if (err) {
+    //         console.log(err)
+    //     }
+    //     else if (doc) {
+    //         console.log("\n")
+    //         console.log(doc)
+    //     }
+    // })
+
+    Container.deleteMany({ imageName: imageName })
+    .then(function() {
+        console.log("\n[+] Container deleted successfully"); // Success
     })
+    .catch(function(error){
+        console.log(error); // Failure
+    });
 
     res.send("DELETE container")
 }

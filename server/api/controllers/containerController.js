@@ -16,7 +16,7 @@ function getContainer(req, res) {
     })
 }
 
-function runContainer(req, res) {
+async function runContainer(req, res) {
     const owner = req.body.owner
     const imageName = req.body.imageName
     const port = req.body.port
@@ -36,6 +36,15 @@ function runContainer(req, res) {
     //     const port = String(key).split("/")[0]
     //     break
     // }
+
+    // remove any previous containers(s) from database
+    await Container.deleteMany({ imageName: imageName })
+    .then(function(){
+        console.log("Previous container(s) deleted"); // Success
+    })
+    .catch(function(error){
+        console.log(error); // Failure
+    });
 
     const container = new Container({ 
         owner: owner,

@@ -15,7 +15,7 @@ function getBuild(req, res) {
     })
 }
 
-function postBuild(req, res) {
+async function postBuild(req, res) {
     const owner = req.body.owner
     const repo = req.body.repo
     const branch = req.body.branch
@@ -31,6 +31,15 @@ function postBuild(req, res) {
     }
 
     console.log(`\n[+] Process exited with status code ${status_code}`)
+
+    // remove any previous build(s) from database
+    await Build.deleteMany({ imageName: imageName })
+    .then(function(){
+        console.log("Previous build(s) deleted"); // Success
+    })
+    .catch(function(error){
+        console.log(error); // Failure
+    });
 
     // save to database
     const build = new Build({ 

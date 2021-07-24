@@ -24,8 +24,6 @@ function postBuild(req, res) {
     const build_result = docker.build_image(repo, branch, imageName)
     const status_code = build_result.status
 
-    console.log(build_result.image_info)
-
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)
         res.send("Failed to build image")
@@ -39,7 +37,9 @@ function postBuild(req, res) {
         owner: owner,
         repo: repo,
         branch: branch,
-        imageName: imageName
+        imageName: imageName,
+        created: build_result.image_info.Created,
+        hash: build_result.image_info.ContainerConfig.Image
     })
     build.save(function(err) {
         if (err) { 

@@ -26,17 +26,17 @@ function spawn_process(script, func, args) {
 
 function get_image_info(image_name) {
     const result = spawn_process("scripts/docker_build.sh", "get_image_info", [image_name])
-    return result.stdout
+    return JSON.parse(result.stdout)[0]
 }
 
 function get_container_info(container_id) {
     const result = spawn_process("scripts/docker_container.sh", "get_container_info", [container_id])
-    return result.stdout
+    return JSON.parse(result.stdout)[0]
 }
 
 function get_container_id(image_name) {
     const result = spawn_process("scripts/docker_container.sh", "get_container_id", [image_name])
-    return result.stdout
+    return String(result.stdout).replace(/(\n|\n|\r)/gm, "")
 }
 
 exports.build_image = function (repo, branch, image_name) {
@@ -59,21 +59,20 @@ exports.run_container = function(image_name, app_port, visible_port) {
     const container_id = get_container_id(image_name)
     const container_info = get_container_info(container_id)
 
-    // console.log(`this is the container info ${container_info}`)
     return { "status": result.status, "container_info": container_info }
 }
 
-exports.start_container = function(container_id) {
-    const result = spawn_process("scripts/docker_container.sh", "start_container", [container_id])
+exports.start_container = function(image_name) {
+    const result = spawn_process("scripts/docker_container.sh", "start_container", [image_name])
     return result.status
 }
 
-exports.stop_container = function(container_id) {
-    const result = spawn_process("scripts/docker_container.sh", "stop_container", [container_id])
+exports.stop_container = function(image_name) {
+    const result = spawn_process("scripts/docker_container.sh", "stop_container", [image_name])
     return result.status
 }
 
-exports.delete_container = function (container_id) {
-    const result = spawn_process("scripts/docker_container.sh", "delete_container", [container_id])
+exports.delete_container = function (image_name) {
+    const result = spawn_process("scripts/docker_container.sh", "delete_container", [image_name])
     return result.status
 }

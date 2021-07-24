@@ -18,15 +18,11 @@ function getContainer(req, res) {
 
 function runContainer(req, res) {
     const owner = req.body.owner
-    const appName = req.body.appName
-    const appID = req.body.appID
+    const imageName = req.body.imageName
     const port = req.body.port
-    const status = req.body.status
 
-    const run_result = docker.run_container(appName, 8080, port)
+    const run_result = docker.run_container(imageName, 8080, port)
     const status_code = run_result.status
-
-    console.log(run_result.container_info)
 
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)
@@ -36,12 +32,18 @@ function runContainer(req, res) {
 
     console.log(`\n[+] Process exited with status code ${status_code}`)
 
+    // for (const key in run_result.container_info.HostConfig.PortBindings) {
+    //     const port = String(key).split("/")[0]
+    //     break
+    // }
+
     const container = new Container({ 
         owner: owner,
-        appName: appName,
-        appID: appID,
+        imageName: imageName,
+        appID: run_result.container_info.Id,
         port: port,
-        status: status
+        created: run_result.container_info.Created,
+        status: run_result.container_info.State.Status
     })
     container.save(function(err) {
         if (err) { 
@@ -55,9 +57,9 @@ function runContainer(req, res) {
 }
 
 function startContainer(req, res) {
-    const id = req.body.id
+    const imageName = req.body.imageName
 
-    const status_code = docker.start_container(id)
+    const status_code = docker.start_container(imageName)
 
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)
@@ -71,9 +73,9 @@ function startContainer(req, res) {
 }
 
 function stopContainer(req, res) {
-    const id = req.body.id
+    const imageName = req.body.imageName
 
-    const status_code = docker.stop_container(id)
+    const status_code = docker.stop_container(imageName)
     
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)
@@ -87,10 +89,10 @@ function stopContainer(req, res) {
 }
 
 function deleteContainer(req, res) {
-    const id = req.body.id
+    const imageName = req.body.imageName
     const _id = req.body._id
 
-    const status_code = docker.delete_container(id)
+    const status_code = docker.delete_container(imageName)
 
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)
@@ -104,7 +106,7 @@ function deleteContainer(req, res) {
         if (err) {
             console.log(err)
         }
-        else {
+        else if (doc) {
             console.log("\n")
             console.log(doc)
         }

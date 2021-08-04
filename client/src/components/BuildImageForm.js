@@ -19,7 +19,7 @@ function BuildImageForm(props) {
         setgithubBranch(evt.target.value)
     };
 
-    const apiBuildImage = (evt) => {
+    const apiBuildImage = () => {
         const url = "http://localhost:5000/api/build"
         const data = {
             "owner": owner,
@@ -35,7 +35,7 @@ function BuildImageForm(props) {
         })
     }
 
-    const apiRunContainer = (evt) => {
+    const apiRunContainer = () => {
         const url = "http://localhost:5000/api/container/run"
         const data = {
             "owner": owner,

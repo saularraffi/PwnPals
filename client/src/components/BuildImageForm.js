@@ -19,30 +19,46 @@ function BuildImageForm(props) {
         setgithubBranch(evt.target.value)
     };
 
+    const apiBuildImage = (evt) => {
+        const url = "http://localhost:5000/api/build"
+        const data = {
+            "owner": owner,
+            "imageName": appName,
+            "repo": githubUri,
+            "branch": githubBranch
+        }
+        
+        axios.post(url, data).then(res => {
+            console.log(res.status);
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const apiRunContainer = (evt) => {
+        const url = "http://localhost:5000/api/container/run"
+        const data = {
+            "owner": owner,
+            "imageName": appName,
+            "port": 8080
+        }
+        
+        axios.post(url, data).then(res => {
+            console.log(res.status);
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
         console.log(`submitting github uri: ${githubUri}`)
         console.log(`submitting github branch: ${githubBranch}`)
         console.log(`submitting app name: ${appName}`)
 
-        const options = {
-            url: "http://localhost:5000/api/build",
-            method: 'POST',
-            data: {
-                owner: owner,
-                imageName: appName,
-                uri: githubUri,
-                branch: githubBranch
-            }
-        }
-        
-        axios.post(options)
-        .then(res => {
-            console.log(res.status);
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        apiBuildImage()
+
+        apiRunContainer()
     }
 
     return (

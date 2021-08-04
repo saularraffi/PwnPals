@@ -3,6 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const path = require('path');
+const cors = require('cors')
 
 // requiring routes
 const testRoute = require("./api/routes/test")
@@ -18,6 +19,8 @@ const port = 5000;
 // using body parser
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json())
+
+app.use(cors())
 
 // using routes in app
 app.use(basePath, testRoute)

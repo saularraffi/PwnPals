@@ -21,6 +21,8 @@ async function postBuild(req, res) {
     const branch = req.body.branch
     const imageName = req.body.imageName
 
+    console.log("\n[+] Building Image...")
+
     const build_result = docker.build_image(repo, branch, imageName)
     const status_code = build_result.status
 

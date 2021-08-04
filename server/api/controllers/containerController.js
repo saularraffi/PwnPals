@@ -21,6 +21,8 @@ async function runContainer(req, res) {
     const imageName = req.body.imageName
     const port = req.body.port
 
+    console.log("\n[+] Running container...")
+
     const run_result = docker.run_container(imageName, 8080, port)
     const status_code = run_result.status
 

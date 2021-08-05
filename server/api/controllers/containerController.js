@@ -54,7 +54,7 @@ async function runContainer(req, res) {
         appID: run_result.container_info.Id,
         port: port,
         created: run_result.container_info.Created,
-        status: run_result.container_info.State.Status
+        status: (run_result.container_info.State.Status === "running" ? "up" : "down")
     })
     container.save(function(err) {
         if (err) { 
@@ -70,13 +70,23 @@ async function runContainer(req, res) {
 function startContainer(req, res) {
     const imageName = req.body.imageName
 
-    const status_code = docker.start_container(imageName)
+    const start_result = docker.start_container(imageName)
+    const status_code = start_result.status
 
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)
         res.send("Failed to start container")
         return
     }
+
+    Container.findOneAndUpdate({ imageName: imageName }, 
+        {status: (start_result.container_info.State.Status === "running" ? "up" : "down")}, (err, doc) => {
+        if (err) {
+            console.log("\n[+] Failed to update container in database")
+            res.send("Container started but database function failed")
+            return
+        }
+    });
 
     console.log(`\n[+] Process exited with status code ${status_code}`)
 
@@ -86,13 +96,23 @@ function startContainer(req, res) {
 function stopContainer(req, res) {
     const imageName = req.body.imageName
 
-    const status_code = docker.stop_container(imageName)
+    const stop_result = docker.stop_container(imageName)
+    const status_code = stop_result.status
     
     if (status_code !== 0 ) {
         console.log(`\n[-] Process exited with status code ${status_code}`)
         res.send("Failed to stop container")
         return
     }
+
+    Container.findOneAndUpdate({ imageName: imageName }, 
+        {status: (stop_result.container_info.State.Status === "running" ? "up" : "down")}, (err, doc) => {
+        if (err) {
+            console.log("\n[+] Failed to update container in database")
+            res.send("Container stopped but database function failed")
+            return
+        }
+    });
 
     console.log(`\n[+] Process exited with status code ${status_code}`)
 
@@ -111,16 +131,6 @@ function deleteContainer(req, res) {
     }
 
     console.log(`\n[+] Process exited with status code ${status_code}`)
-
-    // Container.findOneAndDelete(_id, (err, doc) => {
-    //     if (err) {
-    //         console.log(err)
-    //     }
-    //     else if (doc) {
-    //         console.log("\n")
-    //         console.log(doc)
-    //     }
-    // })
 
     Container.deleteMany({ imageName: imageName })
     .then(function() {

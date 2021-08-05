@@ -55,8 +55,11 @@ function stop_container() {
     image_name=$1
 
     container_id=$(sudo docker ps | grep -w "$image_name" | awk -F ' ' '{print $1}')
-    sudo docker stop "$container_id"
 
+    if [ "$( sudo docker container inspect -f '{{.State.Running}}' $container_id )" == "true" ]; then
+        sudo docker stop "$container_id"
+    fi
+    
     if [ $? == 0 ]; then 
         echo
         echo [+] docker contianer stopped successfully
@@ -73,7 +76,10 @@ function delete_container() {
 
     container_id=$(sudo docker ps -a | grep -w "$image_name" | awk -F ' ' '{print $1}')
 
-    sudo docker stop $container_id >>/dev/null && echo stopping $container_id 
+    if [ "$( sudo docker container inspect -f '{{.State.Running}}' $container_id )" == "true" ]; then
+        sudo docker stop $container_id >>/dev/null && echo stopping $container_id
+    fi
+    
     sudo docker rm "$container_id"
 
     if [ $? == 0 ]; then

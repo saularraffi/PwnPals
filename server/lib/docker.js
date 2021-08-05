@@ -64,12 +64,16 @@ exports.run_container = function(image_name, app_port, visible_port) {
 
 exports.start_container = function(image_name) {
     const result = spawn_process("scripts/docker_container.sh", "start_container", [image_name])
-    return result.status
+    const container_id = get_container_id(image_name)
+    const container_info = get_container_info(container_id)
+    return { "status": result.status, "container_info": container_info }
 }
 
 exports.stop_container = function(image_name) {
     const result = spawn_process("scripts/docker_container.sh", "stop_container", [image_name])
-    return result.status
+    const container_id = get_container_id(image_name)
+    const container_info = get_container_info(container_id)
+    return { "status": result.status, "container_info": container_info }
 }
 
 exports.delete_container = function (image_name) {

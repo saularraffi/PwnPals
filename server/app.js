@@ -37,7 +37,8 @@ app.get('/', (req, res) => {
 mongoose.connect('mongodb://localhost:27017/pwnpals', 
 { 
     useNewUrlParser: true, 
-    useUnifiedTopology: true 
+    useUnifiedTopology: true,
+    useFindAndModify: false
 })
 .then(() => {
     console.log("\n[+] MongoDB connection successful")

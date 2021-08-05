@@ -2,3 +2,4 @@
 - finish the routes for builds and containers
 - create custom libraries around the bash scripts 
 - create a library function that acts as a wrapper around child processes
+- use npm package node-docker-api

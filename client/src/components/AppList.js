@@ -2,30 +2,28 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 
 function AppList(props) {
-    const [appName, setAppName] = useState()
-    const [port, setPort] = useState()
-    const [status, setStatus] = useState()
     const [startStopButton, setStartStopButton] = useState()
+    const [appList, setAppList] = useState([])
+    const [appCount, setAppCount] = useState(appList.length)
 
-    const apiGetContainer = () => {
+    const apiGetContainer = async () => {
         const url = "http://localhost:5000/api/container"
 
-        axios.get(url).then(res => {
-            setAppName(res.data[0].imageName)
-            setPort(res.data[0].port)
-            setStatus(res.data[0].status)
+        await axios.get(url).then(res => {
+            setAppList(res.data)
+
         }).catch(err => {
             console.log(err)
         })
     }
 
     const toggleContainerState = (evt) => {
-        var url = ""
+        var url = "http://localhost:5000/api/container/start"
         const data = {
-            "imageName": appName,
+            "imageName": appList[0].imageName,
         }
 
-        if (evt.target.textContent == "start") {
+        if (evt.target.textContent === "Start") {
             url = "http://localhost:5000/api/container/start"
         }
         else {
@@ -37,43 +35,61 @@ function AppList(props) {
         }).catch(err => {
             console.log(err)
         })
+    }
 
-        // change the status
+    const deleteContainer = async () => {
+        const url = "http://localhost:5000/api/container"
+
+        const payload = {
+            "imageName": appList[0].imageName
+        }
+
+        await axios.delete(url, {data: payload}).then(res => {
+            console.log(res.status);
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     useEffect(() => {
         apiGetContainer()
-
-        if (status == "running") {
-            setStartStopButton("stop")
-        }
-        else {
-            setStartStopButton("start")
-        }
-    })
+    }, [appCount])
 
     return (
         <div>
             <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Port</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <button onClick={toggleContainerState}>{startStopButton}</button>
-                    </td>
-                    <td>{appName}</td>
-                    <td>{port}</td>
-                    <td>{status}</td>
-                </tr>
-            </tbody>
-        </table>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>Name</td>
+                        <td>Port</td>
+                        <td>Status</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {appList.map((app) => {
+                        return (
+                            <tr>
+                                <td>
+                                    {app.status === "up" &&
+                                        <button onClick={toggleContainerState}>Stop</button>
+                                    ||
+                                    app.status === "down" &&
+                                        <button onClick={toggleContainerState}>Start</button>
+                                    }
+                                </td> 
+                                <td>{app.imageName}</td>
+                                <td>{app.port}</td>
+                                <td>{app.status}</td>
+                                <td>
+                                    <button onClick={deleteContainer}>Delete</button>
+                                </td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
         </div>
     )
 }

@@ -5,6 +5,7 @@ function AppList(props) {
     const [startStopButton, setStartStopButton] = useState()
     const [appList, setAppList] = useState([])
     const [appCount, setAppCount] = useState(appList.length)
+    const [stateChange, setStateChange] = useState()
 
     const apiGetContainer = async () => {
         const url = "http://localhost:5000/api/container"
@@ -17,7 +18,7 @@ function AppList(props) {
         })
     }
 
-    const toggleContainerState = (evt) => {
+    const toggleContainerState = async (evt) => {
         var url = "http://localhost:5000/api/container/start"
         const data = {
             "imageName": appList[0].imageName,
@@ -30,11 +31,13 @@ function AppList(props) {
             url = "http://localhost:5000/api/container/stop"
         }
 
-        axios.post(url, data).then(res => {
+        await axios.post(url, data).then(res => {
             console.log(res.status);
         }).catch(err => {
             console.log(err)
         })
+
+        stateChange === true ? setStateChange(false) : setStateChange(true)
     }
 
     const deleteContainer = async () => {
@@ -49,11 +52,13 @@ function AppList(props) {
         }).catch(err => {
             console.log(err)
         })
+
+        setAppCount(appList.length)
     }
 
     useEffect(() => {
         apiGetContainer()
-    }, [appCount])
+    }, [appCount, stateChange])
 
     return (
         <div>

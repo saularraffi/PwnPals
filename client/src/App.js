@@ -7,11 +7,13 @@ import LoginPage from './components/Login'
 import ProfilePage from './components/Profile'
 import UserAppsPage from './components/UserApps'
 import UserAppUploadPage from './components/UserAppUpload'
+import NavBar from './components/NavBar';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <NavBar />
         <Routes>
           <Route exact path='/' element={<LandingPage />}/>
           <Route path='/home' element={<HomePage />}/>

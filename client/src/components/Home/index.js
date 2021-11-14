@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
+import NavBar from "../NavBar";
+
 function HomePage() {
     const navigate = useNavigate();
 
@@ -14,11 +16,7 @@ function HomePage() {
 
     return (
         <div>
-            <h1>This is the home page</h1>
-            <button onClick={() => routeChange('/profile')}>Profile</button>
-            <button onClick={() => routeChange('/apps')}>My Apps</button>
-            <button onClick={() => routeChange('/upload')}>Upload App</button>
-            <button onClick={logOut}>Log Out</button>
+            <h1>Welcome to PwnPals</h1>
         </div>
     )
 }

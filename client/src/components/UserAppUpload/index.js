@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 
-function BuildImageForm(props) {
+function UserAppUploadPage(props) {
     const [owner, setOwner] = useState("user123")
     const [appName, setAppName] = useState("")
     const [githubUri, setGithubUri] = useState("")
@@ -82,4 +82,4 @@ function BuildImageForm(props) {
     )
 }
 
-export default BuildImageForm;
+export default UserAppUploadPage;

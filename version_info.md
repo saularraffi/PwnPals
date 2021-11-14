@@ -23,3 +23,8 @@
 - database implementations for each method for each endpoint
 - custom docker library created to interface with docker processes/scripts
 - able to retrieve info about images and containers
+
+## V4
+
+- set up some routes for basic pages
+- log in and log out simulation

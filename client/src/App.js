@@ -1,12 +1,27 @@
-import BuildImageForm from './components/BuildImageForm'
-import AppList from './components/AppList'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import BugReportPage from './components/BugReport'
+import HomePage from './components/Home'
+import LandingPage from './components/Landing';
+import LoginPage from './components/Login'
+import ProfilePage from './components/Profile'
+import UserAppsPage from './components/UserApps'
+import UserAppUploadPage from './components/UserAppUpload'
 
 function App() {
   return (
     <div className="App">
-      <h1>Welcome to Pwn Pals</h1>
-      <BuildImageForm />
-      <AppList />
+      <BrowserRouter>
+        <Routes>
+          <Route exact path='/' element={<LandingPage />}/>
+          <Route path='/home' element={<HomePage />}/>
+          <Route path='/login' element={<LoginPage />}/>
+          <Route path='/profile' element={<ProfilePage />}/>
+          <Route path='/apps' element={<UserAppsPage />}/>
+          <Route path='/upload' element={<UserAppUploadPage />}/>
+          <Route path='/bug-report' element={<BugReportPage />}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

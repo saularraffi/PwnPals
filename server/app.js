@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const path = require('path');
 const cors = require('cors')
+require('./api/middlewear/auth')
 
 // requiring routes
 const testRoute = require("./api/routes/test")

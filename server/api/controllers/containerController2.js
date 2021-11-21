@@ -34,7 +34,9 @@ function startContainer(req, res) {
 }
 
 function stopContainer(req, res) {
-    const imageName = req.body.imageName
+    const containerId = req.body.containerId
+
+    console.log(containerId)
 
     res.send("Stopping container")
 }

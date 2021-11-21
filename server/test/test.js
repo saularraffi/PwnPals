@@ -3,12 +3,11 @@ const { Docker } = require('node-docker-api')
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-docker.container.list({'all': true})
+docker.image.list()
 .then(containers => {
     containers.map(c => {
-        if (c.data.Image === 'testapp') {
-            c.stop()
+        if (c.data.Id.split(':')[1].substring(0,12) === imageId) {
+            c.remove()
         }
     })
 })
-.catch(error => console.log(error));

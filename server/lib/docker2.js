@@ -3,6 +3,26 @@ const tar = require('tar-fs');
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
+function containerHelper(action, containerId) {
+    docker.container.list()
+    .then(containers => {
+        containers.map(c => {
+            if (c.data.Id.substring(0,12) === containerId) {
+                if (action === 'start') {
+                    c.start()
+                }
+                else if (action === 'stop') {
+                    c.stop()
+                }
+                else if (action === 'delete') {
+                    c.delete()
+                }
+            }
+        })
+    })
+    .catch(error => console.log(error));
+}
+
 exports.buildImage = function(imageName, dockerContextPath) {
     const promisifyStream = stream => new Promise((resolve, reject) => {
         stream.on('data', data => console.log(data.toString()))
@@ -21,49 +41,29 @@ exports.buildImage = function(imageName, dockerContextPath) {
     .catch(error => console.log(error));
 }
 
-exports.deleteImage = function(imageName) {
+exports.deleteImage = function(imageId) {
     docker.image.list()
     .then(containers => {
         containers.map(c => {
-            if (c.data.RepoTags[0].split(':')[0] === imageName) {
+            if (c.data.Id.split(':')[1].substring(0,12) === imageId) {
                 c.remove()
             }
         })
     })
 }
 
-exports.startContainer = function(imageName) {
-    docker.container.list({'all': true})
-    .then(containers => {
-        containers.map(c => {
-            if (c.data.Image === imageName) {
-                c.start()
-            }
-        })
-    })
-    .catch(error => console.log(error));
+exports.createContainer = function(containerId) {
+    return
 }
 
-exports.stopContainer = function(imageName) {
-    docker.container.list({'all': true})
-    .then(containers => {
-        containers.map(c => {
-            if (c.data.Image === imageName) {
-                c.stop()
-            }
-        })
-    })
-    .catch(error => console.log(error));
+exports.startContainer = function(containerId) {
+    containerHelper('start', containerId)
 }
 
-exports.deleteContainer = function(imageName) {
-    docker.container.list({'all': true})
-    .then(containers => {
-        containers.map(c => {
-            if (c.data.Image === imageName) {
-                c.delete()
-            }
-        })
-    })
-    .catch(error => console.log(error));
+exports.stopContainer = function(containerId) {
+    containerHelper('stop', containerId)
+}
+
+exports.deleteContainer = function(containerId) {
+    containerHelper('delete', containerId)
 }

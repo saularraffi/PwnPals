@@ -1,5 +1,6 @@
 const Build = require("../models/Build")
 const docker = require("../../lib/docker.js")
+const docker2 = require("../../lib/docker2.js")
 
 function getBuild(req, res) {
     Build.find({}, function(err, builds) {
@@ -16,12 +17,16 @@ function getBuild(req, res) {
 }
 
 async function postBuild(req, res) {
-    const owner = req.body.owner
     const repo = req.body.repo
-    const branch = req.body.branch
     const imageName = req.body.imageName
 
     console.log("\n[+] Building Image...")
+
+    const imageId = docker2.buildImage(imageName, repo)
+
+    console.log(imageId)
+
+    // add image to database with image ID as a field
 
     res.send("Building image")
 }

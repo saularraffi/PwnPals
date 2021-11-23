@@ -1,23 +1,20 @@
 const { spawn, spawnSync, execSync } = require('child_process');
 const { Docker } = require('node-docker-api')
 const dockerLib = require('../lib/docker2')
+const { spawnProcess } = require('../lib/spawnProcess')
 const tar = require('tar-fs')
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-const imageName = 'testimg'
+function testA() {
+    return "hello"
+}
 
-const promisifyStream = stream => new Promise((resolve, reject) => {
-    stream.on('data', data => console.log(data.toString()))
-    stream.on('end', resolve)
-    stream.on('error', reject)
-});
+async function testB() {
+    return "hello"
+}
 
-const tarStream = tar.pack('/home/saular/Repos/test-app')
-
-docker.image.build(tarStream, {
-    t: imageName
+testB()
+.then(res => {
+    console.log(res)
 })
-.then(stream => promisifyStream(stream))
-.then(() => docker.image.get(imageName).status())
-.catch(error => console.log(error));

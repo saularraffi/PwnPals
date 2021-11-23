@@ -11,6 +11,7 @@
     - #A93CD8 and #3CC3D8 and #F98D2F
 - create a logo
 - create the hacker and developer art
+- figure out github cloning access rights
 
 - minimum viable product requirements
     - pages

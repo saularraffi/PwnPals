@@ -1,6 +1,6 @@
 const { spawnSync } = require('child_process');
 
-exports.spawnProcess = function(script, args=[], options={}) {
+exports.spawnProcess = async function(script, args=[], options={}) {
     options['stdio'] = 'pipe'
     options['encoding'] = 'utf-8'
 

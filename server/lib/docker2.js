@@ -92,8 +92,15 @@ exports.deleteImage = function(imageId) {
     })
 }
 
-exports.createContainer = function(containerId) {
-    return
+exports.createContainer = function(imageName, containerId) {
+    docker.container.create({
+        Image: imageName,
+        name: imageName,
+        ExposedPorts: { '8080/tcp': {} },
+        NetworkConfig: {'NetworkMode': 'host'}
+    })
+    .then(container => container.start())
+    .catch(error => console.log(error));
 }
 
 exports.startContainer = function(containerId) {

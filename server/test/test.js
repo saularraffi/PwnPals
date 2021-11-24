@@ -10,10 +10,9 @@ const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
 docker.container.create({
     Image: 'testapp',
-    name: 'testapp'
+    name: 'testapp',
+    ExposedPorts: { '8080/tcp': {} },
+    NetworkConfig: {'NetworkMode': 'host'}
 })
 .then(container => container.start())
-// .then(container => container.stop())
-// .then(container => container.restart())
-// .then(container => container.delete({ force: true }))
 .catch(error => console.log(error));

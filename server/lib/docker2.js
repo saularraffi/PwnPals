@@ -92,7 +92,7 @@ exports.deleteImage = function(imageId) {
     })
 }
 
-exports.createContainer = function(imageName, containerId) {
+exports.createContainer = function(imageName) {
     docker.container.create({
         Image: imageName,
         name: imageName,
@@ -114,7 +114,3 @@ exports.stopContainer = function(containerId) {
 exports.deleteContainer = function(containerId) {
     containerHelper('delete', containerId)
 }
-
-// exports.test = function() {
-//     console.log(path.join(__dirname, '..', 'scripts', 'cloneRepo.sh'))
-// }

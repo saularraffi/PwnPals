@@ -18,9 +18,9 @@ function getContainer(req, res) {
 }
 
 async function runContainer(req, res) {
-    const owner = req.body.owner
     const imageName = req.body.imageName
-    const external_port = req.body.port
+
+    docker2.createContainer(imageName)
 
     res.send("Runnin container")
 }

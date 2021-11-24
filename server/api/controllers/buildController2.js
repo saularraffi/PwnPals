@@ -22,13 +22,15 @@ async function postBuild(req, res) {
 
     console.log("\n[+] Building Image...")
 
-    const imageId = docker2.buildImage(imageName, repo)
+    docker2.buildImage(imageName, repo)
+    .then(id => {
+        // add image to database with image ID as a field
+        
+        console.log("this is the imageId")
+        console.log(id)
+    })
 
-    console.log(imageId)
-
-    // add image to database with image ID as a field
-
-    res.send("Building image")
+    res.send("Building image...")
 }
 
 function deleteBuild(req, res) {

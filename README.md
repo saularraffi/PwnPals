@@ -65,6 +65,18 @@ install the compass
 $ sudo dpkg -i /opt/mongodb-compass_1.28.1_amd64.deb
 ```
 
+add a docker group 
+
+```
+$ sudo groupadd docker
+```
+
+add your user to the docker group
+
+```
+$ sudo usermod -aG docker $USER
+```
+
 # Notes
 
 build docker image

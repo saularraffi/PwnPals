@@ -27,48 +27,58 @@ function containerHelper(action, containerId) {
     .catch(error => console.log(error));
 }
 
-exports.buildImage = function(imageName, repo) {
+exports.buildImage = async function(imageName, repo) {
     const repoOwner = repo.split('/')[3]
     const repoName = repo.split('/')[4].split('.')[0]
     const cloneDir = path.join('/', 'tmp', 'pwnpals', repoOwner, repoName)
-    // const dockerContextPath = path.join('/', 'tmp', 'pwnpals', repoOwner, repoName)
 
     if (!fs.existsSync(cloneDir)){
         fs.mkdirSync(cloneDir, { recursive: true });
     }
-
-    // const cloneResult = spawnProcess('git', ['clone', repo], { cwd: cloneDir })
-    spawnProcess('git', ['clone', repo, cloneDir])
-    .then(res => {
-        console.log(res)
-
-        if (res.status != 0) {
-            return false
-        }
-
-        const promisifyStream = stream => new Promise((resolve, reject) => {
-            stream.on('data', data => console.log(data.toString()))
-            stream.on('end', resolve)
-            stream.on('error', reject)
+    else {
+        fs.rmdirSync(cloneDir, { recursive: true, force: true }, (err) => {
+            if (err) {
+                throw error
+            }
         });
-        
-        const tarStream = tar.pack(cloneDir)
-        
-        docker.image.build(tarStream, {
-            t: imageName
-        })
-        .then(stream => promisifyStream(stream))
-        .then(() => docker.image.get(imageName).status())
-        .catch(error => console.log(error));
+    }
 
-        // fs.rmdir(cloneDir, { recursive: true, force: true }, (err) => {
-        //     if (err) {
-        //         throw err;
-        //     }
-        // });
+    const cloneResult = await spawnProcess('git', ['clone', repo, cloneDir])
+    
+    console.log(cloneResult)
 
-        return true
+    if (cloneResult.status != 0) {
+        console.log('\n[+] Error cloning repo')
+        return false
+    }
+
+    const promisifyStream = stream => new Promise((resolve, reject) => {
+        stream.on('data', data => console.log(data.toString()))
+        stream.on('end', resolve)
+        stream.on('error', reject)
+    });
+    
+    const tarStream = tar.pack(cloneDir)
+    
+    docker.image.build(tarStream, {
+        t: imageName
     })
+    .then(stream => promisifyStream(stream))
+    .then(() => docker.image.get(imageName).status())
+    .then(status => {
+        return status.data.Config.Image.split(':')[1]
+    })
+    .then(() => {
+        fs.rmdir(path.join(cloneDir, '..'), { recursive: true, force: true }, (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+    })
+    .catch(error => {
+        console.log(error)
+        return null
+    });
 }
 
 exports.deleteImage = function(imageId) {

@@ -1,6 +1,6 @@
 const { spawn, spawnSync, execSync } = require('child_process');
 const { Docker } = require('node-docker-api')
-const dockerLib = require('../lib/docker2')
+const dockerLib = require('../lib/docker')
 const { spawnProcess } = require('../lib/spawnProcess')
 const tar = require('tar-fs')
 

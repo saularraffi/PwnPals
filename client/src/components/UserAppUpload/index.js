@@ -36,7 +36,7 @@ function UserAppUploadPage(props) {
     }
 
     const apiRunContainer = () => {
-        const url = "http://localhost:5000/api/container/run"
+        const url = "http://localhost:5000/api/container/create"
         const data = {
             "owner": owner,
             "imageName": appName,

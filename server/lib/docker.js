@@ -1,82 +1,123 @@
-const { spawnSync } = require('child_process');
+const { Docker } = require('node-docker-api')
+const { spawnProcess } = require('./spawnProcess')
+const tar = require('tar-fs')
+const path = require('path')
+const fs = require('fs');
 
-function spawn_process(script, func, args) {
-    const cmd_args = [func]
 
-    for (const arg of args) {
-        cmd_args.push(arg)
+const docker = new Docker({ socketPath: '/var/run/docker.sock' })
+
+function containerHelper(action, containerId) {
+    docker.container.list()
+    .then(containers => {
+        containers.map(c => {
+            if (c.data.Id.substring(0,12) === containerId) {
+                if (action === 'start') {
+                    c.start()
+                }
+                else if (action === 'stop') {
+                    c.stop()
+                }
+                else if (action === 'delete') {
+                    c.delete()
+                }
+            }
+        })
+    })
+    .catch(error => console.log(error));
+}
+
+exports.buildImage = async function(imageName, repo) {
+    const repoOwner = repo.split('/')[3]
+    const repoName = repo.split('/')[4].split('.')[0]
+    const cloneDir = path.join('/', 'tmp', 'pwnpals', repoOwner, repoName)
+
+    if (!fs.existsSync(cloneDir)){
+        fs.mkdirSync(cloneDir, { recursive: true });
+    }
+    else {
+        fs.rmdirSync(cloneDir, { recursive: true, force: true }, (err) => {
+            if (err) {
+                throw error
+            }
+        });
     }
 
-    const result = spawnSync(script, cmd_args, {
-        stdio: 'pipe',
-        encoding: 'utf-8'
-    });
-
-    const return_data = {
-        "stdout": String(result.stdout),
-        "stderr": String(result.stderr),
-        "status": result.status
-    }
-
-    console.log(return_data.stdout)
-    console.log(return_data.stderr)
+    const cloneResult = await spawnProcess('git', ['clone', repo, cloneDir])
     
-    return return_data
+    console.log(cloneResult)
+
+    if (cloneResult.status != 0) {
+        console.log('\n[+] Error cloning repo')
+        return false
+    }
+
+    const promisifyStream = stream => new Promise((resolve, reject) => {
+        stream.on('data', data => console.log(data.toString()))
+        stream.on('end', resolve)
+        stream.on('error', reject)
+    });
+    
+    const tarStream = tar.pack(cloneDir)
+    
+    return docker.image.build(tarStream, {
+        t: imageName,
+        networkmode: 'host'
+    })
+    .then(stream => promisifyStream(stream))
+    .then(() => {
+        return docker.image.get(imageName).status()
+    })
+    .then(status => {
+        console.log('\n[+] Stream has ended')
+        return status.data.Config.Image.split(':')[1]
+    })
+    .then(id => {        
+        fs.rm(path.join(cloneDir, '..'), { recursive: true, force: true }, (err) => {
+            if (err) {
+                throw err;
+            }
+        });
+        return id
+    })
+    .catch(error => {
+        console.log(error)
+        return null
+    });
 }
 
-function get_image_info(image_name) {
-    const result = spawn_process("scripts/docker_build.sh", "get_image_info", [image_name])
-    return JSON.parse(result.stdout)[0]
+exports.deleteImage = function(imageId) {
+    docker.image.list()
+    .then(containers => {
+        containers.map(c => {
+            if (c.data.Id.split(':')[1].substring(0,12) === imageId) {
+                c.remove()
+            }
+        })
+    })
 }
 
-function get_container_info(container_id) {
-    const result = spawn_process("scripts/docker_container.sh", "get_container_info", [container_id])
-    return JSON.parse(result.stdout)[0]
+exports.createContainer = function(imageName) {
+    docker.container.create({
+        Image: imageName,
+        name: imageName,
+        ExposedPorts: { '8080/tcp': {} },
+        HostConfig: {
+            NetworkMode: 'host'
+        }
+    })
+    .then(container => container.start())
+    .catch(error => console.log(error));
 }
 
-function get_container_id(image_name) {
-    const result = spawn_process("scripts/docker_container.sh", "get_container_id", [image_name])
-    return String(result.stdout).replace(/(\n|\n|\r)/gm, "")
+exports.startContainer = function(containerId) {
+    containerHelper('start', containerId)
 }
 
-exports.build_image = function (repo, branch, image_name) {
-    const result = spawn_process('scripts/docker_build.sh', "build_image", [repo, branch, image_name])
-    const image_info = get_image_info(image_name)
-    return { "status": result.status, "image_info": image_info }
+exports.stopContainer = function(containerId) {
+    containerHelper('stop', containerId)
 }
 
-exports.destroy_image = function(image_name) {
-    const result = spawn_process("scripts/docker_build.sh", "destroy_image", [image_name, "-f"])
-    return result.status
-}
-
-exports.run_container = function(image_name, internal_port, external_port) {
-    const result = spawn_process("scripts/docker_container.sh", "run_container", [
-        image_name, 
-        internal_port, 
-        external_port
-    ])
-    const container_id = get_container_id(image_name)
-    const container_info = get_container_info(container_id)
-
-    return { "status": result.status, "container_info": container_info }
-}
-
-exports.start_container = function(image_name) {
-    const result = spawn_process("scripts/docker_container.sh", "start_container", [image_name])
-    const container_id = get_container_id(image_name)
-    const container_info = get_container_info(container_id)
-    return { "status": result.status, "container_info": container_info }
-}
-
-exports.stop_container = function(image_name) {
-    const result = spawn_process("scripts/docker_container.sh", "stop_container", [image_name])
-    const container_id = get_container_id(image_name)
-    const container_info = get_container_info(container_id)
-    return { "status": result.status, "container_info": container_info }
-}
-
-exports.delete_container = function (image_name) {
-    const result = spawn_process("scripts/docker_container.sh", "delete_container", [image_name])
-    return result.status
+exports.deleteContainer = function(containerId) {
+    containerHelper('delete', containerId)
 }

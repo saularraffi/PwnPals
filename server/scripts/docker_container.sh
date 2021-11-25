@@ -2,8 +2,8 @@
 
 function run_container() {
     image_name=$1
-    app_port=$2
-    visible_port=$3
+    internal_port=$2
+    external_port=$3
     
     currently_running=$(sudo docker ps -a | grep -w "$image_name" | awk -F ' ' '{print $1}')
 
@@ -21,7 +21,7 @@ function run_container() {
         fi
     fi
 
-    sudo docker run -dp "$visible_port":"$app_port" --network host "$image_name"
+    sudo docker run -dp "$external_port":"$internal_port" --network host "$image_name"
 
     if [ $? == 0 ]; then 
         echo

@@ -3,3 +3,28 @@
 - create custom libraries around the bash scripts 
 - create a library function that acts as a wrapper around child processes
 - use npm package node-docker-api
+- delete build in database when user deletes an app
+
+- create the skeleton of the pages (basic react, no styling)
+- set up authentication through Google (eventually facebook, github, and linkedin)
+- choose color scheme for MVP
+    - #A93CD8 and #3CC3D8 and #F98D2F
+- create a logo
+- create the hacker and developer art
+- figure out github cloning access rights
+
+- minimum viable product requirements
+    - pages
+        - landing page
+        - homepage
+        - login page
+        - profile page
+        - app upload page
+        - bug rupport page
+        - app page with app details and bug report threads
+    - api routes
+        - app container buld: GET, POST, DELETE
+        - app container: GET, POST (start, stop, run), DELETE
+        - bug report: GET, POST, PUT, DELETE
+    - other
+        - toolbar at the top, on every page

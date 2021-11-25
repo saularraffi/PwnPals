@@ -4,9 +4,12 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const path = require('path');
 const cors = require('cors')
+const passport = require('passport')
+require('./auth/setup')
 
 // requiring routes
 const testRoute = require("./api/routes/test")
+const authRoute = require("./api/routes/auth")
 const buildRoute = require("./api/routes/build")
 const containerRoute = require("./api/routes/container")
 
@@ -16,14 +19,24 @@ const basePath = "/api"
 const hostname = '127.0.0.1';
 const port = 5000;
 
+app.use(passport.initialize())
+
+app.use(cors())
+// app.use(function (req, res, next) {
+//     res.setHeader('Access-Control-Allow-Origin', '*');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//     next();
+// });
+
 // using body parser
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json())
 
-app.use(cors())
-
 // using routes in app
 app.use(basePath, testRoute)
+app.use(basePath, authRoute)
 app.use(basePath, buildRoute)
 app.use(basePath, containerRoute)
 

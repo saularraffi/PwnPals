@@ -19,11 +19,11 @@ function getContainer(req, res) {
 async function runContainer(req, res) {
     const owner = req.body.owner
     const imageName = req.body.imageName
-    const port = req.body.port
+    const external_port = req.body.port
 
     console.log("\n[+] Running container...")
 
-    const run_result = docker.run_container(imageName, 8080, port)
+    const run_result = docker.run_container(imageName, 80, external_port)
     const status_code = run_result.status
 
     if (status_code !== 0 ) {

@@ -23,3 +23,18 @@
 - database implementations for each method for each endpoint
 - custom docker library created to interface with docker processes/scripts
 - able to retrieve info about images and containers
+
+## V4
+
+- set up some routes for basic pages
+- log in and log out simulation
+- added partial Google OAuth2
+- edited /lib/systemd/system/docker.service to allow communication to docker through api
+    changed
+    ```
+    ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+    ```
+    to 
+    ```
+    ExecStart=/usr/bin/dockerd -H fd:// -H=tcp://0.0.0.0:2375
+    ```

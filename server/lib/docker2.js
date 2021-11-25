@@ -61,7 +61,8 @@ exports.buildImage = async function(imageName, repo) {
     const tarStream = tar.pack(cloneDir)
     
     docker.image.build(tarStream, {
-        t: imageName
+        t: imageName,
+        networkmode: 'host'
     })
     .then(stream => promisifyStream(stream))
     .then(() => docker.image.get(imageName).status())
@@ -97,7 +98,9 @@ exports.createContainer = function(imageName) {
         Image: imageName,
         name: imageName,
         ExposedPorts: { '8080/tcp': {} },
-        NetworkConfig: {'NetworkMode': 'host'}
+        HostConfig: {
+            NetworkMode: 'host'
+        }
     })
     .then(container => container.start())
     .catch(error => console.log(error));

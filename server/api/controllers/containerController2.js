@@ -22,7 +22,7 @@ async function runContainer(req, res) {
 
     docker2.createContainer(imageName)
 
-    res.send("Runnin container")
+    res.send("Running container")
 }
 
 function startContainer(req, res) {

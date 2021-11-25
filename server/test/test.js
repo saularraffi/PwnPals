@@ -6,13 +6,11 @@ const tar = require('tar-fs')
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-// 9445284c5e076cd40757352022075bfbfb5d64d0c211b38f5e12261f0fe30352
-
-docker.container.create({
-    Image: 'testapp',
-    name: 'testapp',
-    ExposedPorts: { '8080/tcp': {} },
-    NetworkConfig: {'NetworkMode': 'host'}
+docker.container.list({
+    all: true
 })
-.then(container => container.start())
-.catch(error => console.log(error));
+   // Inspect
+  .then(containers => containers[0].status())
+  .then(container => container.top())
+  .then(processes => console.log(processes))
+  .catch(error => console.log(error));

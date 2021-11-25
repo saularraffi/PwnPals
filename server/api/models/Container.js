@@ -1,9 +1,10 @@
 const mongoose = require("mongoose")
 
 const Container = mongoose.Schema({
-    owner: String,
+    user: String,
+    imageId: String,
     imageName: String,
-    appID: String,
+    appId: String,
     port: Number,
     created: Date,
     status: String

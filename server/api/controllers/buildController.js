@@ -25,7 +25,7 @@ exports.postBuild = async function(req, res) {
 
     res.send("Building image...")
 
-    const id = await docker.buildImage(imageName, repo)
+    const id = await docker.buildImage(`${user}-${imageName}`, repo)
 
     if (id !== null) {
         const build = new Build({ 
@@ -48,35 +48,20 @@ exports.postBuild = async function(req, res) {
 }
 
 exports.deleteBuild = function(req, res) {
-    const imageName = req.body.imageName
+    const id = req.body.id
+    const imageId = req.body.imageId
 
-    const status_code = docker.destroy_image(imageName)
+    res.send("Deleting image...")
 
-    if (status_code !== 0 ) {
-        console.log(`\n[-] Process exited with status code ${status_code}`)
-        res.send("Failed to delete image")
-        return
-    }
+    const status = docker.deleteImage(imageId)
 
-    console.log(`\n[+] Process exited with status code ${status_code}`)
-
-    // Build.findOneAndDelete(_id, (err, doc) => {
-    //     if (err) {
-    //         console.log(err)
-    //     }
-    //     else {
-    //         console.log("\n")
-    //         console.log(doc)
-    //     }
-    // })
-
-    Build.deleteMany({ imageName: imageName })
-    .then(function() {
-        console.log("\n[+] Image deleted successfully"); // Success
+    Build.findOneAndDelete(id, (err, doc) => {
+        if (err) {
+            console.log(err)
+        }
+        else {
+            console.log("\n")
+            console.log(doc)
+        }
     })
-    .catch(function(error) {
-        console.log(error); // Failure
-    });
-
-    res.send("DELETE build")
 }

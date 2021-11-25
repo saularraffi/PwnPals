@@ -7,19 +7,26 @@ const fs = require('fs');
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-function containerHelper(action, containerId) {
-    docker.container.list()
+async function containerHelper(action, containerId) {
+    let listAll = true
+    if (action === 'stop') {
+        listAll = false
+    }
+
+    return docker.container.list({
+        all: listAll
+    })
     .then(containers => {
-        containers.map(c => {
-            if (c.data.Id.substring(0,12) === containerId) {
+        containers.map(async (c) => {
+            if (c.data.Id === containerId) {
                 if (action === 'start') {
-                    c.start()
+                    return await c.start()
                 }
                 else if (action === 'stop') {
-                    c.stop()
+                    return c.stop()
                 }
                 else if (action === 'delete') {
-                    c.delete()
+                    return c.delete()
                 }
             }
         })
@@ -90,28 +97,36 @@ exports.deleteImage = function(imageId) {
     docker.image.list()
     .then(containers => {
         containers.map(c => {
-            if (c.data.Id.split(':')[1].substring(0,12) === imageId) {
+            // c.data.Id.split(':')[1].substring(0,12)
+            if (c.data.Id.split(':')[1] === imageId) {
+                console.log("found image")
                 c.remove()
             }
         })
     })
 }
 
-exports.createContainer = function(imageName) {
-    docker.container.create({
+exports.createContainer = async function(imageName, port) {
+    const exposedPort = `${port}/tcp`
+    return docker.container.create({
         Image: imageName,
         name: imageName,
-        ExposedPorts: { '8080/tcp': {} },
+        ExposedPorts: { exposedPort: {} },
         HostConfig: {
             NetworkMode: 'host'
         }
     })
-    .then(container => container.start())
-    .catch(error => console.log(error));
+    .then(container => { return container.start() })
+    .then(container => { return container.status() })
+    .catch(error => {
+        console.log(error)
+        return null
+    });
 }
 
-exports.startContainer = function(containerId) {
-    containerHelper('start', containerId)
+exports.startContainer = async function(containerId) {
+    const stat = await containerHelper('start', containerId)
+    console.log(stat)
 }
 
 exports.stopContainer = function(containerId) {

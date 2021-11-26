@@ -1,31 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { isLoggedIn } from '../../auth/userInfo'
 import axios from 'axios';
 
 function LandingPage() {
     const navigate = useNavigate();
 
     const logIn = () => {
-        localStorage.setItem('loggedIn', true)
-        navigate('/home')
-
-        const options = {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-
-        // axios.get('http://localhost:5000/api/auth', options)
-        // .then(() => {
-        //     console.log("successful authentication")
-        // })
-        // .catch(err => {
-        //     console.log(err)
-        // })
+        navigate('/login')
     }
 
     useEffect(() => {
-        if (localStorage.getItem('loggedIn') == 'true') {
+        if (isLoggedIn() === 'true') {
             navigate('/home')
         }
     })

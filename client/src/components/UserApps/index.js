@@ -12,6 +12,7 @@ function UserAppsPage(props) {
 
         await axios.get(url).then(res => {
             setAppList(res.data)
+            console.log(res.data)
 
         }).catch(err => {
             console.log(err)
@@ -65,10 +66,11 @@ function UserAppsPage(props) {
             <table>
                 <thead>
                     <tr>
+                        <td><b>Action</b></td>
+                        <td><b>Name</b></td>
+                        <td><b>Port</b></td>
+                        <td><b>Status</b></td>
                         <td></td>
-                        <td>Name</td>
-                        <td>Port</td>
-                        <td>Status</td>
                         <td></td>
                     </tr>
                 </thead>
@@ -77,16 +79,21 @@ function UserAppsPage(props) {
                         return (
                             <tr>
                                 <td>
-                                    {app.status === "up" &&
+                                    {app.status === "running" &&
                                         <button onClick={toggleContainerState}>Stop</button>
                                     ||
-                                    app.status === "down" &&
+                                    app.status === "exited" &&
                                         <button onClick={toggleContainerState}>Start</button>
                                     }
                                 </td> 
                                 <td>{app.imageName}</td>
                                 <td>{app.port}</td>
                                 <td>{app.status}</td>
+                                <td>
+                                    {app.status === "running" &&
+                                        <button>Open</button>
+                                    }
+                                </td>
                                 <td>
                                     <button onClick={deleteContainer}>Delete</button>
                                 </td>

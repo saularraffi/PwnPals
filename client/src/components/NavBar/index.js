@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { logOut } from '../../auth/userInfo'
 
 function NavBar() {
     const navigate = useNavigate();
@@ -7,8 +8,8 @@ function NavBar() {
         navigate(path);
     }
 
-    const logOut = () => {
-        localStorage.setItem('loggedIn', false)
+    const logUserOut = () => {
+        logOut()
         navigate('/')
     }
 
@@ -24,7 +25,7 @@ function NavBar() {
             <button onClick={() => routeChange('/profile')}>Profile</button>
             <button onClick={() => routeChange('/apps')}>My Apps</button>
             <button onClick={() => routeChange('/upload')}>Upload App</button>
-            <button onClick={logOut}>Log Out</button>
+            <button onClick={logUserOut}>Log Out</button>
         </div>
     )
 }

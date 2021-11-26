@@ -1,7 +1,9 @@
+import { getUser } from '../../auth/userInfo'
+
 function ProfilePage() {
     return (
         <div>
-            <h1>Profile Page</h1>
+            <h1>Profile Page for {getUser()}</h1>
         </div>
     )
 }

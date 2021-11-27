@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
+import { Button } from '@material-ui/core';
 
 function UserAppsPage(props) {
     const [startStopButton, setStartStopButton] = useState()
@@ -57,6 +58,11 @@ function UserAppsPage(props) {
         setAppCount(appList.length)
     }
 
+    const openApp = function(port) {
+        console.log("opening app")
+        window.open(`http://localhost:${port}`);
+    }
+
     useEffect(() => {
         apiGetContainer()
     }, [appCount, stateChange])
@@ -83,7 +89,7 @@ function UserAppsPage(props) {
                                         <button onClick={toggleContainerState}>Stop</button>
                                     ||
                                     app.status === "exited" &&
-                                        <button onClick={toggleContainerState}>Start</button>
+                                        <button>Start</button>
                                     }
                                 </td> 
                                 <td>{app.imageName}</td>
@@ -91,7 +97,7 @@ function UserAppsPage(props) {
                                 <td>{app.status}</td>
                                 <td>
                                     {app.status === "running" &&
-                                        <button>Open</button>
+                                        <button onClick={() => openApp(app.port)}>Open</button>
                                     }
                                 </td>
                                 <td>

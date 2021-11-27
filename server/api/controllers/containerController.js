@@ -18,13 +18,11 @@ exports.getContainer = function(req, res) {
 
 exports.createContainer = async function(req, res) {
     const user = req.body.user
-    const imageId = req.body.user
     const imageName = req.body.imageName
-    const port = req.body.port
 
     res.send("Creating container")
 
-    const stats = await docker.createContainer(imageName)
+    const stats = await docker.createContainer(`${user}-${imageName}`)
 
     if (stats !== null) {
         const container = new Container({ 
@@ -32,7 +30,7 @@ exports.createContainer = async function(req, res) {
             imageId: stats.data.Image.split(':')[1],
             imageName: imageName,
             appId: stats.data.Id,
-            port: port,
+            port: 80,
             status: stats.data.State.Status,
             created: Date.now(),
         })

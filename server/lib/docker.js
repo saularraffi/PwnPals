@@ -106,8 +106,10 @@ exports.deleteImage = function(imageId) {
     })
 }
 
-exports.createContainer = async function(imageName, port) {
+exports.createContainer = async function(imageName) {
+    const port = 80
     const exposedPort = `${port}/tcp`
+
     return docker.container.create({
         Image: imageName,
         name: imageName,

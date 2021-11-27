@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import { getUser } from '../../auth/userInfo'
 
 function UserAppUploadPage(props) {
-    const [owner, setOwner] = useState("user123")
+    const [user] = useState(getUser())
     const [appName, setAppName] = useState("")
     const [githubUri, setGithubUri] = useState("")
-    const [githubBranch, setgithubBranch] = useState("")
 
     const handleAppNameChange = (evt) => {
         setAppName(evt.target.value)
@@ -15,17 +15,12 @@ function UserAppUploadPage(props) {
         setGithubUri(evt.target.value)
     };
 
-    const handleBranchChange = (evt) => {
-        setgithubBranch(evt.target.value)
-    };
-
     const apiBuildImage = () => {
         const url = "http://localhost:5000/api/build"
         const data = {
-            "owner": owner,
+            "user": user,
             "imageName": appName,
-            "repo": githubUri,
-            "branch": githubBranch
+            "repo": githubUri
         }
         
         axios.post(url, data).then(res => {
@@ -38,9 +33,8 @@ function UserAppUploadPage(props) {
     const apiRunContainer = () => {
         const url = "http://localhost:5000/api/container/create"
         const data = {
-            "owner": owner,
-            "imageName": appName,
-            "port": 8080
+            "user": user,
+            "imageName": appName
         }
         
         axios.post(url, data).then(res => {
@@ -53,16 +47,15 @@ function UserAppUploadPage(props) {
     const handleSubmit = (evt) => {
         evt.preventDefault();
         console.log(`submitting github uri: ${githubUri}`)
-        console.log(`submitting github branch: ${githubBranch}`)
         console.log(`submitting app name: ${appName}`)
 
-        apiBuildImage()
-
+        // apiBuildImage()
         apiRunContainer()
     }
 
     return (
         <div>
+            <h1>Upload your app</h1>
             <form onSubmit={handleSubmit}>
                 <label>App Name:
                         <input type="text" name="app-name" onChange={handleAppNameChange} />
@@ -70,10 +63,6 @@ function UserAppUploadPage(props) {
                 <br/>
                 <label>GitHub URI:
                     <input type="text" name="github-uri" onChange={handleUriChange} />
-                </label>
-                <br/>
-                <label>Branch:
-                    <input type="text" name="github-branch" onChange={handleBranchChange} />
                 </label>
                 <br/>
                 <input type="submit" value="Submit" />

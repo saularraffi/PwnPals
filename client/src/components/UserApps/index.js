@@ -20,9 +20,9 @@ function UserAppsPage(props) {
         })
     }
 
-    const toggleContainerState = async (app, action) => {
+    const toggleContainerState = async (id, action) => {
         const data = {
-            "containerId": app.containerId
+            "containerId": id
         }
 
         const url = `http://localhost:5000/api/container/${action}`
@@ -36,20 +36,22 @@ function UserAppsPage(props) {
         stateChange === true ? setStateChange(false) : setStateChange(true)
     }
 
-    const deleteContainer = async () => {
-        const url = "http://localhost:5000/api/container"
+    const deleteContainer = async (app) => {
+        const url = "http://localhost:5000/api/build"
 
-        const payload = {
-            "imageName": appList[0].imageName
+        const data = {
+            "imageId": app.imageId
         }
 
-        await axios.delete(url, {data: payload}).then(res => {
+        await axios.delete(url, {data: data}).then(res => {
             console.log(res.status);
         }).catch(err => {
             console.log(err)
         })
 
         setAppCount(appList.length)
+        stateChange === true ? setStateChange(false) : setStateChange(true)
+        console.log(`number of app: ${appList.length}`)
     }
 
     const openApp = function(port) {
@@ -80,10 +82,10 @@ function UserAppsPage(props) {
                             <tr>
                                 <td>
                                     {app.status === "running" &&
-                                        <button onClick={() => toggleContainerState(app, "stop")}>Stop</button>
+                                        <button onClick={() => toggleContainerState(app.containerId, "stop")}>Stop</button>
                                     ||
                                     app.status === "exited" &&
-                                        <button onClick={() => toggleContainerState(app, "start")}>Start</button>
+                                        <button onClick={() => toggleContainerState(app.containerId, "start")}>Start</button>
                                     }
                                 </td> 
                                 <td>{app.imageName}</td>
@@ -95,7 +97,7 @@ function UserAppsPage(props) {
                                     }
                                 </td>
                                 <td>
-                                    <button onClick={deleteContainer}>Delete</button>
+                                    <button onClick={() => deleteContainer(app)}>Delete</button>
                                 </td>
                             </tr>
                         )

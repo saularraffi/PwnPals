@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import axios from 'axios';
 import { getUser } from '../../auth/userInfo'
@@ -6,6 +7,7 @@ function UserAppUploadPage(props) {
     const [user] = useState(getUser())
     const [appName, setAppName] = useState("")
     const [githubUri, setGithubUri] = useState("")
+    const navigate = useNavigate();
 
     const handleAppNameChange = (evt) => {
         setAppName(evt.target.value)
@@ -36,6 +38,8 @@ function UserAppUploadPage(props) {
         console.log(`submitting app name: ${appName}`)
 
         apiBuildImage()
+
+        navigate('/apps');
     }
 
     return (

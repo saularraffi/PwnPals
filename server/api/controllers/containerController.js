@@ -75,13 +75,6 @@ exports.stopContainer = function(req, res) {
         }
     })
 
-    // get rid of this line after conforming dvwa appId field to containerId in db
-    Container.findOneAndUpdate({ appId: containerId }, { status: "exited" }, (err, doc) => {
-        if (err) {
-            console.log(err)
-        }
-    })
-
     res.send("Stopping container")
 }
 

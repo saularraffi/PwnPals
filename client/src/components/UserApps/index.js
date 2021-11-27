@@ -20,18 +20,12 @@ function UserAppsPage(props) {
         })
     }
 
-    const toggleContainerState = async (evt) => {
-        var url = "http://localhost:5000/api/container/start"
+    const toggleContainerState = async (app, action) => {
         const data = {
-            "imageName": appList[0].imageName,
+            "containerId": app.containerId
         }
 
-        if (evt.target.textContent === "Start") {
-            url = "http://localhost:5000/api/container/start"
-        }
-        else {
-            url = "http://localhost:5000/api/container/stop"
-        }
+        const url = `http://localhost:5000/api/container/${action}`
 
         await axios.post(url, data).then(res => {
             console.log(res.status);
@@ -72,7 +66,7 @@ function UserAppsPage(props) {
             <table>
                 <thead>
                     <tr>
-                        <td><b>Action</b></td>
+                        <td><b></b></td>
                         <td><b>Name</b></td>
                         <td><b>Port</b></td>
                         <td><b>Status</b></td>
@@ -86,10 +80,10 @@ function UserAppsPage(props) {
                             <tr>
                                 <td>
                                     {app.status === "running" &&
-                                        <button onClick={toggleContainerState}>Stop</button>
+                                        <button onClick={() => toggleContainerState(app, "stop")}>Stop</button>
                                     ||
                                     app.status === "exited" &&
-                                        <button>Start</button>
+                                        <button onClick={() => toggleContainerState(app, "start")}>Start</button>
                                     }
                                 </td> 
                                 <td>{app.imageName}</td>

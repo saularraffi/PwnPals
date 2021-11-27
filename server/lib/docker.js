@@ -119,6 +119,7 @@ exports.createContainer = async function(imageName) {
         }
     })
     .then(container => { return container.start() })
+    .then(container => { return container.stop() })
     .then(container => { return container.status() })
     .catch(error => {
         console.log(error)
@@ -127,8 +128,7 @@ exports.createContainer = async function(imageName) {
 }
 
 exports.startContainer = async function(containerId) {
-    const stat = await containerHelper('start', containerId)
-    console.log(stat)
+    containerHelper('start', containerId)
 }
 
 exports.stopContainer = function(containerId) {

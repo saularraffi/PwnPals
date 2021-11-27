@@ -1,5 +1,6 @@
 const Build = require("../models/Build")
 const docker = require("../../lib/docker.js")
+const axios = require("axios")
 
 
 exports.getBuild = function(req, res) {
@@ -25,7 +26,7 @@ exports.postBuild = async function(req, res) {
 
     res.send("Building image...")
 
-    const id = await docker.buildImage(`${user}-${imageName}`, repo)
+    const id = await docker.buildImage(imageName, repo)
 
     if (id !== null) {
         const build = new Build({ 
@@ -42,6 +43,16 @@ exports.postBuild = async function(req, res) {
             }
             else {
                 console.log("\n[+] Build saved successfully")
+                
+                const url = "http://localhost:5000/api/container/create"
+                const data = {
+                    "user": user,
+                    "imageName": imageName
+                }
+
+                axios.post(url, data).catch(err => {
+                    console.log(err)
+                })
             }
         })
     }

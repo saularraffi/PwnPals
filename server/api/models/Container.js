@@ -4,7 +4,7 @@ const Container = mongoose.Schema({
     user: String,
     imageId: String,
     imageName: String,
-    appId: String,
+    containerId: String,
     port: Number,
     created: Date,
     status: String

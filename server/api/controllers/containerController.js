@@ -22,14 +22,14 @@ exports.createContainer = async function(req, res) {
 
     res.send("Creating container")
 
-    const stats = await docker.createContainer(`${user}-${imageName}`)
+    const stats = await docker.createContainer(imageName)
 
     if (stats !== null) {
         const container = new Container({ 
             user: user,
             imageId: stats.data.Image.split(':')[1],
             imageName: imageName,
-            appId: stats.data.Id,
+            containerId: stats.data.Id,
             port: 80,
             status: stats.data.State.Status,
             created: Date.now(),
@@ -51,21 +51,44 @@ exports.startContainer = function(req, res) {
 
     const status = docker.startContainer(containerId)
 
+    // use the returned status to update db
+
+    Container.findOneAndUpdate({ containerId: containerId }, { status: "running" }, (err, doc) => {
+        if (err) {
+            console.log(err)
+        }
+    })
+
     res.send("Starting container")
 }
 
 exports.stopContainer = function(req, res) {
     const containerId = req.body.containerId
 
-    res.send("Stopping container")
-
     const status = docker.stopContainer(containerId)
+
+    // use the returned status to update db
+
+    Container.findOneAndUpdate({ containerId: containerId }, { status: "exited" }, (err, doc) => {
+        if (err) {
+            console.log(err)
+        }
+    })
+
+    // get rid of this line after conforming dvwa appId field to containerId in db
+    Container.findOneAndUpdate({ appId: containerId }, { status: "exited" }, (err, doc) => {
+        if (err) {
+            console.log(err)
+        }
+    })
+
+    res.send("Stopping container")
 }
 
 exports.deleteContainer = function(req, res) {
     const containerId = req.body.containerId
 
-    res.send("Deleting container")
-
     const status = docker.deleteContainer(containerId)
+
+    res.send("Deleting container")
 }

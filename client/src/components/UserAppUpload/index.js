@@ -19,22 +19,8 @@ function UserAppUploadPage(props) {
         const url = "http://localhost:5000/api/build"
         const data = {
             "user": user,
-            "imageName": appName,
+            "imageName": `${user}-${appName}`,
             "repo": githubUri
-        }
-        
-        axios.post(url, data).then(res => {
-            console.log(res.status);
-        }).catch(err => {
-            console.log(err)
-        })
-    }
-
-    const apiRunContainer = () => {
-        const url = "http://localhost:5000/api/container/create"
-        const data = {
-            "user": user,
-            "imageName": appName
         }
         
         axios.post(url, data).then(res => {
@@ -49,8 +35,7 @@ function UserAppUploadPage(props) {
         console.log(`submitting github uri: ${githubUri}`)
         console.log(`submitting app name: ${appName}`)
 
-        // apiBuildImage()
-        apiRunContainer()
+        apiBuildImage()
     }
 
     return (

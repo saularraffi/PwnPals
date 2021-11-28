@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Button } from '@material-ui/core';
 
+const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
+  
 function UserAppsPage(props) {
     const [startStopButton, setStartStopButton] = useState()
     const [appList, setAppList] = useState([])
@@ -57,6 +62,9 @@ function UserAppsPage(props) {
 
     useEffect(() => {
         getContainers()
+        sleep(3000).then(() => {
+            stateChange === true ? setStateChange(false) : setStateChange(true)
+        })
     }, [appCount, stateChange])
 
     return (

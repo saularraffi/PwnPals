@@ -9,6 +9,7 @@ require('./auth/setup')
 
 // requiring routes
 const testRoute = require("./api/routes/test")
+const userRoute = require("./api/routes/user")
 const authRoute = require("./api/routes/auth")
 const buildRoute = require("./api/routes/build")
 const containerRoute = require("./api/routes/container")
@@ -36,6 +37,7 @@ app.use(bodyParser.json())
 
 // using routes in app
 app.use(basePath, testRoute)
+app.use(basePath, userRoute)
 app.use(basePath, authRoute)
 app.use(basePath, buildRoute)
 app.use(basePath, containerRoute)

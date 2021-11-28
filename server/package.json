@@ -30,6 +30,7 @@
     "node-docker-api": "^1.1.22",
     "passport": "^0.5.0",
     "passport-google-oauth2": "^0.2.0",
+    "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "tar-fs": "^2.1.1"
   }

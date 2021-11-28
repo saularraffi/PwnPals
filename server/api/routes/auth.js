@@ -4,7 +4,7 @@ const passport = require('passport')
 
 const endpoint = "/auth"
 
-router.get(endpoint, passport.authenticate('google'))
+router.get(`${endpoint}`, passport.authenticate('google'))
 // router.get(endpoint, passport.authenticate('google', {
 //     successRedirect: 'auth/success',
 //     failureRedirect: 'auth/failed',

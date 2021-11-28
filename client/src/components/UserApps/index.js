@@ -18,7 +18,7 @@ function UserAppsPage(props) {
 
         await axios.get(url).then(res => {
             setAppList(res.data)
-            console.log(res.data)
+            console.log("Getting containers")
 
         }).catch(err => {
             console.log(err)

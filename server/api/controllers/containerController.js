@@ -60,8 +60,7 @@ exports.startContainer = async function(req, res) {
                 res.send("Error starting container")
             }
             else {
-                console.log(status)
-                console.log("\n[+] Image started successfully")
+                console.log("\n[+] Container started successfully")
                 res.send("Starting container")
             }
         })
@@ -83,8 +82,7 @@ exports.stopContainer = async function(req, res) {
                 res.send("Error stopping container")
             }
             else {
-                console.log(status)
-                console.log("\n[+] Image stopped successfully")
+                console.log("\n[+] Container stopped successfully")
                 res.send("Stopping container")
             }
         })

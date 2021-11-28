@@ -64,7 +64,6 @@ exports.deleteBuild = async function(req, res) {
     console.log("\n[+] Deleting image...")
 
     const status = await docker.deleteImage(imageId)
-    console.log(status)
 
     Build.findOneAndDelete({ imageId: imageId }, (err, doc) => {
         if (err) {

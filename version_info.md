@@ -26,9 +26,10 @@
 
 ## V4
 
-- set up some routes for basic pages
+- created very basic UI for some of the main pages
 - log in and log out simulation
 - added partial Google OAuth2
 - implemented docker functionality fully with node-docker-api library, all necessary CRUD functions implemented
     - you can upload your app with an app name and GitHub url
     - you can view your apps, start, stop, and delete your apps, and open them in a new tab
+- added user routes and controllers

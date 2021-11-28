@@ -6,10 +6,23 @@ exports.getUser = function(req, res) {
 
     User.findById(id, function(err, user) {
         if (err) {
+            console.log(err)
             res.send("Failed to find user")
         }
         else {
             res.send(user) 
+        }
+    })
+}
+
+exports.getAllUsers = function(req, res) {
+    User.find({}, function(err, users) {
+        if (err) {
+            console.log(err)
+            res.send("Failed to find users")
+        }
+        else {
+            res.send(users) 
         }
     })
 }
@@ -24,6 +37,7 @@ exports.postUser = function(req, res) {
     })
     user.save(function(err) {
         if (err) {
+            console.log(err)
             res.send("Error saving user")
         }
         else {

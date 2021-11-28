@@ -41,7 +41,7 @@ exports.postUser = function(req, res) {
             res.send("Error saving user")
         }
         else {
-            res.send("User saved successfully")
+            res.send(user)
         }
     })
 }
@@ -53,17 +53,17 @@ exports.updateUser = function(req, res) {
 
     let update = {}
 
-    if (username === null) { update['username'] = username }
-    if (password === null) { update['password'] = password }
+    if (username !== undefined) { update['username'] = username }
+    if (password !== undefined) { update['password'] = password }
 
-    User.findByIdAndUpdate(id, update, function(err, doc) {
+    User.findByIdAndUpdate(id, update, function(err, user) {
         if (err) {
             console.log(err)
             res.send("Error updating user")
         }
         else {
-            console.log(doc)
-            res.send("Successfully updated user")
+            console.log(user)
+            res.send(user)
         }
     })
 }
@@ -71,14 +71,14 @@ exports.updateUser = function(req, res) {
 exports.deleteUser = function(req, res) { 
     const id = req.body.id
 
-    User.findByIdAndDelete(id, function(err, doc) {
+    User.findByIdAndDelete(id, function(err, user) {
         if (err) {
             console.log(err)
             res.send("Error updating user")
         }
         else {
-            console.log(doc)
-            res.send("Successfully updated user")
+            console.log(user)
+            res.send(user)
         }   
     })
 }

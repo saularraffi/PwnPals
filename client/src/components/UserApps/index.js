@@ -22,7 +22,7 @@ function UserAppsPage(props) {
 
     const toggleContainerState = async (id, action) => {
         const data = {
-            "containerId": id
+            containerId: id
         }
 
         const url = `http://localhost:5000/api/container/${action}`
@@ -36,22 +36,54 @@ function UserAppsPage(props) {
         stateChange === true ? setStateChange(false) : setStateChange(true)
     }
 
-    const deleteContainer = async (app) => {
-        const url = "http://localhost:5000/api/build"
+    const deleteImage = async (imageId) => {
+        const url = "htpp://localhost:5000/api/build"
 
         const data = {
-            "imageId": app.imageId
+            imageId: imageId
         }
 
-        await axios.delete(url, {data: data}).then(res => {
+        await axios.delete(url, { data: data }).then(res => {
             console.log(res.status);
+            return res.status
         }).catch(err => {
             console.log(err)
         })
+    }
 
-        setAppCount(appList.length)
-        stateChange === true ? setStateChange(false) : setStateChange(true)
-        console.log(`number of app: ${appList.length}`)
+    const deleteContainer = async (containerId) => {
+        const url = "http://localhost:5000/api/container"
+
+        const data = {
+            containerId: containerId
+        }
+
+        await axios.delete(url, { data: data }).then(res => {
+            console.log(res.status);
+            return res.status
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const deleteApp = async (app) => {
+        const containerDeleteStatus = await deleteContainer(app.containerId)
+        
+        if (containerDeleteStatus === 200) {
+            const imageDeleteStatus = deleteImage(app.imageId)
+
+            if (imageDeleteStatus === 200) {
+                stateChange === true ? setStateChange(false) : setStateChange(true)
+                setAppCount(appList.length)
+                console.log(`number of app: ${appList.length}`)
+            }
+            else {
+                console.log(`Status ${imageDeleteStatus} - Image failed to delete`)
+            }
+        }
+        else {
+            console.log(`Status ${containerDeleteStatus} - Container failed to delete`)
+        }
     }
 
     const openApp = function(port) {
@@ -97,7 +129,7 @@ function UserAppsPage(props) {
                                     }
                                 </td>
                                 <td>
-                                    <button onClick={() => deleteContainer(app)}>Delete</button>
+                                    <button onClick={() => deleteApp(app)}>Delete</button>
                                 </td>
                             </tr>
                         )

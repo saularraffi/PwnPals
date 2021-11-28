@@ -1,5 +1,4 @@
 const Build = require("../models/Build")
-const Container = require("../models/Container")
 const docker = require("../../lib/docker.js")
 const axios = require("axios")
 
@@ -59,38 +58,22 @@ exports.postBuild = async function(req, res) {
     }
 }
 
-exports.deleteBuild = function(req, res) {
-    const id = req.body.id
+exports.deleteBuild = async function(req, res) {
     const imageId = req.body.imageId
 
-    res.send("Deleting image...")
+    console.log("\n[+] Deleting image...")
 
-    Container.findOne({ imageId: imageId }, async function(err, doc) {
-        if (err){
+    const status = await docker.deleteImage(imageId)
+    console.log(status)
+
+    Build.findOneAndDelete({ imageId: imageId }, (err, doc) => {
+        if (err) {
             console.log(err)
-            return
+            res.send("Image failed to delete")
         }
-
-        const url = "http://localhost:5000/api/container"
-        const data = {
-            "containerId": doc.containerId
+        else {
+            console.log("\n[+] Image deleted successfully")
+            res.send("Image deleted successfully")
         }
-
-        await axios.delete(url, data).then(res => {
-            console.log(res.status);
-            const status = docker.deleteImage(imageId)
-
-            Build.findOneAndDelete(id, (err, doc) => {
-                if (err) {
-                    console.log(err)
-                }
-                else {
-                    console.log("\n[+] Image deleted successfully")
-                }
-            })
-        }).catch(err => {
-            console.log("\n[-] Error deleting container")
-            console.log(err)
-        })
     })
 }

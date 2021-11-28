@@ -4,7 +4,7 @@ const docker = require("../../lib/docker.js")
 
 exports.getContainer = function(req, res) {
     Container.find({}, function(err, containers) {
-        console.log(containers)
+        // console.log(containers)
 
         if (err) { 
             console.log(err) 
@@ -20,6 +20,7 @@ exports.createContainer = async function(req, res) {
     const user = req.body.user
     const imageName = req.body.imageName
 
+    console.log("\n[+] Creating container")
     res.send("Creating container")
 
     const stats = await docker.createContainer(imageName)
@@ -46,42 +47,66 @@ exports.createContainer = async function(req, res) {
     }
 }
 
-exports.startContainer = function(req, res) {
+exports.startContainer = async function(req, res) {
     const containerId = req.body.containerId
 
-    const status = docker.startContainer(containerId)
+    const status = await docker.startContainer(containerId)
 
-    // use the returned status to update db
+    if (status !== null) {
+        Container.findOneAndUpdate({ containerId: containerId }, { status: "running" }, (err, doc) => {
+            if (err) {
+                console.log(err)
+                res.send("Error starting container")
+            }
+            else {
+                console.log(status)
+                console.log("\n[+] Image started successfully")
+                res.send("Starting container")
+            }
+        })
+    }
+    else {
+        res.send("Error starting container")
+    }
+}
 
-    Container.findOneAndUpdate({ containerId: containerId }, { status: "running" }, (err, doc) => {
+exports.stopContainer = async function(req, res) {
+    const containerId = req.body.containerId
+
+    const status = await docker.stopContainer(containerId)
+
+    if (status !== null) {
+        Container.findOneAndUpdate({ containerId: containerId }, { status: "exited" }, (err, doc) => {
+            if (err) {
+                console.log(err)
+                res.send("Error stopping container")
+            }
+            else {
+                console.log(status)
+                console.log("\n[+] Image stopped successfully")
+                res.send("Stopping container")
+            }
+        })
+    }
+    else {
+        res.send("Error stopping container")
+    }
+}
+
+exports.deleteContainer = async function(req, res) {
+    const containerId = req.body.containerId
+
+    const status = await docker.deleteContainer(containerId) 
+    console.log(status)
+
+    Container.findOneAndDelete({ containerId: containerId }, (err, doc) => {
         if (err) {
             console.log(err)
         }
-    })
-
-    res.send("Starting container")
-}
-
-exports.stopContainer = function(req, res) {
-    const containerId = req.body.containerId
-
-    const status = docker.stopContainer(containerId)
-
-    // use the returned status to update db
-
-    Container.findOneAndUpdate({ containerId: containerId }, { status: "exited" }, (err, doc) => {
-        if (err) {
-            console.log(err)
+        else {
+            console.log("\n[+] Container deleted successfully")
         }
     })
-
-    res.send("Stopping container")
-}
-
-exports.deleteContainer = function(req, res) {
-    const containerId = req.body.containerId
-
-    const status = docker.deleteContainer(containerId)
 
     res.send("Deleting container")
 }

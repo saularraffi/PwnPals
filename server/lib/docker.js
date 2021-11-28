@@ -16,22 +16,35 @@ async function containerHelper(action, containerId) {
     return docker.container.list({
         all: listAll
     })
-    .then(containers => {
-        containers.map(async (c) => {
+    .then(async (containers) => {
+        return await Promise.all(containers.map(c => {
             if (c.data.Id === containerId) {
                 if (action === 'start') {
-                    return await c.start()
+                    return c.start()
                 }
                 else if (action === 'stop') {
                     return c.stop()
                 }
                 else if (action === 'delete') {
-                    return c.delete()
+                    if (c.data.State === "running") {
+                        c.stop().then(() => {
+                            return c.delete()
+                        })
+                    }
+                    else {
+                        return c.delete()
+                    }
                 }
             }
-        })
+        }))
     })
-    .catch(error => console.log(error));
+    .then(res => {
+        return res
+    })
+    .catch(error => {
+        console.log(error)
+        return null
+    });
 }
 
 exports.buildImage = async function(imageName, repo) {
@@ -77,7 +90,7 @@ exports.buildImage = async function(imageName, repo) {
     })
     .then(status => {
         console.log('\n[+] Stream has ended')
-        return status.data.Config.Image.split(':')[1]
+        return status.data.Id.split(':')[1]
     })
     .then(id => {        
         fs.rm(path.join(cloneDir, '..'), { recursive: true, force: true }, (err) => {
@@ -93,16 +106,15 @@ exports.buildImage = async function(imageName, repo) {
     });
 }
 
-exports.deleteImage = function(imageId) {
-    docker.image.list()
-    .then(containers => {
-        containers.map(c => {
-            // c.data.Id.split(':')[1].substring(0,12)
-            if (c.data.Id.split(':')[1] === imageId) {
+exports.deleteImage = async function(imageId) {
+    return docker.image.list()
+    .then(async (images) => {
+        return await Promise.all(images.map(i => {
+            if (i.data.Id.split(':')[1] === imageId) {
                 console.log("found image")
-                c.remove()
+                return i.remove()
             }
-        })
+        }))
     })
 }
 
@@ -128,13 +140,13 @@ exports.createContainer = async function(imageName) {
 }
 
 exports.startContainer = async function(containerId) {
-    containerHelper('start', containerId)
+    return await containerHelper('start', containerId)
 }
 
-exports.stopContainer = function(containerId) {
-    containerHelper('stop', containerId)
+exports.stopContainer = async function(containerId) {
+    return await containerHelper('stop', containerId)
 }
 
-exports.deleteContainer = function(containerId) {
-    containerHelper('delete', containerId)
+exports.deleteContainer = async function(containerId) {
+    return await containerHelper('delete', containerId)
 }

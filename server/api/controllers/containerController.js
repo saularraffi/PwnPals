@@ -1,4 +1,5 @@
 const Container = require("../models/Container")
+const Build = require("../models/Build")
 const docker = require("../../lib/docker.js")
 
 
@@ -96,17 +97,25 @@ exports.stopContainer = async function(req, res) {
 exports.deleteContainer = async function(req, res) {
     const containerId = req.body.containerId
 
-    const status = await docker.deleteContainer(containerId) 
-    console.log(status)
+    await docker.deleteContainer(containerId) 
 
     Container.findOneAndDelete({ containerId: containerId }, (err, doc) => {
         if (err) {
             console.log(err)
+            res.send("Container failed to delete")
         }
         else {
             console.log("\n[+] Container deleted successfully")
+            res.send("Container deleted successfully")
+
+            Build.findOneAndDelete({ imageId: doc.imageId }, (err, doc) => {
+                if (err) {
+                    console.log(err)
+                }
+                else {
+                    console.log("\n[+] Image deleted successfully")
+                }
+            })
         }
     })
-
-    res.send("Deleting container")
 }

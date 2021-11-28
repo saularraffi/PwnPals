@@ -26,14 +26,7 @@ async function containerHelper(action, containerId) {
                     return c.stop()
                 }
                 else if (action === 'delete') {
-                    if (c.data.State === "running") {
-                        c.stop().then(() => {
-                            return c.delete()
-                        })
-                    }
-                    else {
-                        return c.delete()
-                    }
+                    return c.delete({ force: true })
                 }
             }
         }))

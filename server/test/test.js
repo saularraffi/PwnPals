@@ -14,15 +14,38 @@ const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 // console.log(found)
 // console.log(found[0].split(' ')[1])
 
-const url = "http://localhost:5000/api/container/create"
-const data = {
-    "user": "testUser",
-    "imageName": "testApp"
+async function createContainer(imageName) {
+    const port = 80
+    const exposedPort = `${port}/tcp`
+
+    return docker.container.create({
+        Image: imageName,
+        name: imageName,
+        ExposedPorts: { exposedPort: {} },
+        HostConfig: {
+            NetworkMode: 'host'
+        }
+    })
+    .then(container => { return container.start() })
+    .then(container => { return container.stop() })
+    .then(container => { return container.status() })
+    .catch(error => {
+        console.log(error)
+        return null
+    });
 }
 
-axios.post(url, data).then(res => {
-    console.log(res.status)
-    console.log(res.data)
-}).catch(err => {
-    console.log(err)
-})
+function deleteContainer() {
+    docker.container.list({
+        all: true
+    })
+    .then(containers => {
+        return containers[0]
+    })
+    .then(container => container.delete())
+    .then(res => console.log(res))
+    .catch(error => console.log(error));
+}
+
+// createContainer('saular-testapp')
+deleteContainer()

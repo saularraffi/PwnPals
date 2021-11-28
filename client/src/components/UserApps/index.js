@@ -8,7 +8,7 @@ function UserAppsPage(props) {
     const [appCount, setAppCount] = useState(appList.length)
     const [stateChange, setStateChange] = useState()
 
-    const apiGetContainer = async () => {
+    const getContainers = async () => {
         const url = "http://localhost:5000/api/container"
 
         await axios.get(url).then(res => {
@@ -36,21 +36,6 @@ function UserAppsPage(props) {
         stateChange === true ? setStateChange(false) : setStateChange(true)
     }
 
-    const deleteImage = async (imageId) => {
-        const url = "htpp://localhost:5000/api/build"
-
-        const data = {
-            imageId: imageId
-        }
-
-        await axios.delete(url, { data: data }).then(res => {
-            console.log(res.status);
-            return res.status
-        }).catch(err => {
-            console.log(err)
-        })
-    }
-
     const deleteContainer = async (containerId) => {
         const url = "http://localhost:5000/api/container"
 
@@ -59,31 +44,10 @@ function UserAppsPage(props) {
         }
 
         await axios.delete(url, { data: data }).then(res => {
-            console.log(res.status);
-            return res.status
+            getContainers()
         }).catch(err => {
             console.log(err)
         })
-    }
-
-    const deleteApp = async (app) => {
-        const containerDeleteStatus = await deleteContainer(app.containerId)
-        
-        if (containerDeleteStatus === 200) {
-            const imageDeleteStatus = deleteImage(app.imageId)
-
-            if (imageDeleteStatus === 200) {
-                stateChange === true ? setStateChange(false) : setStateChange(true)
-                setAppCount(appList.length)
-                console.log(`number of app: ${appList.length}`)
-            }
-            else {
-                console.log(`Status ${imageDeleteStatus} - Image failed to delete`)
-            }
-        }
-        else {
-            console.log(`Status ${containerDeleteStatus} - Container failed to delete`)
-        }
     }
 
     const openApp = function(port) {
@@ -92,7 +56,7 @@ function UserAppsPage(props) {
     }
 
     useEffect(() => {
-        apiGetContainer()
+        getContainers()
     }, [appCount, stateChange])
 
     return (
@@ -129,7 +93,7 @@ function UserAppsPage(props) {
                                     }
                                 </td>
                                 <td>
-                                    <button onClick={() => deleteApp(app)}>Delete</button>
+                                    <button onClick={() => deleteContainer(app.containerId)}>Delete</button>
                                 </td>
                             </tr>
                         )

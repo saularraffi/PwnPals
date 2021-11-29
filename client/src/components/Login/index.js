@@ -17,21 +17,30 @@ function LoginPage() {
         setPassword(evt.target.value)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        // fixes some issue with aborting request
+        e.preventDefault();
+
         // setLoggedInStatus(true)
         // setUser(username)
 
-        const params = `username=${username}&password=${password}`
+        const data = {
+            username: username,
+            password: password
+        }
 
-        axios.get(`http://localhost:5000/api/auth/local?${params}`)
+        axios.post(`http://localhost:5000/api/auth/local`, data)
         .then(res => {
-            console.log(res)
+            console.log("Access Granted")
         })
         .catch(err => {
-            console.log(err)
+            if (err.request.status === 401) {
+                console.log("Access Denied")
+            }
+            else {
+                console.log(err)
+            }
         })
-
-        console.log("helloooo")
 
         // navigate('/home')
     }

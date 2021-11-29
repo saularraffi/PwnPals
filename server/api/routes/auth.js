@@ -4,8 +4,8 @@ const passport = require('passport')
 
 const endpoint = "/auth"
 
-router.get(`${endpoint}/google`, passport.authenticate('google'))
-router.get(`${endpoint}/local`, passport.authenticate('local'), (req, res) => {
+router.post(`${endpoint}/google`, passport.authenticate('google'))
+router.post(`${endpoint}/local`, passport.authenticate('local'), (req, res) => {
     console.log("Access granted")
     res.send("Access granted")
 })

@@ -1,4 +1,5 @@
 const User = require("../models/User")
+const bcrypt = require('bcrypt')
 
 
 exports.getUser = function(req, res) {
@@ -27,13 +28,15 @@ exports.getAllUsers = function(req, res) {
     })
 }
 
-exports.postUser = function(req, res) {
+exports.postUser = async function(req, res) {
     const username = req.body.username
     const password = req.body.password
 
+    const passwordHash = await bcrypt.hash(password, 10)
+
     const user = new User({
         username: username,
-        password: password
+        password: passwordHash
     })
     user.save(function(err) {
         if (err) {
@@ -41,6 +44,7 @@ exports.postUser = function(req, res) {
             res.send("Error saving user")
         }
         else {
+            console.log(user)
             res.send(user)
         }
     })

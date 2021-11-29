@@ -3,7 +3,7 @@ import { setLoggedInStatus, setUser, isLoggedIn } from '../../auth/userInfo'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
-function LoginPage() {
+function CreateAccountPage() {
     const [username, setUsername] = useState()
     const [password, setPassword] = useState()
 
@@ -26,12 +26,10 @@ function LoginPage() {
             password: password
         }
 
-        axios.post(`http://localhost:5000/api/auth/local`, data)
+        axios.post(`http://localhost:5000/api/user`, data)
         .then(res => {
             console.log(res)
-            setLoggedInStatus(true)
-            setUser(username)
-            navigate('/home')
+            navigate('/login')
         })
         .catch(err => {
             if (err.request.status === 401) {
@@ -43,15 +41,9 @@ function LoginPage() {
         })
     }
 
-    // useEffect(() => {
-    //     if (isLoggedIn() === 'true') {
-    //         navigate('/home')
-    //     }
-    // })
-
     return (
         <div>
-            <h1>Login</h1>
+            <h1>Create Account</h1>
             <form onSubmit={handleSubmit}>
             <label>
                 Username: <input type="text" name="username" onChange={handleUsernameChange} />
@@ -63,9 +55,8 @@ function LoginPage() {
             <br />
             <input type="submit" value="Submit" />
             </form>
-            <button onClick={() => navigate('/register')}>Create Account</button>
         </div>
     )
 }
 
-export default LoginPage
+export default CreateAccountPage

@@ -4,6 +4,7 @@ import BugReportPage from './components/BugReport'
 import HomePage from './components/Home'
 import LandingPage from './components/Landing';
 import LoginPage from './components/Login'
+import CreateAccountPage from './components/CreateAccount'
 import ProfilePage from './components/Profile'
 import UserAppsPage from './components/UserApps'
 import UserAppUploadPage from './components/UserAppUpload'
@@ -18,6 +19,7 @@ function App() {
           <Route exact path='/' element={<LandingPage />}/>
           <Route path='/home' element={<HomePage />}/>
           <Route path='/login' element={<LoginPage />}/>
+          <Route path='/register' element={<CreateAccountPage />}/>
           <Route path='/profile' element={<ProfilePage />}/>
           <Route path='/apps' element={<UserAppsPage />}/>
           <Route path='/upload' element={<UserAppUploadPage />}/>

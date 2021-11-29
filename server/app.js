@@ -21,8 +21,8 @@ const port = 5000;
 
 // passport auth stuff
 app.use(passport.initialize())
-const setup = require('./auth/setup')
-setup()
+const setupPassport = require('./auth/setup')
+setupPassport()
 
 app.use(cors())
 // app.use(function (req, res, next) {

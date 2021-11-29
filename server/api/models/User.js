@@ -1,13 +1,13 @@
 const mongoose = require("mongoose")
+const bcrypt = require('bcrypt')
 
 const User = mongoose.Schema({
     username: String,
     password: String
 })
 
-User.methods.verifyPassword = function(password) {
-    if (this.password === password) { return true }
-    else { return false }
+User.methods.verifyPassword = async function(password) {
+    return await bcrypt.compare(password, this.password)
 }
 
 module.exports = mongoose.model("user", User)

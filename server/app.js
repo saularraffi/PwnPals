@@ -5,7 +5,6 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const cors = require('cors')
 const passport = require('passport')
-require('./auth/setup')
 
 // requiring routes
 const testRoute = require("./api/routes/test")
@@ -20,7 +19,10 @@ const basePath = "/api"
 const hostname = '127.0.0.1';
 const port = 5000;
 
+// passport auth stuff
 app.use(passport.initialize())
+const setup = require('./auth/setup')
+setup()
 
 app.use(cors())
 // app.use(function (req, res, next) {

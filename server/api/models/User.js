@@ -5,4 +5,9 @@ const User = mongoose.Schema({
     password: String
 })
 
+User.methods.verifyPassword = function(password) {
+    if (this.password === password) { return true }
+    else { return false }
+}
+
 module.exports = mongoose.model("user", User)

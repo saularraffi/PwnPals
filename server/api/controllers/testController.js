@@ -5,8 +5,8 @@ const axios = require('axios')
 
 // handle single object retrieval
 function getTest(req, res) { 
-    Test.find({}, function(err, users) {
-        console.log(users)
+    Test.find({}, function(err, docs) {
+        console.log(docs)
 
         if (err) { console.log(err) }
     })

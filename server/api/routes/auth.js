@@ -6,7 +6,7 @@ const endpoint = "/auth"
 
 router.post(`${endpoint}/google`, passport.authenticate('google'))
 router.post(`${endpoint}/local`, passport.authenticate('local'), (req, res) => {
-    console.log("Access granted")
+    console.log(req.session)
     res.send("Access granted")
 })
 

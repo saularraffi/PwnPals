@@ -5,6 +5,8 @@ const bodyParser = require('body-parser')
 const path = require('path');
 const cors = require('cors')
 const passport = require('passport')
+const session = require('express-session')
+const cookieParser = require('cookie-parser')
 
 // requiring routes
 const testRoute = require("./api/routes/test")
@@ -19,8 +21,19 @@ const basePath = "/api"
 const hostname = '127.0.0.1';
 const port = 5000;
 
+// session stuff
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(session({
+    secret: 'blablabla',
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false
+}))
+app.use(cookieParser())
+
 // passport auth stuff
 app.use(passport.initialize())
+app.use(passport.session())
 const setupPassport = require('./auth/setup')
 setupPassport()
 
@@ -43,13 +56,6 @@ app.use(basePath, userRoute)
 app.use(basePath, authRoute)
 app.use(basePath, buildRoute)
 app.use(basePath, containerRoute)
-
-// set up root route
-app.get('/', (req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.send("Welcome to Pwn Pals!")
-})
 
 mongoose.connect('mongodb://localhost:27017/pwnpals', 
 { 

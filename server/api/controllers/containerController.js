@@ -4,9 +4,21 @@ const docker = require("../../lib/docker.js")
 
 
 exports.getContainer = function(req, res) {
-    Container.find({}, function(err, containers) {
-        // console.log(containers)
+    const id = req.query.id
 
+    Container.findById(id, function(err, container) {
+        if (err) { 
+            console.log(err) 
+            res.send("Failed to get container")
+        }
+        else {
+            res.json(container)
+        }
+    })
+}
+
+exports.getContainers = function(req, res) {
+    Container.find({}, function(err, containers) {
         if (err) { 
             console.log(err) 
             res.send("Failed to get containers")

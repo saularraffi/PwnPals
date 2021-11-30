@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { Button } from '@material-ui/core';
+import { useNavigate } from "react-router-dom";
+
 
 const sleep = (milliseconds) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
-
   
 function UserAppsPage(props) {
     const [startStopButton, setStartStopButton] = useState()
@@ -13,8 +13,10 @@ function UserAppsPage(props) {
     const [appCount, setAppCount] = useState(appList.length)
     const [stateChange, setStateChange] = useState()
 
+    const navigate = useNavigate();
+
     const getContainers = async () => {
-        const url = "http://localhost:5000/api/container"
+        const url = "http://localhost:5000/api/container/all"
 
         await axios.get(url).then(res => {
             setAppList(res.data)
@@ -84,7 +86,7 @@ function UserAppsPage(props) {
                     {appList.map((app) => {
                         return (
                             <tr>
-                                <td>
+                                <td key={'action-start-stop'}>
                                     {app.status === "running" &&
                                         <button onClick={() => toggleContainerState(app.containerId, "stop")}>Stop</button>
                                     ||
@@ -92,15 +94,17 @@ function UserAppsPage(props) {
                                         <button onClick={() => toggleContainerState(app.containerId, "start")}>Start</button>
                                     }
                                 </td> 
-                                <td>{app.imageName}</td>
-                                <td>{app.port}</td>
-                                <td>{app.status}</td>
-                                <td>
+                                <td key={'image-name'}>
+                                    <a href={`../app/${app._id}`}>{app.imageName}</a>
+                                </td>
+                                <td key={'port'}>{app.port}</td>
+                                <td key={'state'}>{app.status}</td>
+                                <td key={'action-open'}>
                                     {app.status === "running" &&
                                         <button onClick={() => openApp(app.port)}>Open</button>
                                     }
                                 </td>
-                                <td>
+                                <td key={'action-delete'}>
                                     <button onClick={() => deleteContainer(app.containerId)}>Delete</button>
                                 </td>
                             </tr>

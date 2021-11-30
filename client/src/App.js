@@ -25,7 +25,7 @@ function App() {
           <Route path='/apps' element={<UserAppsPage />}/>
           <Route path='/app/:id' element={<UserAppPage />}/>
           <Route path='/upload' element={<UserAppUploadPage />}/>
-          <Route path='/bug-report' element={<BugReportPage />}/>
+          <Route path='/bug-report/:id' element={<BugReportPage />}/>
         </Routes>
       </BrowserRouter>
     </div>

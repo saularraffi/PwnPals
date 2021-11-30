@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
 
 
 const sleep = (milliseconds) => {
@@ -8,12 +7,9 @@ const sleep = (milliseconds) => {
 }
   
 function UserAppsPage(props) {
-    const [startStopButton, setStartStopButton] = useState()
     const [appList, setAppList] = useState([])
     const [appCount, setAppCount] = useState(appList.length)
     const [stateChange, setStateChange] = useState()
-
-    const navigate = useNavigate();
 
     const getContainers = async () => {
         const url = "http://localhost:5000/api/container/all"

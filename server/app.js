@@ -23,13 +23,14 @@ const port = 5000;
 
 // session stuff
 const oneDay = 1000 * 60 * 60 * 24;
+const sessionSecret = 'thisisnotmysecret'  // save this as an env variable
 app.use(session({
-    secret: 'blablabla',
+    secret: sessionSecret,
     saveUninitialized: true,
     cookie: { maxAge: oneDay },
     resave: false
 }))
-app.use(cookieParser())
+app.use(cookieParser(sessionSecret))
 
 // passport auth stuff
 app.use(passport.initialize())

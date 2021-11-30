@@ -14,6 +14,7 @@ const userRoute = require("./api/routes/user")
 const authRoute = require("./api/routes/auth")
 const buildRoute = require("./api/routes/build")
 const containerRoute = require("./api/routes/container")
+const bugReportRoute = require("./api/routes/bugReport")
 
 // variable declarations
 const app = express()
@@ -57,6 +58,7 @@ app.use(basePath, userRoute)
 app.use(basePath, authRoute)
 app.use(basePath, buildRoute)
 app.use(basePath, containerRoute)
+app.use(basePath, bugReportRoute)
 
 mongoose.connect('mongodb://localhost:27017/pwnpals', 
 { 

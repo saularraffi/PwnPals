@@ -20,7 +20,9 @@ exports.getReport = function(req, res) {
 }
 
 exports.getAllReports = function(req, res) { 
-    BugReport.find({}, function(err, bugReports) {
+    const { imageId } = req.query
+
+    BugReport.find({ imageId: imageId }, function(err, bugReports) {
         if (err) {
             console.log(err)
             res.send("Failed to find bug reports")

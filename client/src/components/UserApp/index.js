@@ -25,7 +25,7 @@ function UserAppPage() {
     }
 
     const navigateToReportForm = () => {
-        navigate(`/bug-report/${appId}`)
+        navigate(`/app/${appId}/bug-report`)
     }
 
     useEffect(() => {
@@ -40,7 +40,9 @@ function UserAppPage() {
             <p><b>Status:</b> {appData.status}</p>
             <p><b>Created:</b> {appData.created}</p>
             <button onClick={navigateToReportForm}>Submit Bug</button>
-            <BugReportsList appName={appData.imageName}/>
+            {appData.imageName && appData.imageId &&
+                <BugReportsList appName={appData.imageName} imageId={appData.imageId}/>
+            }
         </div>
     )
 }

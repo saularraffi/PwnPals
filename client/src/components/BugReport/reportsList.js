@@ -47,7 +47,7 @@ function BugReportsList(prop) {
 
     return (
         <div>
-            <h1>Bug Reports for {prop.appName}</h1>
+            <h3>Bug Reports for {prop.appName}</h3>
             <table>
                 <thead>
                     <tr>

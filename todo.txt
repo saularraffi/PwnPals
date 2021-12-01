@@ -1,1 +1,2 @@
 - finish session management --> storing session info on backend and setting/sending cookies
+- add bug report update functionality

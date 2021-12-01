@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getUserId } from '../../auth/userInfo'
 import axios from 'axios';
 
-function BugReportPage() {
+function BugReportFormPage() {
     const location = useLocation();
     const appId = location.pathname.split('/').at(-1)
     const [appData, setAppData] = useState({})
@@ -81,4 +81,4 @@ function BugReportPage() {
     )
 }
 
-export default BugReportPage
+export default BugReportFormPage

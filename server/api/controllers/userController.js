@@ -3,12 +3,16 @@ const bcrypt = require('bcrypt')
 
 
 exports.getUser = function(req, res) {
-    const id = req.body.id
+    const id = req.query.id
 
     User.findById(id, function(err, user) {
         if (err) {
             console.log(err)
             res.send("Failed to find user")
+        }
+        else if (!user) {
+            console.log(`Could not find user with id ${id}`)
+            res.send("Could not find the specified user")
         }
         else {
             res.send(user) 
@@ -64,6 +68,10 @@ exports.updateUser = function(req, res) {
         if (err) {
             console.log(err)
             res.send("Error updating user")
+        }
+        else if (!user) {
+            console.log(`Could not find user with id ${id}`)
+            res.send("Could not find the specified user to update")
         }
         else {
             console.log(user)

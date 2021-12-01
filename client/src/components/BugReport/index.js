@@ -7,6 +7,8 @@ function BugReportPage() {
     const appId = location.pathname.split('/').at(-1)
     const [appData, setAppData] = useState({})
     const [didMount, setDidMount] = useState(false)
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
 
     const fetchContainer = function() {
         const url = `http://localhost:5000/api/container?id=${appId}`
@@ -21,16 +23,16 @@ function BugReportPage() {
         setDidMount(true)
     }
 
-    const handleSubmit = () => {
-        return
+    const handleTitleChange = (evt) => {
+        setTitle(evt.target.value)
     }
 
-    const handleTitleChange = () => {
-        return
+    const handleDescriptionChange = (evt) => {
+        setDescription(evt.target.value)
     }
 
-    const handleDescriptionChange = () => {
-        return
+    const handleSubmit = (e) => {
+        e.preventDefault()
     }
 
     useEffect(() => {

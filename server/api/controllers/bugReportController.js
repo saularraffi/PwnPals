@@ -2,21 +2,101 @@ const BugReport = require("../models/BugReport")
 
 
 exports.getReport = function(req, res) { 
-    res.send("GET report") 
+    const { id } = req.query
+
+    BugReport.findById(id, function(err, bugReport) {
+        if (err) {
+            console.log(err)
+            res.send("Failed to find bug report")
+        }
+        else if (!bugReport) {
+            console.log(`Could not find bug report with id ${id}`)
+            res.send("Could not find the specified bug report")
+        }
+        else {
+            res.send(bugReport) 
+        }
+    })
 }
 
-exports.getReports = function(req, res) { 
-    res.send("GET reports") 
+exports.getAllReports = function(req, res) { 
+    BugReport.find({}, function(err, bugReports) {
+        if (err) {
+            console.log(err)
+            res.send("Failed to find bug reports")
+        }
+        else {
+            res.send(bugReports) 
+        }
+    })
 }
 
 exports.postReport = function(req, res) {
-    res.send("POST report")
+    const { userId } = req.body
+    const { title } = req.body
+    const { description } = req.body
+    const { imageId } = req.body
+
+    const bugReport = new BugReport({
+        userId: userId,
+        title: title,
+        description: description,
+        imageId: imageId,
+        created: Date.now()
+    })
+    bugReport.save(function(err) {
+        if (err) {
+            console.log(err)
+            res.send("Error saving bug report")
+        }
+        else {
+            console.log(bugReport)
+            res.send(bugReport)
+        }
+    })
 }
 
-exports.updateReport = function(req, res) { 
-    res.send("PUT report") 
+exports.updateReport = function(req, res) {
+    const { id } = req.body
+    const { userId } = req.body
+    const { title } = req.body
+    const { description } = req.body
+    const { imageId } = req.body
+
+    let update = {}
+
+    if (userId !== undefined) { update['userId'] = userId }
+    if (title !== undefined) { update['title'] = title }
+    if (description !== undefined) { update['description'] = description }
+    if (imageId !== undefined) { update['imageId'] = imageId }
+
+    BugReport.findByIdAndUpdate(id, update, function(err, bugReport) {
+        if (err) {
+            console.log(err)
+            res.send("Error updating bug report")
+        }
+        else if (!bugReport) {
+            console.log(`Could not find bug report with id ${id}`)
+            res.send("Could not find the specified bug report to update")
+        }
+        else {
+            console.log(bugReport)
+            res.send(bugReport)
+        }
+    })
 }
 
 exports.deleteReport = function(req, res) { 
-    res.send("DELETE report") 
+    const { id } = req.body
+
+    BugReport.findByIdAndDelete(id, function(err, bugReport) {
+        if (err) {
+            console.log(err)
+            res.send("Error updating bug report")
+        }
+        else {
+            console.log(bugReport)
+            res.send(bugReport)
+        }   
+    })
 }

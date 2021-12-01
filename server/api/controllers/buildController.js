@@ -17,6 +17,22 @@ exports.getBuild = function(req, res) {
     })
 }
 
+exports.getAllBuilds = function(req, res) {
+    const { id } = req.query
+
+    Build.findById(id, function(err, build) {
+        console.log(builds)
+
+        if (err) { 
+            console.log(err)
+            res.send("Failed to get build")
+        }
+        else {
+            res.json(build)
+        }
+    })
+}
+
 exports.postBuild = async function(req, res) {
     const user = req.body.user
     const repo = req.body.repo

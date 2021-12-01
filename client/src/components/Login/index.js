@@ -19,7 +19,7 @@ function LoginPage() {
 
     const handleSubmit = (e) => {
         // fixes some issue with aborting request
-        e.preventDefault();
+        e.preventDefault()
 
         const data = {
             username: username,

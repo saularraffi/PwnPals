@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
+import { getUserId } from '../../auth/userInfo'
 import axios from 'axios';
 
 function BugReportPage() {
@@ -9,6 +10,7 @@ function BugReportPage() {
     const [didMount, setDidMount] = useState(false)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
+    const [errorSubmittingReport, setErrorSubmittingReport] = useState(false)
 
     const fetchContainer = function() {
         const url = `http://localhost:5000/api/container?id=${appId}`
@@ -33,6 +35,24 @@ function BugReportPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        const url = 'http://localhost:5000/api/bug-report'
+
+        const data = {
+            userId: getUserId(),
+            title: title,
+            description: description,
+            imageId: appData.imageId
+        }
+
+        axios.post(url, data).then(res => {
+            console.log(res)
+            window.history.back()
+        })
+        .catch(err => {
+            console.log(err)
+            setErrorSubmittingReport(true)
+        })
     }
 
     useEffect(() => {
@@ -42,6 +62,9 @@ function BugReportPage() {
     return (
         <div>
             <h1>Bug Report for {appData.imageName}</h1>
+            {errorSubmittingReport == true &&
+                <p>There was an error submitting the report.</p>
+            }
             <form onSubmit={handleSubmit}>
                 <label>Title:
                     <input type="text" name="title" onChange={handleTitleChange} />

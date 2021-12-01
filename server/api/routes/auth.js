@@ -12,7 +12,7 @@ router.post(`${endpoint}/local`, passport.authenticate('local'), (req, res) => {
     console.log(req.session.id)
     console.log(req.session.cookie)
     // res.redirect('http://localhost:3000/apps')
-    res.send("Access granted")
+    res.send(req.user.id)
 })
 
 module.exports = router

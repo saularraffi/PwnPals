@@ -6,12 +6,20 @@ export function getUser() {
     return localStorage.getItem('username')
 }
 
-export function setLoggedInStatus(status) {
-    localStorage.setItem('loggedIn', status)
-}
-
 export function setUser(username) {
     localStorage.setItem('username', username)
+}
+
+export function getUserId() {
+    return localStorage.getItem('userId')
+}
+
+export function setUserId(userId) {
+    localStorage.setItem('userId', userId)
+}
+
+export function setLoggedInStatus(status) {
+    localStorage.setItem('loggedIn', status)
 }
 
 export function logOut() {

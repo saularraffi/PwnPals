@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import { setLoggedInStatus, setUser, isLoggedIn } from '../../auth/userInfo'
+import { setLoggedInStatus, setUser, isLoggedIn, setUserId } from '../../auth/userInfo'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
 function LoginPage() {
-    const [username, setUsername] = useState()
-    const [password, setPassword] = useState()
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
 
     const navigate = useNavigate();
 
@@ -31,6 +31,7 @@ function LoginPage() {
             console.log(res)
             setLoggedInStatus(true)
             setUser(username)
+            setUserId(res.data)
             navigate('/home')
         })
         .catch(err => {

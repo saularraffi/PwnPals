@@ -91,6 +91,8 @@ exports.updateReport = function(req, res) {
 exports.deleteReport = function(req, res) { 
     const { id } = req.body
 
+    console.log(req.body)
+
     BugReport.findByIdAndDelete(id, function(err, bugReport) {
         if (err) {
             console.log(err)

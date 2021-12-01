@@ -26,6 +26,21 @@ function BugReportsList(prop) {
         return description
     }
 
+    const deleteReport = (id) => {
+        const url = 'http://localhost:5000/api/bug-report'
+
+        const data = {
+            id: id
+        }
+
+        axios.delete(url, { data: data }).then(res => {
+            console.log(res)
+            fetchBugReports()
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     useEffect(() => {
         fetchBugReports()
     }, [didMount])
@@ -36,6 +51,7 @@ function BugReportsList(prop) {
             <table>
                 <thead>
                     <tr>
+                        <td></td>
                         <td><b>Title</b></td>
                         <td><b>Description</b></td>
                         <td><b>Date</b></td>
@@ -45,6 +61,9 @@ function BugReportsList(prop) {
                     {bugReports.map((report) => {
                         return (
                             <tr>
+                                <td>
+                                    <button onClick={() => deleteReport(report._id)}>Delete</button>
+                                </td>
                                 <td>
                                     <a href={`../bug-report/${report._id}`}>{report.title}</a>
                                 </td>

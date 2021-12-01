@@ -28,7 +28,7 @@ function BugReportsList(prop) {
     const displayDescription = (description) => {
         description = description.substring(0,50)
         if (description.length >= 15) {
-            description = description + ' ...'
+            description = description + '...'
         }
         return description
     }

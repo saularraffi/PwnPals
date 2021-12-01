@@ -1,23 +1,30 @@
 function BugReportsList(prop) {
+    const bugReportsList = [{
+        title: "Test",
+        created: "10/2/2021"
+    }]
+
     return (
         <div>
             <h1>Bug Reports for {prop.appName}</h1>
-            {/* <table>
+            <table>
                 <thead>
                     <tr>
-                        <td><b>test</b></td>
+                        <td><b>Title</b></td>
+                        <td><b>Date</b></td>
                     </tr>
                 </thead>
                 <tbody>
-                    {appList.map((app) => {
+                    {bugReportsList.map((report) => {
                         return (
                             <tr>
-                                <td>test</td>
+                                <td>{report.title}</td>
+                                <td>{report.created}</td>
                             </tr>
                         )
                     })}
                 </tbody>
-            </table> */}
+            </table>
         </div>
     )
 }

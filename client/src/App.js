@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
+import BugReportPage from './components/BugReport/report'
 import BugReportFormPage from './components/BugReport/reportForm'
 import HomePage from './components/Home'
 import LandingPage from './components/Landing';
@@ -25,7 +26,8 @@ function App() {
           <Route path='/apps' element={<UserAppsPage />}/>
           <Route path='/app/:id' element={<UserAppPage />}/>
           <Route path='/upload' element={<UserAppUploadPage />}/>
-          <Route path='/bug-report/:id' element={<BugReportFormPage />}/>
+          <Route path='/bug-report/:id' element={<BugReportPage />}/>
+          <Route path='/app/:id/bug-report' element={<BugReportFormPage />}/>
         </Routes>
       </BrowserRouter>
     </div>

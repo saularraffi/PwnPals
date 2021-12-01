@@ -6,17 +6,10 @@ function BugReportsList(prop) {
     const [bugReports, setBugReports] = useState([])
 
     const fetchBugReports = function() {
-        console.log("fetching data")
         const url = `http://localhost:5000/api/bug-report/all?imageId=${prop.imageId}`
 
         axios.get(url).then(res => {
             console.log(res.data)
-            // res.data.map(report => {
-            //     res.data.description = report.description.substring(0,15)
-            //     if (res.data.description.length >= 15) {
-            //         res.data.description = res.data.description + ' ...'
-            //     }
-            // })
             setBugReports(res.data)
         }).catch(err => {
             console.log(err)
@@ -52,7 +45,9 @@ function BugReportsList(prop) {
                     {bugReports.map((report) => {
                         return (
                             <tr>
-                                <td>{report.title}</td>
+                                <td>
+                                    <a href={`../bug-report/${report._id}`}>{report.title}</a>
+                                </td>
                                 <td>{displayDescription(report.description)}</td>
                                 <td>{report.created}</td>
                             </tr>

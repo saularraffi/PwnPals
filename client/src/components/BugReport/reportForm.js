@@ -4,8 +4,8 @@ import { getUserId } from '../../auth/userInfo'
 import axios from 'axios';
 
 function BugReportFormPage() {
-    const location = useLocation();
-    const appId = location.pathname.split('/').at(-1)
+    const location = useLocation()
+    const appId = location.pathname.split('/').at(-2)
     const [appData, setAppData] = useState({})
     const [didMount, setDidMount] = useState(false)
     const [title, setTitle] = useState('')

@@ -25,7 +25,7 @@ function UserAppPage() {
     }
 
     const navigateToReportForm = () => {
-        navigate(`/bug-report/${appId}`)
+        navigate(`/app/${appId}/bug-report`)
     }
 
     useEffect(() => {

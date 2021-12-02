@@ -3,11 +3,34 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { getUser } from '../../auth/userInfo'
 
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import FormGroup from '@mui/material/FormGroup'
+import Button from '@mui/material/Button';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+    form: {
+        // justifyContent: "center",
+        // alignItems: "center",
+        // backgroundColor: '#b0e0e6'
+    },
+    textField: {
+        // justifyContent: "center",
+        // alignItems: "center",
+    },
+    btn: {
+        // justifyContent: "center",
+        // alignItems: "center",
+    }
+})
+
 function UserAppUploadPage(props) {
     const [user] = useState(getUser())
     const [appName, setAppName] = useState("")
     const [githubUri, setGithubUri] = useState("")
     const navigate = useNavigate();
+    const classes = useStyles()
 
     const handleAppNameChange = (evt) => {
         setAppName(evt.target.value)
@@ -45,17 +68,44 @@ function UserAppUploadPage(props) {
     return (
         <div>
             <h1>Upload your app</h1>
-            <form onSubmit={handleSubmit}>
-                <label>App Name:
-                        <input type="text" name="app-name" onChange={handleAppNameChange} />
-                    </label>
+            {/* <Box
+                component="form"
+                className={classes.form}
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit}
+            ></Box> */}
+            <FormGroup 
+                lassName={classes.form}
+                noValidate
+                autoComplete='off'
+            >
+                <TextField
+                    className={classes.textField}
+                    required
+                    id="app-name"
+                    name='app-name'
+                    label="App Name"
+                    placeholder="Type in your app name"
+                    variant='filled'
+                    onChange={handleAppNameChange}
+                />
                 <br/>
-                <label>GitHub URI:
-                    <input type="text" name="github-uri" onChange={handleUriChange} />
-                </label>
+                <TextField
+                    className={classes.textField}
+                    required
+                    id="github-uri"
+                    name='github-uri'
+                    label="GitHub URI"
+                    placeholder="Type in your project's GitHub URI"
+                    variant='filled'
+                    onChange={handleUriChange}
+                />
                 <br/>
-                <input type="submit" value="Submit" />
-            </form>
+                <Button className={classes.btn} variant="contained">
+                    Build App
+                </Button>
+            </FormGroup>
         </div>
     )
 }

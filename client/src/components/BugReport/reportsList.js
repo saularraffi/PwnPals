@@ -61,14 +61,14 @@ function BugReportsList(prop) {
                     {bugReports.map((report) => {
                         return (
                             <tr>
-                                <td>
+                                <td key='delete-btn'>
                                     <button onClick={() => deleteReport(report._id)}>Delete</button>
                                 </td>
-                                <td>
+                                <td key={report.title}>
                                     <a href={`../bug-report/${report._id}`}>{report.title}</a>
                                 </td>
-                                <td>{displayDescription(report.description)}</td>
-                                <td>{report.created}</td>
+                                <td key={report.description}>{displayDescription(report.description)}</td>
+                                <td key={report.created}>{report.created}</td>
                             </tr>
                         )
                     })}

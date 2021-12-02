@@ -82,25 +82,25 @@ function UserAppsPage(props) {
                     {appList.map((app) => {
                         return (
                             <tr>
-                                <td key={'action-start-stop'}>
+                                <td key='toggle-state-btn'>
                                     {app.status === "running" &&
                                         <button onClick={() => toggleContainerState(app.containerId, "stop")}>Stop</button>
                                     ||
                                     app.status === "exited" &&
                                         <button onClick={() => toggleContainerState(app.containerId, "start")}>Start</button>
                                     }
-                                </td> 
-                                <td key={'image-name'}>
+                                </td>
+                                <td key={app.imageName}>
                                     <a href={`../app/${app._id}`}>{app.imageName}</a>
                                 </td>
-                                <td key={'port'}>{app.port}</td>
-                                <td key={'state'}>{app.status}</td>
-                                <td key={'action-open'}>
+                                <td key={app.port}>{app.port}</td>
+                                <td key={app.status}>{app.status}</td>
+                                <td key='open-app-btn'>
                                     {app.status === "running" &&
                                         <button onClick={() => openApp(app.port)}>Open</button>
                                     }
                                 </td>
-                                <td key={'action-delete'}>
+                                <td key='delete-app-btn'>
                                     <button onClick={() => deleteContainer(app.containerId)}>Delete</button>
                                 </td>
                             </tr>

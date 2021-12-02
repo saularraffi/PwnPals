@@ -7,6 +7,7 @@ const cors = require('cors')
 const passport = require('passport')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
+const MongoStore = require('connect-mongo')
 
 // requiring routes
 const testRoute = require("./api/routes/test")
@@ -29,7 +30,16 @@ app.use(session({
     secret: sessionSecret,
     saveUninitialized: true,
     cookie: { maxAge: oneDay },
-    resave: false
+    resave: false,
+    store: new MongoStore({
+        mongoUrl: 'mongodb://localhost:27017/pwnpals-sessions',
+        autoRemove: 'native',
+        ttl: oneDay,
+        mongoOptions: {
+            useNewUrlParser: true, 
+            useUnifiedTopology: true
+        }
+    })
 }))
 app.use(cookieParser(sessionSecret))
 

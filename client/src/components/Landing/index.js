@@ -6,7 +6,7 @@ import {
     Box
 } from '@mui/material'
 
-import NavBar from '../NavBar/landingPageNavBar'
+import NavBar from '../NavBar'
 import ImageCard from '../ImageCard'
 
 import programmer_image from '../../images/programmer_card_image.png'

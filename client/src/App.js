@@ -10,7 +10,7 @@ import ProfilePage from './components/Profile'
 import UserAppsPage from './components/UserApps'
 import UserAppPage from './components/UserApp'
 import UserAppUploadPage from './components/UserAppUpload'
-import NavBar from './components/NavBar';
+import NavBar from './components/NavBar/landingPageNavBar';
 
 function App() {
   return (

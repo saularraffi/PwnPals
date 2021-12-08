@@ -1,9 +1,30 @@
+import { 
+    Box, 
+    Checkbox, 
+    Grid, 
+    TextField, 
+    FormControlLabel,
+    Button,
+    Typography
+} from '@mui/material'
+
+import { makeStyles } from '@mui/styles'
+
 import { useState, useEffect } from 'react'
 import { setLoggedInStatus, setUser, isLoggedIn, setUserId } from '../../auth/userInfo'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
-function LoginPage() {
+
+const useStyles = makeStyles({
+    checkbox: {
+        marginTop: 20,
+        marginBottom: 20
+    }
+})
+
+function LoginForm() {
+    const classes = useStyles()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -44,29 +65,72 @@ function LoginPage() {
         })
     }
 
-    // useEffect(() => {
-    //     if (isLoggedIn() === 'true') {
-    //         navigate('/home')
-    //     }
-    // })
+    const navigateOnClick = function(path) {
+        navigate(path)
+    }
 
     return (
         <div>
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-            <label>
-                Username: <input type="text" name="username" onChange={handleUsernameChange} />
-            </label>
-            <br />
-            <label>
-                Password: <input type="password" name="password" onChange={handlePasswordChange} />
-            </label>
-            <br />
-            <input type="submit" value="Submit" />
-            </form>
-            <button onClick={() => navigate('/register')}>Create Account</button>
+            <Box
+                id={classes.form}
+                component="form"
+                className={classes.form}
+                noValidate
+                autoComplete="off"
+                display='flex'
+                flexDirection='column'
+                margin='auto'
+                width='400px'
+                marginTop='10%'
+                onSubmit={handleSubmit}
+            >
+                <Typography
+                    fontSize={40}
+                    marginBottom={5}
+                    display={'flex'}
+                    flexDirection={'column'}
+                    alignItems={'center'}
+                >
+                    Log In
+                </Typography>
+                <Grid container spacing={4}>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="standard"
+                            label="Username"
+                            onChange={handleUsernameChange}
+                        />
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="standard"
+                            label="Password"
+                            type="password"
+                            onChange={handlePasswordChange}
+                        />
+                    </Grid>
+                </Grid>
+                <FormControlLabel 
+                    className={classes.checkbox}
+                    value="female" 
+                    control={<Checkbox />} 
+                    label="Keep me logged in" 
+                />
+                <Button fullWidth type="submit" variant="contained">
+                    Log In
+                </Button>
+                <Button fullWidth variant="contained"
+                    style={{ backgroundColor: "#E77F0A" }}
+                    sx={{ marginTop: 3 }}
+                    onClick={() => navigateOnClick('/register')}
+                >
+                    Create Account
+                </Button>
+            </Box>
         </div>
     )
 }
 
-export default LoginPage
+export default LoginForm

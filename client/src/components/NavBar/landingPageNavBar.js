@@ -181,6 +181,7 @@ export default function NavBar() {
                 width: '100%',
                 position: 'sticky',
                 top: 0,
+                marginBottom: 7
             }}
         >
         {/* style={{ position: 'fixed' }} */}
@@ -224,6 +225,24 @@ export default function NavBar() {
                 <Box sx={{ flexGrow: 1 }} />
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                     
+                    { isLoggedIn() === 'true' && 
+                        <Button style={{ color:'white' }} 
+                            sx={{ fontSize: '1.1em' }}
+                            onClick={() => navigateOnClick('/apps')}
+                        >
+                            Apps
+                        </Button>
+                    }
+
+                    { isLoggedIn() === 'true' && 
+                        <Button style={{ color:'white' }} 
+                            sx={{ fontSize: '1.1em' }}
+                            onClick={() => navigateOnClick('/upload')}
+                        >
+                            Upload
+                        </Button>
+                    }
+
                     { isLoggedIn() === 'true' && 
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={4} color="error">

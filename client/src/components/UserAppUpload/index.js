@@ -1,36 +1,22 @@
+import { 
+    Box, 
+    Grid, 
+    TextField, 
+    Button,
+    Typography
+} from '@mui/material'
+
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import axios from 'axios';
 import { getUser } from '../../auth/userInfo'
 
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import FormGroup from '@mui/material/FormGroup'
-import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles({
-    form: {
-        // justifyContent: "center",
-        // alignItems: "center",
-        // backgroundColor: '#b0e0e6'
-    },
-    textField: {
-        // justifyContent: "center",
-        // alignItems: "center",
-    },
-    btn: {
-        // justifyContent: "center",
-        // alignItems: "center",
-    }
-})
-
 function UserAppUploadPage(props) {
+    const navigate = useNavigate();
+    
     const [user] = useState(getUser())
     const [appName, setAppName] = useState("")
     const [githubUri, setGithubUri] = useState("")
-    const navigate = useNavigate();
-    const classes = useStyles()
 
     const handleAppNameChange = (evt) => {
         setAppName(evt.target.value)
@@ -67,45 +53,50 @@ function UserAppUploadPage(props) {
 
     return (
         <div>
-            <h1>Upload your app</h1>
-            {/* <Box
+            <Box
                 component="form"
-                className={classes.form}
                 noValidate
                 autoComplete="off"
+                display='flex'
+                flexDirection='column'
+                margin='auto'
+                width='400px'
+                marginTop='10%'
                 onSubmit={handleSubmit}
-            ></Box> */}
-            <FormGroup 
-                lassName={classes.form}
-                noValidate
-                autoComplete='off'
             >
-                <TextField
-                    className={classes.textField}
-                    required
-                    id="app-name"
-                    name='app-name'
-                    label="App Name"
-                    placeholder="Type in your app name"
-                    variant='filled'
-                    onChange={handleAppNameChange}
-                />
-                <br/>
-                <TextField
-                    className={classes.textField}
-                    required
-                    id="github-uri"
-                    name='github-uri'
-                    label="GitHub URI"
-                    placeholder="Type in your project's GitHub URI"
-                    variant='filled'
-                    onChange={handleUriChange}
-                />
-                <br/>
-                <Button className={classes.btn} variant="contained">
-                    Build App
+                <Typography
+                    fontSize={40}
+                    marginBottom={5}
+                    display={'flex'}
+                    flexDirection={'column'}
+                    alignItems={'center'}
+                >
+                    Upload Your App
+                </Typography>
+                <Grid container spacing={4}>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="standard"
+                            label="App Name"
+                            onChange={handleAppNameChange}
+                        />
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="standard"
+                            label="GitHub URI"
+                            onChange={handleUriChange}
+                        />
+                    </Grid>
+                </Grid>
+                <Button fullWidth type="submit" variant="contained"
+                    sx={{marginTop: 5}}
+                >
+                    Upload
                 </Button>
-            </FormGroup>
+            </Box>
         </div>
     )
 }

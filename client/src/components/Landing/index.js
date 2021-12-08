@@ -48,7 +48,6 @@ function LandingPage() {
     return (
         <Box
             sx={{
-                marginTop: 7,
                 position: 'absolute',
                 left: 0,
                 right: 0,

@@ -201,14 +201,20 @@ export default function NavBar() {
                         <MenuIcon />
                     </IconButton>
                 }
-                <Typography
+                
+                <Button style={{ color: 'white' }}
                     variant="h4"
                     noWrap
                     component="div"
-                    sx={{ display: { xs: 'none', sm: 'block' } }}
+                    sx={{ 
+                        display: { xs: 'none', sm: 'block' }, 
+                        fontSize: '2em',
+                        fontFamily: 'monospace',
+                    }}
+                    onClick={() => navigateOnClick('/')}
                 >
                     PwnPals
-                </Typography>
+                </Button>
 
                 { isLoggedIn() === 'true' && 
                     <Search>
@@ -235,7 +241,7 @@ export default function NavBar() {
                     }
 
                     { isLoggedIn() === 'true' && 
-                        <Button style={{ color:'white' }} 
+                        <Button style={{ color: 'white' }} 
                             sx={{ fontSize: '1.1em' }}
                             onClick={() => navigateOnClick('/upload')}
                         >

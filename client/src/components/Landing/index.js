@@ -43,12 +43,12 @@ function LandingPage() {
         if (isLoggedIn() === 'true') {
             navigate('/home')
         }
-    })
+    }, [])
 
     return (
         <Box
             sx={{
-                position: 'absolute',
+                position: 'absolute',  // this needs to change because it is going over navbar
                 left: 0,
                 right: 0,
             }}

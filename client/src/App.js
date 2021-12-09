@@ -12,7 +12,13 @@ import UserAppPage from './components/UserApp'
 import UserAppUploadPage from './components/UserAppUpload'
 import NavBar from './components/NavBar';
 
+import { isLoggedIn, setLoggedInStatus } from './auth/userInfo'
+
 function App() {
+  if (isLoggedIn !== 'true' && isLoggedIn !== 'false') {
+    setLoggedInStatus(false)
+  }
+  
   return (
     <div className="App">
       <BrowserRouter>

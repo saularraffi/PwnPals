@@ -53,6 +53,8 @@ to
 ExecStart=/usr/bin/dockerd -H fd:// -H=tcp://0.0.0.0:2375
 ```
 
+restart machine
+
 # MongoDB Setup
 
 ```

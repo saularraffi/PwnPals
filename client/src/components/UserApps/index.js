@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
+import Table from './table'
 
 
 const sleep = (milliseconds) => {
@@ -16,6 +17,7 @@ function UserAppsPage(props) {
 
         await axios.get(url).then(res => {
             setAppList(res.data)
+            console.log(res.data)
             console.log("Getting containers")
 
         }).catch(err => {
@@ -58,12 +60,16 @@ function UserAppsPage(props) {
         window.open(`http://localhost:${port}`);
     }
 
+    // useEffect(() => {
+    //     getContainers()
+    //     sleep(3000).then(() => {
+    //         stateChange === true ? setStateChange(false) : setStateChange(true)
+    //     })
+    // }, [appCount, stateChange])
+
     useEffect(() => {
         getContainers()
-        sleep(3000).then(() => {
-            stateChange === true ? setStateChange(false) : setStateChange(true)
-        })
-    }, [appCount, stateChange])
+    }, [])
 
     return (
         <div>
@@ -108,6 +114,7 @@ function UserAppsPage(props) {
                     })}
                 </tbody>
             </table>
+            {/* <Table /> */}
         </div>
     )
 }

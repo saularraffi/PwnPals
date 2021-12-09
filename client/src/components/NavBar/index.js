@@ -113,7 +113,7 @@ export default function NavBar() {
                 <Button onClick={() => navigateOnClick('/profile')}>Profile</Button>
             </MenuItem>
             <MenuItem onClick={handleMenuClose}>
-                <Button onClick={logUserOut}>Log Out</Button>
+                <Button onClick={() => logUserOut()}>Log Out</Button>
             </MenuItem>
         </Menu>
     );

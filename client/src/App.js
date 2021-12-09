@@ -15,7 +15,7 @@ import NavBar from './components/NavBar';
 import { isLoggedIn, setLoggedInStatus } from './auth/userInfo'
 
 function App() {
-  if (isLoggedIn !== 'true' && isLoggedIn !== 'false') {
+  if (isLoggedIn() !== 'true' && isLoggedIn() !== 'false') {
     setLoggedInStatus(false)
   }
   

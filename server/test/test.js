@@ -8,44 +8,12 @@ const axios = require('axios')
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-// const dockerfile = fs.readFileSync(`${__dirname}/dockerFileTest`, {encoding:'utf8', flag:'r'}) 
-// const regex = /d[E|e][X|x][P|p][O|o][S|s][E|e] [0-9]*/g;
-// const found = dockerfile.match(regex);
-// console.log(found)
-// console.log(found[0].split(' ')[1])
-
-async function createContainer(imageName) {
-    const port = 80
-    const exposedPort = `${port}/tcp`
-
-    return docker.container.create({
-        Image: imageName,
-        name: imageName,
-        ExposedPorts: { exposedPort: {} },
-        HostConfig: {
-            NetworkMode: 'host'
-        }
-    })
-    .then(container => { return container.start() })
-    .then(container => { return container.stop() })
-    .then(container => { return container.status() })
-    .catch(error => {
-        console.log(error)
-        return null
-    });
-}
-
-function deleteContainer() {
-    docker.container.list({
-        all: true
-    })
-    .then(containers => {
-        return containers[0]
-    })
-    .then(container => container.delete())
-    .then(res => console.log(res))
-    .catch(error => console.log(error));
-}
-
-// createContainer('saular-testapp')
-deleteContainer()
+docker.container.list()
+   // Inspect
+  .then(containers => containers[0].status())
+  .then(container => container.stats())
+  .then(stats => {
+    stats.on('data', stat => console.log('Stats: ', stat.toString()))
+    stats.on('error', err => console.log('Error: ', err))
+  })
+  .catch(error => console.log(error));

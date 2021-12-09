@@ -28,6 +28,31 @@ to see local images
 $ sudo docker images
 ```
 
+add a docker group 
+
+```
+$ sudo groupadd docker
+```
+
+add your user to the docker group
+
+```
+$ sudo usermod -aG docker $USER
+```
+
+edit /lib/systemd/system/docker.service if you want to communicate with docker api 
+
+```
+change
+
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+```
+```
+to
+
+ExecStart=/usr/bin/dockerd -H fd:// -H=tcp://0.0.0.0:2375
+```
+
 # MongoDB Setup
 
 ```
@@ -63,31 +88,6 @@ install the compass
 
 ```
 $ sudo dpkg -i /opt/mongodb-compass_1.28.1_amd64.deb
-```
-
-add a docker group 
-
-```
-$ sudo groupadd docker
-```
-
-add your user to the docker group
-
-```
-$ sudo usermod -aG docker $USER
-```
-
-edit /lib/systemd/system/docker.service if you want to communicate with docker api 
-
-```
-change
-
-ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
-```
-```
-to
-
-ExecStart=/usr/bin/dockerd -H fd:// -H=tcp://0.0.0.0:2375
 ```
 
 # Notes

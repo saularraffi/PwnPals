@@ -87,6 +87,18 @@ function AppsTable({ apps }) {
 
     return (
         <TableContainer>
+            <Typography
+                sx={{ 
+                    textAlign: 'center',
+                    fontSize: '2em',
+                    backgroundColor: '#606061',
+                    color: 'white',
+                    paddingTop: 1,
+                    paddingBottom: 1
+                }}
+            >
+                My Apps
+            </Typography>
             <Table>
                 <TableHead sx={{ backgroundColor: '#1976d2  ' }}>
                     <TableRow>

@@ -1,120 +1,86 @@
-import MaterialTable from 'material-table'
-import { Container } from '@mui/material'
-import { forwardRef } from 'react';
-
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 
-const tableIcons = {
-    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-};
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
 
-function Table() {
-    const data = [
-        { appName: 'My App 1', port: '8080', state: 'Running' },
-        { appName: 'My App 2', port: '80', state: 'Stopped' },
-        { appName: 'My App 3', port: '443', state: 'Running' },
-        { appName: 'My App 4', port: '8081', state: 'Running' },
-        { appName: 'My App 5', port: '8080', state: 'Stopped' }
-    ]
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
-    const details = {
-        'My App 1': 'These are some of the details for application one',
-        'My App 2': 'These are some of the details for application two',
-        'My App 3': 'These are some of the details for application three',
-        'My App 4': 'These are some of the details for application four',
-        'My App 5': 'These are some of the details for application five'
-    }
+export default function CustomizedTables({ apps }) {
+    const [open, setOpen] = React.useState(false);
 
-    const columns = [
-        { title: 'App Name', field: 'appName' },
-        { title: 'Port', field: 'port' },
-        { title: 'State', field: 'state' }
-    ]
-
-    return (
-        <Container
-            sx={{
-                marginTop: '10%',
-            }}
-        >
-            <MaterialTable
-                title="User's Apps"
-                data={data}
-                columns={columns}
-                icons={tableIcons}
-                options={{
-                    paging: false,
-                    grouping: true,
-                    headerStyle: {
-                        backgroundColor: '#01579b',
-                        color: '#FFF'
-                    },
-                    rowStyle: rowData => ({
-                        backgroundColor: (rowData.tableData.id % 2 == 0) ? '#EEE' : '#FFF'
-                    })
-                }}
-                detailPanel={rowData => {
-                    return (
-                        <p>Some details</p>
-                    )
-                }}
-                onRowClick={(event, rowData, togglePanel) => togglePanel()}
-                // editable={{
-                //     onRowUpdate: (newData, oldData) => {
-                //         new Promise((resolve, reject) => {
-                //             setTimeout(() => {
-                //                 console.log("hello")
-                //                 resolve();
-                //             }, 1000)
-                //         })
-                //     }
-                // }}
-                actions={[
-                    {
-                        icon: 'save',
-                        tooltip: 'Save User',
-                        // onClick: (event, rowData) => alert("You saved " + rowData.name)
-                    },
-                    {
-                        icon: 'delete',
-                        tooltip: 'Delete User',
-                        // onClick: (event, rowData) => alert("You want to delete " + rowData.name)
-                    }
-                ]}
-            />
-        </Container>
-    )
+  return (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell />
+            <StyledTableCell>App Name</StyledTableCell>
+            <StyledTableCell align="right">Port</StyledTableCell>
+            <StyledTableCell align="right">Status&nbsp;</StyledTableCell>
+            <StyledTableCell align="right">Date Create&nbsp;</StyledTableCell>
+            <StyledTableCell align="right">Actions&nbsp;</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+            <React.Fragment>
+                <StyledTableRow>
+                    {apps.map((app) => (
+                        <StyledTableRow key={app._id}>
+                            <StyledTableCell>
+                                <IconButton
+                                    aria-label="expand row"
+                                    size="small"
+                                    onClick={() => setOpen(!open)}
+                                >
+                                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                </IconButton>
+                            </StyledTableCell>
+                            <StyledTableCell component="th" scope="row">
+                                {app.imageName}
+                            </StyledTableCell>
+                            <StyledTableCell align="right">{app.port}</StyledTableCell>
+                            <StyledTableCell align="right">{app.status}</StyledTableCell>
+                            <StyledTableCell align="right">{app.created}</StyledTableCell>
+                            <StyledTableCell align="right">Delete</StyledTableCell>
+                        </StyledTableRow>
+                    ))}
+                </StyledTableRow>
+                <StyledTableRow>
+                    <StyledTableCell>
+                        <Collapse in={open} timeout="auto" unmountOnExit>Hello</Collapse>
+                    </StyledTableCell>
+                </StyledTableRow>
+            </React.Fragment>
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 }
-
-export default Table

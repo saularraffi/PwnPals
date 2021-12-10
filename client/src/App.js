@@ -12,10 +12,10 @@ import UserAppPage from './components/UserApp'
 import UserAppUploadPage from './components/UserAppUpload'
 import NavBar from './components/NavBar';
 
-import { isLoggedIn, setLoggedInStatus } from './auth/userInfo'
+import { setLoggedInStatus } from './auth/userInfo'
 
 function App() {
-  if (isLoggedIn() !== 'true' && isLoggedIn() !== 'false') {
+  if (localStorage.getItem('loggedIn') === null) {
     setLoggedInStatus(false)
   }
   

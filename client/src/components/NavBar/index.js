@@ -6,7 +6,8 @@ import {
     Button,
     Box,
     Typography,
-    IconButton
+    IconButton,
+    Grid
 } from '@mui/material'
 
 import {
@@ -37,20 +38,27 @@ function MyNavBar() {
         navigate('/')
     }
 
-    const navigateOnClick = () => {
-        navigate('/profile')
+    const navigateOnClick = (path) => {
+        navigate(path)
     }
 
     const renderButtons = () => {
         if (isLoggedIn()) {
             return (
                 <Box>
-                    <Button style={{ paddingRight: 15, color: 'white', fontSize: '1.1em' }}
-                        onClick={navigateOnClick}
+                    <Button sx={{ color: 'white', fontSize: '1.1em' }}
+                        onClick={() => navigateOnClick('/')}
+                    >
+                        Home
+                    </Button>
+                    <Button variant="contained" disableElevation 
+                        style={{ paddingRight: 15, color: 'white', fontSize: '1.1em' }}
+                        onClick={() => navigateOnClick('/profile')}
                     >
                         Profile
                     </Button>
-                    <Button style={{ color: 'white', fontSize: '1.1em' }}
+                    <Button variant="contained" disableElevation 
+                        style={{ color: 'white', fontSize: '1.1em' }}
                         onClick={handleLogOut}
                     >
                         Logout
@@ -60,7 +68,8 @@ function MyNavBar() {
         }
         else {
             return (
-                <Button style={{ color: 'white', fontSize: '1.1em' }}
+                <Button variant="contained" disableElevation 
+                    style={{ color: 'white', fontSize: '1.1em' }}
                     onClick={handleLogIn}
                 >
                     Login

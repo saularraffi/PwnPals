@@ -48,7 +48,7 @@ function ProfilePage() {
                     <AddIcon style={{ marginRight: 10 }} />
                     New
                 </Button>
-                <Table apps={appList}/>
+                <Table apps={appList} getContainers={getContainers}/>
             </Container>
         </Box>
     )

@@ -15,9 +15,10 @@ import Button from '@mui/material/Button';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
 
 
-function AppsTable({ apps }) {
+function AppsTable({ apps, getContainers }) {
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,
@@ -36,6 +37,41 @@ function AppsTable({ apps }) {
 
     const tableRowStyles = {
         fontSize: '1.2em'
+    }
+
+    const toggleContainerState = async (id, action) => {
+        const data = {
+            containerId: id
+        }
+
+        const url = `http://localhost:5000/api/container/${action}`
+
+        await axios.post(url, data).then(res => {
+            console.log(res.status);
+        }).catch(err => {
+            console.log(err)
+        })
+
+        // stateChange === true ? setStateChange(false) : setStateChange(true)
+    }
+
+    const deleteContainer = async (id) => {
+        const url = "http://localhost:5000/api/container"
+
+        const data = {
+            containerId: id
+        }
+
+        await axios.delete(url, { data: data }).then(res => {
+            getContainers()
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const openApp = function(port) {
+        console.log("opening app")
+        window.open(`http://localhost:${port}`);
     }
 
     function Row(props) {
@@ -64,20 +100,37 @@ function AppsTable({ apps }) {
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box 
-                          sx={{
-                              marginTop: 3,
-                              marginBottom: 3,
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              width: '40%'
-                          }}>
-                              { app.status == 'running'
-                                  ? <Button variant="contained" color="error">Stop</Button>
-                                  : <Button variant="contained" color="success">Start</Button>
-                              }
-                              <Button variant="contained" color="info">View Bugs</Button>
-                              <Button variant="contained" color="warning">Submit Bug</Button>
-                              <Button variant="contained" color="error">Delete</Button>
+                            sx={{
+                                marginTop: 3,
+                                marginBottom: 3,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                width: app.status === 'running' ? '45%' : '40%'
+                            }}>
+                                { app.status === 'running' &&
+                                    <Button variant="contained" onClick={() => openApp(app.port)}>
+                                        Open
+                                    </Button>
+                                }
+                                { app.status === 'running'
+                                    ?   <Button variant="contained" color="error"
+                                            onClick={() => toggleContainerState(app._id, 'stop')}
+                                        >
+                                            Stop
+                                        </Button>
+                                    :   <Button variant="contained" color="success"
+                                            onClick={() => toggleContainerState(app._id, 'start')}
+                                        >
+                                            Start
+                                        </Button>
+                                }
+                                <Button variant="contained" color="info">View Bugs</Button>
+                                <Button variant="contained" color="warning">Submit Bug</Button>
+                                <Button variant="contained" color="error"
+                                    onClick={() => deleteContainer(app._id)}
+                                >
+                                    Delete
+                                </Button>
                           </Box>
                       </Collapse>
                 </TableCell>

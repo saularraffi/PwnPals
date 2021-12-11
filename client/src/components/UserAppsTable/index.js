@@ -14,11 +14,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CircleIcon from '@mui/icons-material/Circle';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
 
-function AppsTable({ apps, getContainers }) {
+function AppsTable({ apps, getContainers, nav }) {
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,
@@ -75,6 +76,57 @@ function AppsTable({ apps, getContainers }) {
         window.open(`http://localhost:${port}`);
     }
 
+    function CollapsedRow(props) {
+        const app = props.app
+
+        return (
+            <React.Fragment>
+                <Box 
+                    sx={{
+                        marginTop: 3,
+                        marginBottom: 3,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: app.status === 'running' ? '45%' : '40%'
+                    }}
+                >
+                        { app.status === 'running' &&
+                            <Button variant="contained" onClick={() => openApp(app.port)}>
+                                Open
+                            </Button>
+                        }
+                        { app.status === 'running'
+                            ?   <Button variant="contained" color="error"
+                                    onClick={() => toggleContainerState(app._id, app.containerId, 'stop')}
+                                >
+                                    Stop
+                                </Button>
+                            :   <Button variant="contained" color="success"
+                                    onClick={() => toggleContainerState(app._id, app.containerId, 'start')}
+                                >
+                                    Start
+                                </Button>
+                        }
+                        <Button variant="contained" color="info"
+                            onClick={() => nav(`/bug-report/${app._id}`)}
+                        >
+                            View Bugs
+                        </Button>
+                        <Button variant="contained" color="warning"
+                            onClick={() => nav(`/app/${app._id}/bug-report`)}
+                        >
+                            Submit Bug
+                        </Button>
+                        <Button variant="contained" color="error"
+                            onClick={() => deleteContainer(app._id, app.containerId)}
+                        >
+                            Delete
+                        </Button>
+                    </Box>
+            </React.Fragment>
+        )
+    }
+
     function Row(props) {
         const app = props.row;
         const [open, setOpen] = React.useState(false);
@@ -93,6 +145,11 @@ function AppsTable({ apps, getContainers }) {
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         </IconButton>
                     </TableCell>
+                    <TableCell>
+                        <CircleIcon 
+                            style={{color: app.status === 'running' ? 'green' : 'red'}}
+                        />
+                    </TableCell>
                     <TableCell><Typography>{app.imageName}</Typography></TableCell>
                     <TableCell><Typography>{app.port}</Typography></TableCell>
                     <TableCell><Typography>{app.status}</Typography></TableCell>
@@ -100,40 +157,8 @@ function AppsTable({ apps, getContainers }) {
                 </StyledTableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box 
-                            sx={{
-                                marginTop: 3,
-                                marginBottom: 3,
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                width: app.status === 'running' ? '45%' : '40%'
-                            }}>
-                                { app.status === 'running' &&
-                                    <Button variant="contained" onClick={() => openApp(app.port)}>
-                                        Open
-                                    </Button>
-                                }
-                                { app.status === 'running'
-                                    ?   <Button variant="contained" color="error"
-                                            onClick={() => toggleContainerState(app._id, app.containerId, 'stop')}
-                                        >
-                                            Stop
-                                        </Button>
-                                    :   <Button variant="contained" color="success"
-                                            onClick={() => toggleContainerState(app._id, app.containerId, 'start')}
-                                        >
-                                            Start
-                                        </Button>
-                                }
-                                <Button variant="contained" color="info">View Bugs</Button>
-                                <Button variant="contained" color="warning">Submit Bug</Button>
-                                <Button variant="contained" color="error"
-                                    onClick={() => deleteContainer(app._id, app.containerId)}
-                                >
-                                    Delete
-                                </Button>
-                          </Box>
-                      </Collapse>
+                        <CollapsedRow app={app} />
+                    </Collapse>
                 </TableCell>
             </React.Fragment>
         )
@@ -156,6 +181,7 @@ function AppsTable({ apps, getContainers }) {
             <Table>
                 <TableHead sx={{ backgroundColor: '#1976d2  ' }}>
                     <TableRow>
+                        <TableCell />
                         <TableCell />
                         <TableCell sx={tableHeaderStyles}>Name</TableCell>
                         <TableCell sx={tableHeaderStyles}>Port</TableCell>

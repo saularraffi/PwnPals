@@ -1,9 +1,22 @@
+import { 
+    Box, 
+    Checkbox, 
+    Grid, 
+    TextField, 
+    FormControlLabel,
+    Button,
+    Typography
+} from '@mui/material'
+
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import { getUserId } from '../../auth/userInfo'
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
+
 function BugReportFormPage() {
+    const navigate = useNavigate();
     const location = useLocation()
     const appId = location.pathname.split('/').at(-2)
     const [appData, setAppData] = useState({})
@@ -55,29 +68,61 @@ function BugReportFormPage() {
         })
     }
 
+    const navigateOnClick = function(path) {
+        navigate(path)
+    }
+
     useEffect(() => {
         fetchContainer()
     }, [didMount])
 
     return (
-        <div>
-            <h1>Bug Report for {appData.imageName}</h1>
-            {errorSubmittingReport == true &&
-                <p>There was an error submitting the report.</p>
-            }
-            <form onSubmit={handleSubmit}>
-                <label>Title:
-                    <input type="text" name="title" onChange={handleTitleChange} />
-                </label>
-                <br/>
-                <label>Description:
-                    <br/>
-                    <textarea type="text" name="description" onChange={handleDescriptionChange}></textarea>
-                </label>
-                <br/>
-                <input type="submit" value="Submit" />
-            </form>
-        </div>
+        <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            display='flex'
+            flexDirection='column'
+            margin='auto'
+            width={800}
+            marginTop='10%'
+            onSubmit={handleSubmit}
+        >
+            <Typography
+                fontSize={40}
+                marginBottom={5}
+                display={'flex'}
+                flexDirection={'column'}
+                alignItems={'center'}
+            >
+                Bug Submission for <b>{appData.imageName}</b>
+            </Typography>
+            <Grid container spacing={4}>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <TextField
+                        fullWidth
+                        variant="standard"
+                        label="Title"
+                        onChange={handleTitleChange}
+                        sx={{ width: '50%' }}
+                    />
+                </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <TextField
+                        label="Description"
+                        multiline
+                        fullWidth
+                        rows={5}
+                        onChange={handleDescriptionChange}
+                    />
+                </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <Button sx={{ width: '20%' }} type="submit" variant="contained">
+                        Submit Bug
+                    </Button>
+                </Grid>
+            </Grid>
+        </Box>
     )
 }
 

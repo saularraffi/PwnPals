@@ -70,66 +70,64 @@ function LoginForm() {
     }
 
     return (
-        <div>
-            <Box
-                id={classes.form}
-                component="form"
-                className={classes.form}
-                noValidate
-                autoComplete="off"
-                display='flex'
-                flexDirection='column'
-                margin='auto'
-                width='400px'
-                marginTop='10%'
-                onSubmit={handleSubmit}
+        <Box
+            id={classes.form}
+            component="form"
+            className={classes.form}
+            noValidate
+            autoComplete="off"
+            display='flex'
+            flexDirection='column'
+            margin='auto'
+            width='400px'
+            marginTop='10%'
+            onSubmit={handleSubmit}
+        >
+            <Typography
+                fontSize={40}
+                marginBottom={5}
+                display={'flex'}
+                flexDirection={'column'}
+                alignItems={'center'}
             >
-                <Typography
-                    fontSize={40}
-                    marginBottom={5}
-                    display={'flex'}
-                    flexDirection={'column'}
-                    alignItems={'center'}
-                >
-                    Log In
-                </Typography>
-                <Grid container spacing={4}>
-                    <Grid item lg={12} md={12} sm={12} xs={12}>
-                        <TextField
-                            fullWidth
-                            variant="standard"
-                            label="Username"
-                            onChange={handleUsernameChange}
-                        />
-                    </Grid>
-                    <Grid item lg={12} md={12} sm={12} xs={12}>
-                        <TextField
-                            fullWidth
-                            variant="standard"
-                            label="Password"
-                            type="password"
-                            onChange={handlePasswordChange}
-                        />
-                    </Grid>
+                Log In
+            </Typography>
+            <Grid container spacing={4}>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <TextField
+                        fullWidth
+                        variant="standard"
+                        label="Username"
+                        onChange={handleUsernameChange}
+                    />
                 </Grid>
-                <FormControlLabel 
-                    className={classes.checkbox}
-                    value="female" 
-                    control={<Checkbox />} 
-                    label="Keep me logged in" 
-                />
-                <Button fullWidth type="submit" variant="contained">
-                    Log In
-                </Button>
-                <Button fullWidth variant="contained"
-                    style={{ backgroundColor: "#E77F0A" }}
-                    sx={{ marginTop: 3 }}
-                    onClick={() => navigateOnClick('/register')}
-                >
-                    Create Account
-                </Button>
-            </Box>
-        </div>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <TextField
+                        fullWidth
+                        variant="standard"
+                        label="Password"
+                        type="password"
+                        onChange={handlePasswordChange}
+                    />
+                </Grid>
+            </Grid>
+            <FormControlLabel 
+                className={classes.checkbox}
+                value="female" 
+                control={<Checkbox />} 
+                label="Keep me logged in" 
+            />
+            <Button fullWidth type="submit" variant="contained">
+                Log In
+            </Button>
+            <Button fullWidth variant="contained"
+                style={{ backgroundColor: "#E77F0A" }}
+                sx={{ marginTop: 3 }}
+                onClick={() => navigateOnClick('/register')}
+            >
+                Create Account
+            </Button>
+        </Box>
     )
 }
 

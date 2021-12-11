@@ -40,7 +40,7 @@ add your user to the docker group
 $ sudo usermod -aG docker $USER
 ```
 
-edit /lib/systemd/system/docker.service if you want to communicate with docker api 
+edit ```/lib/systemd/system/docker.service``` if you want to communicate with docker api 
 
 ```
 change

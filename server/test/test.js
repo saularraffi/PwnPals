@@ -8,12 +8,24 @@ const axios = require('axios')
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-docker.container.list()
-   // Inspect
-  .then(containers => containers[0].status())
-  .then(container => container.stats())
-  .then(stats => {
-    stats.on('data', stat => console.log('Stats: ', stat.toString()))
-    stats.on('error', err => console.log('Error: ', err))
-  })
-  .catch(error => console.log(error));
+const containers = ['one', 'two', 'three', 'four', 'five']
+const containerId = 'two'
+
+function test() {
+  containers.map(c => {
+    if (c === containerId) {
+        return "found"
+    }
+  })  
+}
+
+function test2() {
+  for (const c of containers) {
+    if (c === containerId) {
+      return 'found'
+    }
+  }
+}
+
+// test().then(res => console.log(res))
+console.log(test2())

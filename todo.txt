@@ -1,4 +1,4 @@
 - finish session management --> storing session info on backend and setting/sending cookies
 - add bug report update functionality
 - fix problem with calling api for docker functions (pass container id not mongo id, or pass mongo id)
-- fix error handling with docker functions
+- fix error handling with docker functions  

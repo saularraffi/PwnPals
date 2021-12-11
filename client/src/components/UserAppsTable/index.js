@@ -39,9 +39,10 @@ function AppsTable({ apps, getContainers }) {
         fontSize: '1.2em'
     }
 
-    const toggleContainerState = async (id, action) => {
+    const toggleContainerState = async (mongoId, containerId, action) => {
         const data = {
-            containerId: id
+            mongoId: mongoId,
+            containerId: containerId
         }
 
         const url = `http://localhost:5000/api/container/${action}`
@@ -55,11 +56,12 @@ function AppsTable({ apps, getContainers }) {
         // stateChange === true ? setStateChange(false) : setStateChange(true)
     }
 
-    const deleteContainer = async (id) => {
+    const deleteContainer = async (mongoId, containerId) => {
         const url = "http://localhost:5000/api/container"
 
         const data = {
-            containerId: id
+            mongoId: mongoId,
+            containerId: containerId
         }
 
         await axios.delete(url, { data: data }).then(res => {
@@ -114,12 +116,12 @@ function AppsTable({ apps, getContainers }) {
                                 }
                                 { app.status === 'running'
                                     ?   <Button variant="contained" color="error"
-                                            onClick={() => toggleContainerState(app._id, 'stop')}
+                                            onClick={() => toggleContainerState(app._id, app.containerId, 'stop')}
                                         >
                                             Stop
                                         </Button>
                                     :   <Button variant="contained" color="success"
-                                            onClick={() => toggleContainerState(app._id, 'start')}
+                                            onClick={() => toggleContainerState(app._id, app.containerId, 'start')}
                                         >
                                             Start
                                         </Button>
@@ -127,7 +129,7 @@ function AppsTable({ apps, getContainers }) {
                                 <Button variant="contained" color="info">View Bugs</Button>
                                 <Button variant="contained" color="warning">Submit Bug</Button>
                                 <Button variant="contained" color="error"
-                                    onClick={() => deleteContainer(app._id)}
+                                    onClick={() => deleteContainer(app._id, app.containerId)}
                                 >
                                     Delete
                                 </Button>

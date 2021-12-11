@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import BugReportPage from './components/BugReport/report'
+import BugReportsListPage from './components/BugReport/reportsList'
 import BugReportFormPage from './components/BugReport/reportForm'
 import HomePage from './components/Home'
 import LandingPage from './components/Landing';
@@ -30,6 +31,7 @@ function App() {
           <Route path='/profile' element={<ProfilePage />}/>
           <Route path='/app/:id' element={<UserAppPage />}/>
           <Route path='/upload' element={<UserAppUploadPage />}/>
+          <Route path='/bug-reports/:id' element={<BugReportsListPage />}/>
           <Route path='/bug-report/:id' element={<BugReportPage />}/>
           <Route path='/app/:id/bug-report' element={<BugReportFormPage />}/>
         </Routes>

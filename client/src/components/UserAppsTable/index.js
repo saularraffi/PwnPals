@@ -108,7 +108,7 @@ function AppsTable({ apps, getContainers, nav }) {
                                 </Button>
                         }
                         <Button variant="contained" color="info"
-                            onClick={() => nav(`/bug-report/${app._id}`)}
+                            onClick={() => nav(`/bug-reports/${app._id}`)}
                         >
                             View Bugs
                         </Button>

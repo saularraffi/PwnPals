@@ -8,10 +8,9 @@ import {
     Typography
 } from '@mui/material'
 
-import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import { getUserId } from '../../auth/userInfo'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 
 
@@ -55,21 +54,20 @@ function BugReportFormPage() {
             userId: getUserId(),
             title: title,
             description: description,
-            imageId: appData.imageId
+            appId: appData._id
         }
 
         axios.post(url, data).then(res => {
             console.log(res)
             window.history.back()
         })
+        .then(() => {
+            navigate(`/bug-reports/${appId}`)
+        })
         .catch(err => {
             console.log(err)
             setErrorSubmittingReport(true)
         })
-    }
-
-    const navigateOnClick = function(path) {
-        navigate(path)
     }
 
     useEffect(() => {

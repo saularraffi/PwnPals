@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import axios from 'axios';
 
 function BugReportsList(prop) {
+    const location = useLocation()
+    const appId = location.pathname.split('/').at(-1)
     const [didMount, setDidMount] = useState(false)
     const [bugReports, setBugReports] = useState([])
 
+    console.log(appId)
+
     const fetchBugReports = function() {
-        const url = `http://localhost:5000/api/bug-report/all?imageId=${prop.imageId}`
+        const url = `http://localhost:5000/api/bug-report/all?appId=${appId}`
 
         axios.get(url).then(res => {
             console.log(res.data)

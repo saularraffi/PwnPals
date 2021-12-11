@@ -49,11 +49,10 @@ function AppsTable({ apps, getContainers }) {
 
         await axios.post(url, data).then(res => {
             console.log(res.status);
+            getContainers()
         }).catch(err => {
             console.log(err)
         })
-
-        // stateChange === true ? setStateChange(false) : setStateChange(true)
     }
 
     const deleteContainer = async (mongoId, containerId) => {

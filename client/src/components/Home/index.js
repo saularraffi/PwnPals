@@ -1,12 +1,19 @@
+import {
+    Box, 
+    Container,
+    Typography,
+} from '@mui/material'
+
+import { useState } from 'react'
 import { getUser } from '../../auth/userInfo'
 
 function HomePage() {
-    const user = getUser()
+    const [user] = useState(getUser())
 
     return (
-        <div>
-            <h1>Welcome to PwnPals, {user}</h1>
-        </div>
+        <Box sx={{ margin: 20 }}>
+            <Typography variant='h2'>Hi, {user}!<br />Welcome to PwnPals!</Typography>
+        </Box>
     )
 }
 

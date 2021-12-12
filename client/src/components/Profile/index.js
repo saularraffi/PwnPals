@@ -40,7 +40,7 @@ function ProfilePage() {
     }, [])
 
     return (
-        <Box sx={{ margin: 10 }}>
+        <Box sx={{ margin: 20 }}>
             <Typography variant='h2'>Your Profile - {username}</Typography>
             <Container sx={{marginTop: 10}}>
                 <Button variant="contained" color="success"

@@ -38,7 +38,7 @@ function BugReportsList() {
 
         axios.get(url).then(res => {
             console.log(res.data)
-            setBugReports(res.data)
+            setBugReports(res.data.reverse())
         }).catch(err => {
             console.log(err)
         })

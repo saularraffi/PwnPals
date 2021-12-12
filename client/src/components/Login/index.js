@@ -27,6 +27,7 @@ function LoginForm() {
     const classes = useStyles()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [loginAttemptFailed, setLoginAttemptFailed] = useState(false)
 
     const navigate = useNavigate();
 
@@ -58,6 +59,7 @@ function LoginForm() {
         .catch(err => {
             if (err.request.status === 401) {
                 console.log("Access Denied")
+                setLoginAttemptFailed(true)
             }
             else {
                 console.log(err)
@@ -111,6 +113,11 @@ function LoginForm() {
                     />
                 </Grid>
             </Grid>
+
+            { loginAttemptFailed &&
+                <Typography style={{ color: 'red', marginTop: 20 }}>Login attempt failed</Typography>
+            }
+
             <FormControlLabel 
                 className={classes.checkbox}
                 value="female" 

@@ -26,6 +26,11 @@ function CreateAccountPage() {
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [verifiedPassword, setVerifiedPassword] = useState('')
+    const [userExists, setUserExists] = useState(false)
+    const [passwordsDontMatch, setPasswordsDontMatch] = useState(false)
+    const [passwordIsEmpty, setPasswordIsEmpty] = useState(false)
+    // const [passError, setPassError] = useState(false)
 
     const navigate = useNavigate();
 
@@ -37,26 +42,49 @@ function CreateAccountPage() {
         setPassword(evt.target.value)
     }
 
+    const handleVerifiedPasswordChange = (evt) => {
+        setVerifiedPassword(evt.target.value)
+    }
+    
     const handleSubmit = (e) => {
-        // fixes some issue with aborting request
         e.preventDefault();
 
-        const data = {
-            username: username,
-            password: password
-        }
-
-        axios.post(`http://localhost:5000/api/user`, data)
+        axios.get(`http://localhost:5000/api/user/verify?username=${username}`)
         .then(res => {
-            console.log(res)
-            navigate('/login')
+            setUserExists(true)
+            setPasswordIsEmpty(false)
+            setPasswordsDontMatch(false)
         })
         .catch(err => {
-            if (err.request.status === 401) {
-                console.log("Access Denied")
+            if (password !== verifiedPassword) {
+                setPasswordsDontMatch(true)
+                setUserExists(false)
+                setPasswordIsEmpty(false)
+            }
+            else if (password === '') {
+                setPasswordIsEmpty(true)
+                setUserExists(false)
+                setPasswordsDontMatch(false)
             }
             else {
-                console.log(err)
+                const data = {
+                    username: username,
+                    password: password
+                }
+        
+                axios.post(`http://localhost:5000/api/user`, data)
+                .then(res => {
+                    console.log(res)
+                    navigate('/login')
+                })
+                .catch(err => {
+                    if (err.request.status === 401) {
+                        console.log("Access Denied")
+                    }
+                    else {
+                        console.log(err)
+                    }
+                })
             }
         })
     }
@@ -91,6 +119,7 @@ function CreateAccountPage() {
                             fullWidth
                             variant="standard"
                             label="Username"
+                            error={userExists}
                             onChange={handleUsernameChange}
                         />
                     </Grid>
@@ -100,18 +129,42 @@ function CreateAccountPage() {
                             variant="standard"
                             label="Password"
                             type="password"
+                            error={passwordsDontMatch || passwordIsEmpty}
                             onChange={handlePasswordChange}
                         />
                     </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <TextField
+                            fullWidth
+                            variant="standard"
+                            label="Verify Password"
+                            type="password"
+                            error={passwordsDontMatch || passwordIsEmpty}
+                            onChange={handleVerifiedPasswordChange}
+                        />
+                    </Grid>
                 </Grid>
-                <FormControlLabel 
-                    className={classes.checkbox}
-                    value="female" 
-                    control={<Checkbox />} 
-                    label="Keep me logged in" 
-                />
+                
+                { userExists &&
+                    <Typography style={{ color: 'red', marginTop: 20 }}>
+                        This user already exists.
+                    </Typography>
+                }
+
+                { passwordsDontMatch &&
+                    <Typography style={{ color: 'red', marginTop: 20 }}>
+                        Passwords don't match.
+                    </Typography>
+                }
+
+                { passwordIsEmpty &&
+                    <Typography style={{ color: 'red', marginTop: 20 }}>
+                        Password cannot be empty.
+                    </Typography>
+                }
+
                 <Button fullWidth type="submit" variant="contained"
-                    style={{backgroundColor: '#E77F0A'}}
+                    style={{ backgroundColor: '#E77F0A', marginTop: 40 }}
                 >
                     Create Account
                 </Button>

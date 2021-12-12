@@ -32,6 +32,25 @@ exports.getAllUsers = function(req, res) {
     })
 }
 
+exports.verifyUser = function(req, res) {
+    const username = req.query.username
+
+    User.find({ username: username }, function(err, user) {
+        if (err) {
+            console.log(err)
+            res.status(500).send('Database Error');
+        }
+        else if (user.length === 0) {
+            console.log('User does not exist')
+            res.status(404).send('User does not exist');
+        }
+        else {
+            console.log("user exists")
+            res.status(200).send(user);
+        }
+    })
+}
+
 exports.postUser = async function(req, res) {
     const username = req.body.username
     const password = req.body.password

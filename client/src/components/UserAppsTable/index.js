@@ -22,11 +22,11 @@ import axios from 'axios';
 function AppsTable({ apps, getContainers, nav }) {
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
+            backgroundColor: theme.palette.action.hover,
         },
         // hide last border
         '&:last-child td, &:last-child th': {
-        border: 0,
+            border: 0,
         },
     }));
 
@@ -150,10 +150,10 @@ function AppsTable({ apps, getContainers, nav }) {
                             style={{color: app.status === 'running' ? 'green' : 'red'}}
                         />
                     </TableCell>
-                    <TableCell><Typography>{app.imageName}</Typography></TableCell>
-                    <TableCell><Typography>{app.port}</Typography></TableCell>
-                    <TableCell><Typography>{app.status}</Typography></TableCell>
-                    <TableCell><Typography>{app.created}</Typography></TableCell>
+                    <TableCell sx={tableRowStyles}>{app.imageName}</TableCell>
+                    <TableCell sx={tableRowStyles}>{app.port}</TableCell>
+                    <TableCell sx={tableRowStyles}>{app.status}</TableCell>
+                    <TableCell sx={tableRowStyles}>{app.created}</TableCell>
                 </StyledTableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
@@ -179,7 +179,7 @@ function AppsTable({ apps, getContainers, nav }) {
                 My Apps
             </Typography>
             <Table>
-                <TableHead sx={{ backgroundColor: '#1976d2  ' }}>
+                <TableHead sx={{ backgroundColor: '#1976d2' }}>
                     <TableRow>
                         <TableCell />
                         <TableCell />

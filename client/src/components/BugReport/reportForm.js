@@ -93,7 +93,7 @@ function BugReportFormPage() {
                 flexDirection={'column'}
                 alignItems={'center'}
             >
-                Bug Submission for <b>{appData.imageName}</b>
+                Bug Submissions for <strong>{appData.imageName}</strong>
             </Typography>
             <Grid container spacing={4}>
                 <Grid item lg={12} md={12} sm={12} xs={12}>

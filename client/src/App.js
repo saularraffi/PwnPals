@@ -17,8 +17,6 @@ function App() {
   if (localStorage.getItem('loggedIn') === null) {
     setLoggedInStatus(false)
   }
-
-  console.log(process.env)
   
   return (
     <div className="App">

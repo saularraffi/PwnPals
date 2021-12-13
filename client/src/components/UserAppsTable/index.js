@@ -76,7 +76,7 @@ function AppsTable({ apps, getContainers, nav }) {
         window.open(`http://localhost:${port}`);
     }
 
-    function CollapsedRow(props) {
+    const CollapsedRow = (props) => {
         const app = props.app
 
         return (
@@ -127,7 +127,7 @@ function AppsTable({ apps, getContainers, nav }) {
         )
     }
 
-    function Row(props) {
+    const Row = (props) => {
         const app = props.row;
         const [open, setOpen] = React.useState(false);
       

@@ -34,7 +34,7 @@ function BugReportsList() {
     }));
 
     const fetchBugReports = function() {
-        const url = `http://localhost:5000/api/bug-report/all?appId=${appId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report/all?appId=${appId}`
 
         axios.get(url).then(res => {
             console.log(res.data)
@@ -53,7 +53,7 @@ function BugReportsList() {
     }
 
     // const deleteReport = (id) => {
-    //     const url = 'http://localhost:5000/api/bug-report'
+    //     const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
 
     //     const data = {
     //         id: id

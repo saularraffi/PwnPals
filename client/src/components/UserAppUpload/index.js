@@ -9,12 +9,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import axios from 'axios';
-import { getUser } from '../../auth/userInfo'
+import { getUser, getUserId } from '../../auth/userInfo'
 
 function UserAppUploadPage(props) {
     const navigate = useNavigate();
     
     const [user] = useState(getUser())
+    const [userId] = useState(getUserId())
     const [appName, setAppName] = useState("")
     const [githubUri, setGithubUri] = useState("")
 
@@ -29,7 +30,7 @@ function UserAppUploadPage(props) {
     const apiBuildImage = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/build`
         const data = {
-            "user": user,
+            "userId": userId,
             "imageName": `${user}-${appName}`,
             "repo": githubUri
         }

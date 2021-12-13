@@ -61,12 +61,15 @@ exports.createContainer = async function(req, res) {
 }
 
 exports.startContainer = async function(req, res) {
+    const mongoId = req.body.mongoId
     const containerId = req.body.containerId
 
     const status = await docker.startContainer(containerId)
 
-    if (status !== null) {
-        Container.findOneAndUpdate({ containerId: containerId }, { status: "running" }, (err, doc) => {
+    console.log(status)
+
+    if (status !== undefined || status !== null) {
+        Container.findOneAndUpdate({ _id: mongoId }, { status: "running" }, (err, doc) => {
             if (err) {
                 console.log(err)
                 res.send("Error starting container")
@@ -78,17 +81,19 @@ exports.startContainer = async function(req, res) {
         })
     }
     else {
+        console.log("\n[-] Container failed to start")
         res.send("Error starting container")
     }
 }
 
 exports.stopContainer = async function(req, res) {
+    const mongoId = req.body.mongoId
     const containerId = req.body.containerId
 
     const status = await docker.stopContainer(containerId)
 
-    if (status !== null) {
-        Container.findOneAndUpdate({ containerId: containerId }, { status: "exited" }, (err, doc) => {
+    if (status !== undefined || status !== null) {
+        Container.findOneAndUpdate({ _id: mongoId }, { status: "exited" }, (err, doc) => {
             if (err) {
                 console.log(err)
                 res.send("Error stopping container")
@@ -100,32 +105,40 @@ exports.stopContainer = async function(req, res) {
         })
     }
     else {
+        console.log("\n[-] Container failed to stop")
         res.send("Error stopping container")
     }
 }
 
 exports.deleteContainer = async function(req, res) {
+    const mongoId = req.body.mongoId
     const containerId = req.body.containerId
 
-    await docker.deleteContainer(containerId) 
+    const status = await docker.deleteContainer(containerId) 
 
-    Container.findOneAndDelete({ containerId: containerId }, (err, doc) => {
-        if (err) {
-            console.log(err)
-            res.send("Container failed to delete")
-        }
-        else {
-            console.log("\n[+] Container deleted successfully")
-            res.send("Container deleted successfully")
+    if (status !== undefined || status !== null) {
+        Container.findOneAndDelete({ _id: mongoId }, (err, doc) => {
+            if (err) {
+                console.log(err)
+                res.send("Container failed to delete")
+            }
+            else {
+                console.log("\n[+] Container deleted successfully")
+                res.send("Container deleted successfully")
 
-            Build.findOneAndDelete({ imageId: doc.imageId }, (err, doc) => {
-                if (err) {
-                    console.log(err)
-                }
-                else {
-                    console.log("\n[+] Image deleted successfully")
-                }
-            })
-        }
-    })
+                Build.findOneAndDelete({ imageId: doc.imageId }, (err, doc) => {
+                    if (err) {
+                        console.log(err)
+                    }
+                    else {
+                        console.log("\n[+] Image deleted successfully")
+                    }
+                })
+            }
+        })
+    }
+    else {
+        console.log("\n[-] Container failed to delete")
+        res.send("Container failed to delete")
+    }
 }

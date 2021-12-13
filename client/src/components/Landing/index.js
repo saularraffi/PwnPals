@@ -40,7 +40,7 @@ function LandingPage() {
     }
 
     useEffect(() => {
-        if (isLoggedIn() === 'true') {
+        if (isLoggedIn()) {
             navigate('/home')
         }
     }, [])

@@ -4,7 +4,7 @@ const BugReport = mongoose.Schema({
     userId: String,
     title: String,
     description: String,
-    imageId: String,
+    appId: String,
     created: Date
 })
 

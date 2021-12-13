@@ -7,13 +7,26 @@ const fs = require('fs')
 const axios = require('axios');
 const path = require('path/posix');
 
-// const docker = new Docker({ socketPath: '/var/run/docker.sock' }) 
-const docker = new Docker({ socketPath: 'tcp://0.0.0.0:2376' });
- 
-// List
-docker.container.list()
-   // Inspect
-  .then(containers => containers[0].status())
-  .then(container => container.top())
-  .then(processes => console.log(processes))
-  .catch(error => console.log(error));
+const docker = new Docker({ socketPath: '/var/run/docker.sock' })
+
+const containers = ['one', 'two', 'three', 'four', 'five']
+const containerId = 'two'
+
+function test() {
+  containers.map(c => {
+    if (c === containerId) {
+        return "found"
+    }
+  })  
+}
+
+function test2() {
+  for (const c of containers) {
+    if (c === containerId) {
+      return 'found'
+    }
+  }
+}
+
+// test().then(res => console.log(res))
+console.log(test2())

@@ -20,9 +20,9 @@ exports.getReport = function(req, res) {
 }
 
 exports.getAllReports = function(req, res) { 
-    const { imageId } = req.query
+    const { appId } = req.query
 
-    BugReport.find({ imageId: imageId }, function(err, bugReports) {
+    BugReport.find({ appId: appId }, function(err, bugReports) {
         if (err) {
             console.log(err)
             res.send("Failed to find bug reports")
@@ -37,13 +37,13 @@ exports.postReport = function(req, res) {
     const { userId } = req.body
     const { title } = req.body
     const { description } = req.body
-    const { imageId } = req.body
+    const { appId } = req.body
 
     const bugReport = new BugReport({
         userId: userId,
         title: title,
         description: description,
-        imageId: imageId,
+        appId: appId,
         created: Date.now()
     })
     bugReport.save(function(err) {

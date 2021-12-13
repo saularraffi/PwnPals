@@ -1,21 +1,47 @@
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import Container from '@mui/material/Container';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import CardHeader from '@mui/material/CardHeader'
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { Add as AddIcon } from '@material-ui/icons'
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-function BugReportsList(prop) {
-    const [didMount, setDidMount] = useState(false)
+
+function BugReportsList() {
+    const navigate = useNavigate();
+    const location = useLocation()
+    const appId = location.pathname.split('/').at(-1)
     const [bugReports, setBugReports] = useState([])
 
+      
+    const StyledTableRow = styled(TableRow)(({ theme }) => ({
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
+        // hide last border
+        '&:last-child td, &:last-child th': {
+            border: 0,
+        },
+    }));
+
     const fetchBugReports = function() {
-        const url = `http://localhost:5000/api/bug-report/all?imageId=${prop.imageId}`
+        const url = `http://localhost:5000/api/bug-report/all?appId=${appId}`
 
         axios.get(url).then(res => {
             console.log(res.data)
-            setBugReports(res.data)
+            setBugReports(res.data.reverse())
         }).catch(err => {
             console.log(err)
         })
-
-        setDidMount(true)
     }
 
     const displayDescription = (description) => {
@@ -26,55 +52,82 @@ function BugReportsList(prop) {
         return description
     }
 
-    const deleteReport = (id) => {
-        const url = 'http://localhost:5000/api/bug-report'
+    // const deleteReport = (id) => {
+    //     const url = 'http://localhost:5000/api/bug-report'
 
-        const data = {
-            id: id
-        }
+    //     const data = {
+    //         id: id
+    //     }
 
-        axios.delete(url, { data: data }).then(res => {
-            console.log(res)
-            fetchBugReports()
-        }).catch(err => {
-            console.log(err)
-        })
+    //     axios.delete(url, { data: data }).then(res => {
+    //         console.log(res)
+    //         fetchBugReports()
+    //     }).catch(err => {
+    //         console.log(err)
+    //     })
+    // }
+
+    const tableHeaderStyles = {
+        fontSize: '1.3em',
+        color: 'white',
+        fontWeight: 'bold'
+    }
+
+    const navigateOnClick = (path) => {
+        navigate(path)
     }
 
     useEffect(() => {
         fetchBugReports()
-    }, [didMount])
+    }, [])
 
     return (
-        <div>
-            <h3>Bug Reports for {prop.appName}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <td></td>
-                        <td><b>Title</b></td>
-                        <td><b>Description</b></td>
-                        <td><b>Date</b></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bugReports.map((report) => {
-                        return (
-                            <tr>
-                                <td key='delete-btn'>
-                                    <button onClick={() => deleteReport(report._id)}>Delete</button>
-                                </td>
-                                <td key={report.title}>
-                                    <a href={`../bug-report/${report._id}`}>{report.title}</a>
-                                </td>
-                                <td key={report.description}>{displayDescription(report.description)}</td>
-                                <td key={report.created}>{report.created}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
-        </div>
+        <Box sx={{ margin: '10% 10% 10% 10%'}}>
+            <Button variant="contained" color="success"
+                style={{paddingLeft: 5, marginBottom: 15}}
+                onClick={() => navigateOnClick(`/app/${appId}/bug-report`)}
+            >
+                <AddIcon style={{ marginRight: 10 }} />
+                Submut Report
+            </Button>
+            <TableContainer>
+                <Table sx={{ minWidth: 700 }}>
+                    {/* <TableHead
+                        style={{ backgroundColor: '#1976d2' }}
+                    >
+                        <TableRow>
+                            <TableCell sx={tableHeaderStyles}>Title</TableCell>
+                            <TableCell sx={tableHeaderStyles}>Description</TableCell>
+                            <TableCell sx={tableHeaderStyles}>Date</TableCell>
+                        </TableRow>
+                    </TableHead> */}
+                    <TableBody>
+                        {bugReports.map((report) => (
+                            <StyledTableRow key={report.name}>
+                                <CardHeader
+                                    avatar={
+                                        <Avatar
+                                            alt="Remy Sharp"
+                                            // src="/static/images/avatar/1.jpg"
+                                        />
+                                    }
+                                    title={report.title}
+                                    titleTypographyProps={{
+                                        fontSize: '1.2em',
+                                        fontWeight: 'bold',
+                                        marginLeft: 3,
+                                        color: '#1976d2'
+                                    }}
+                                />
+                                <TableCell align="right" sx={{ fontSize: '1.2em' }}>
+                                    {report.created}
+                                </TableCell>
+                            </StyledTableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
     )
 }
 

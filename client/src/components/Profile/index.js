@@ -11,15 +11,16 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 import Table from '../UserAppsTable'
-import { getUser } from '../../auth/userInfo'
+import { getUser, getUserId } from '../../auth/userInfo'
 
 function ProfilePage() {
     const navigate = useNavigate();
     const [appList, setAppList] = useState([])
     const [username] = useState(getUser())
+    const [userId] = useState(getUserId())
 
     const getContainers = async () => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/container/all`
+        const url = `${process.env.REACT_APP_BACKEND}/api/container/all?userId=${userId}`
 
         await axios.get(url).then(res => {
             setAppList(res.data)

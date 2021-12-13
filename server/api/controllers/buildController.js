@@ -34,7 +34,7 @@ exports.getAllBuilds = function(req, res) {
 }
 
 exports.postBuild = async function(req, res) {
-    const user = req.body.user
+    const userId = req.body.userId
     const repo = req.body.repo
     const imageName = req.body.imageName
 
@@ -46,7 +46,7 @@ exports.postBuild = async function(req, res) {
 
     if (id !== null) {
         const build = new Build({ 
-            user: user,
+            userId: userId,
             repo: repo,
             imageName: imageName,
             created: Date.now(),
@@ -62,7 +62,7 @@ exports.postBuild = async function(req, res) {
                 
                 const url = "http://localhost:5000/api/container/create"
                 const data = {
-                    "user": user,
+                    "userId": userId,
                     "imageName": imageName
                 }
 

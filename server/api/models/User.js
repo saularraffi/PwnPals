@@ -3,7 +3,11 @@ const bcrypt = require('bcrypt')
 
 const User = mongoose.Schema({
     username: String,
-    password: String
+    password: String,
+    friends: {
+        type: Array,
+        default: []
+    },
 })
 
 User.methods.verifyPassword = async function(password) {

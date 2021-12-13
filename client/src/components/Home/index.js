@@ -50,7 +50,7 @@ function HomePage() {
                 sx={{
                     minWidth: 700,
                     maxWidth: 1000,
-                    margin: 'auto'
+                    margin: '1.3em auto'
                 }}
             >
                 <CardContent>
@@ -78,17 +78,25 @@ function HomePage() {
         console.log(friendsActivities)
     }, [])
 
+    const users = [
+        { id: 1, name: 'Nathan', role: 'Web Developer' },
+        { id: 2, name: 'John', role: 'Web Designer' },
+        { id: 3, name: 'Jane', role: 'Team Leader' },
+    ]
+
     return (
         <Box sx={{ margin: 20 }}>
             <Typography variant='h2'>Hi, {user}!<br />Welcome to PwnPals!</Typography>
             <Box sx={{ marginTop: 10 }}>
                 {
                     friendsActivities.map((activity) => {
-                        ActivityCard(
-                            'hacker1337',
-                            'has submitted a new bug',
-                            'app title',
-                            'this is the description for this activity'
+                        return (
+                            ActivityCard(
+                                'hacker1337',
+                                'has submitted a new bug',
+                                'app title',
+                                'this is the description for this activity'
+                            )
                         )
                     })
                 }

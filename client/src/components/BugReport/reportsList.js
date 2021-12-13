@@ -92,15 +92,6 @@ function BugReportsList() {
             </Button>
             <TableContainer>
                 <Table sx={{ minWidth: 700 }}>
-                    {/* <TableHead
-                        style={{ backgroundColor: '#1976d2' }}
-                    >
-                        <TableRow>
-                            <TableCell sx={tableHeaderStyles}>Title</TableCell>
-                            <TableCell sx={tableHeaderStyles}>Description</TableCell>
-                            <TableCell sx={tableHeaderStyles}>Date</TableCell>
-                        </TableRow>
-                    </TableHead> */}
                     <TableBody>
                         {bugReports.map((report) => (
                             <StyledTableRow key={report.name}>

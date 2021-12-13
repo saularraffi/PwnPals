@@ -33,6 +33,7 @@ exports.getContainers = function(req, res) {
 
 exports.createContainer = async function(req, res) {
     const userId = req.body.userId
+    const username = req.body.username
     const imageName = req.body.imageName
 
     console.log("\n[+] Creating container")
@@ -43,6 +44,7 @@ exports.createContainer = async function(req, res) {
     if (stats !== null) {
         const container = new Container({ 
             userId: userId,
+            username: username,
             imageId: stats.data.Image.split(':')[1],
             imageName: imageName,
             containerId: stats.data.Id,

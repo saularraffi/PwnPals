@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 
 const Container = mongoose.Schema({
     userId: String,
+    username: String,
     imageId: String,
     imageName: String,
     containerId: String,

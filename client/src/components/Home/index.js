@@ -39,23 +39,12 @@ function HomePage() {
                     }
                     return activities
                 })
-                // .then(activities => {
-                //     for (const activity of activities.apps) {
-                //         console.log(activity)
-                //     }
-                //     for (const activity of activities.reports) {
-                //         console.log(activity)
-                //     }
-                //     return activities
-                // })
                 .then(activities => { 
                     setFriendsActivities([
                         ...friendsActivities, 
                         ...activities.apps, 
                         ...activities.reports
                     ])
-                    // console.log([...friendsActivities, ...res[0].data, ...res[1].data])
-                    // console.log(friendsActivities)
                 })
             }
         })
@@ -64,8 +53,16 @@ function HomePage() {
         })
     }
 
+    const fetchUsername = () => {
+        const url = `${process.env.REACT_APP_BACKEND}/api/user?id=${userId}`
+
+        axios.get(url).then(user => {
+            return user.username
+        })
+    }
+
     const ActivityCard = (activity) => {
-        const user = 'hacker1337'
+        const user = activity.username
 
         const header = activity.imageId !== undefined 
         ? 'has submitted a new app' 

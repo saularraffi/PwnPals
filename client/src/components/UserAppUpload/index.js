@@ -31,6 +31,7 @@ function UserAppUploadPage(props) {
         const url = `${process.env.REACT_APP_BACKEND}/api/build`
         const data = {
             "userId": userId,
+            "username": getUser(),
             "imageName": `${user}-${appName}`,
             "repo": githubUri
         }

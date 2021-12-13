@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 
 import React, { useEffect, useState } from "react";
-import { getUserId } from '../../auth/userInfo'
+import { getUser, getUserId } from '../../auth/userInfo'
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 
@@ -52,6 +52,7 @@ function BugReportFormPage() {
 
         const data = {
             userId: getUserId(),
+            username: getUser(),
             title: title,
             description: description,
             appId: appData._id

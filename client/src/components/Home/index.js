@@ -11,42 +11,35 @@ import Box from '@mui/material/Box';
 import { useState, useEffect } from 'react'
 import { getUser, getUserId } from '../../auth/userInfo'
 import axios from 'axios';
+import { FlashOnRounded } from '@material-ui/icons';
 
 
 function HomePage() {
     const [user] = useState(getUser())
     const [userId] = useState(getUserId())
-    const [friendsActivities, setFriendsActivities] = useState({})
+    const [friendsActivities, setFriendsActivities] = useState([])
+    const [fetchedUserDetails, setFetchedUserDetails] = useState(false)
+    const [reload, setReload] = useState(0)
 
-    const getUserDetails = () => {
+    const fetchUserDetails = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/user?id=${userId}`
 
-        axios.get(url).then(res => {
+        axios.get(url).then(async (res) => {
+            setFetchedUserDetails(true)
             const friends = res.data.friends
-            getContainers(friends[2])
-        }).catch(err => {
-            console.log(err)
+            for (const friend of friends) {
+                await Promise.all([
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${friend}`),
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${friend}`)
+                ])
+                .then(res => { 
+                    setFriendsActivities([...friendsActivities, ...res[0].data, ...res[1].data])
+                    // console.log([...friendsActivities, ...res[0].data, ...res[1].data])
+                    // console.log(friendsActivities)
+                })
+            }
         })
-    }
-
-    const getContainers = (userId) => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/container/all?userId=${userId}`
-
-        axios.get(url).then(res => {
-            console.log(res.data)
-            return res
-        }).catch(err => {
-            console.log(err)
-        })
-    }
-
-    const getBugReports = (userId) => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${userId}`
-
-        axios.get(url).then(res => {
-            console.log(res.data)
-            return res
-        }).catch(err => {
+        .catch(err => {
             console.log(err)
         })
     }
@@ -79,19 +72,26 @@ function HomePage() {
     }
 
     useEffect(() => {
-        getUserDetails()
+        if (!fetchedUserDetails) {
+            fetchUserDetails()
+        }
+        console.log(friendsActivities)
     }, [])
 
     return (
         <Box sx={{ margin: 20 }}>
             <Typography variant='h2'>Hi, {user}!<br />Welcome to PwnPals!</Typography>
             <Box sx={{ marginTop: 10 }}>
-                {ActivityCard(
-                    'hacker1337',
-                    'has uploaded a new app',
-                    'app title',
-                    'this is the description for this activity'
-                )}
+                {
+                    friendsActivities.map((activity) => {
+                        ActivityCard(
+                            'hacker1337',
+                            'has submitted a new bug',
+                            'app title',
+                            'this is the description for this activity'
+                        )
+                    })
+                }
             </Box>
         </Box>
     )

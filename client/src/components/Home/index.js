@@ -32,8 +32,28 @@ function HomePage() {
                     axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${friend}`),
                     axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${friend}`)
                 ])
-                .then(res => { 
-                    setFriendsActivities([...friendsActivities, ...res[0].data, ...res[1].data])
+                .then(res => {
+                    const activities = {
+                        apps: res[0].data,
+                        reports: res[1].data
+                    }
+                    return activities
+                })
+                // .then(activities => {
+                //     for (const activity of activities.apps) {
+                //         console.log(activity)
+                //     }
+                //     for (const activity of activities.reports) {
+                //         console.log(activity)
+                //     }
+                //     return activities
+                // })
+                .then(activities => { 
+                    setFriendsActivities([
+                        ...friendsActivities, 
+                        ...activities.apps, 
+                        ...activities.reports
+                    ])
                     // console.log([...friendsActivities, ...res[0].data, ...res[1].data])
                     // console.log(friendsActivities)
                 })
@@ -44,13 +64,25 @@ function HomePage() {
         })
     }
 
-    const ActivityCard = (user, header, activityTitle, description) => {
+    const ActivityCard = (activity) => {
+        const user = 'hacker1337'
+
+        const header = activity.imageId !== undefined 
+        ? 'has submitted a new app' 
+        : 'has submitted a new bug'
+
+        const activityTitle = activity.title !== undefined 
+        ? activity.title 
+        : activity.imageName
+
+        const description = activity.description
+
         return (
             <Card 
                 sx={{
                     minWidth: 700,
                     maxWidth: 1000,
-                    margin: '1.3em auto'
+                    margin: '2em auto'
                 }}
             >
                 <CardContent>
@@ -78,12 +110,6 @@ function HomePage() {
         console.log(friendsActivities)
     }, [])
 
-    const users = [
-        { id: 1, name: 'Nathan', role: 'Web Developer' },
-        { id: 2, name: 'John', role: 'Web Designer' },
-        { id: 3, name: 'Jane', role: 'Team Leader' },
-    ]
-
     return (
         <Box sx={{ margin: 20 }}>
             <Typography variant='h2'>Hi, {user}!<br />Welcome to PwnPals!</Typography>
@@ -91,12 +117,7 @@ function HomePage() {
                 {
                     friendsActivities.map((activity) => {
                         return (
-                            ActivityCard(
-                                'hacker1337',
-                                'has submitted a new bug',
-                                'app title',
-                                'this is the description for this activity'
-                            )
+                            ActivityCard(activity)
                         )
                     })
                 }

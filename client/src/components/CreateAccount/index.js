@@ -49,7 +49,7 @@ function CreateAccountPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.get(`http://localhost:5000/api/user/verify?username=${username}`)
+        axios.get(`${process.env.REACT_APP_BACKEND}/api/user/verify?username=${username}`)
         .then(res => {
             setUserExists(true)
             setPasswordIsEmpty(false)
@@ -71,8 +71,8 @@ function CreateAccountPage() {
                     username: username,
                     password: password
                 }
-        
-                axios.post(`http://localhost:5000/api/user`, data)
+                
+                axios.post(`${process.env.REACT_APP_BACKEND}/api/user`, data)
                 .then(res => {
                     console.log(res)
                     navigate('/login')

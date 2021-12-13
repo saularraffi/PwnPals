@@ -48,7 +48,7 @@ function LoginForm() {
             password: password
         }
 
-        axios.post(`http://localhost:5000/api/auth/local`, data)
+        axios.post(`${process.env.REACT_APP_BACKEND}/api/auth/local`, data)
         .then(res => {
             console.log(res)
             setLoggedInStatus(true)

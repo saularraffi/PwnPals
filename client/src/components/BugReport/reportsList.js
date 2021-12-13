@@ -34,7 +34,7 @@ function BugReportsList() {
     }));
 
     const fetchBugReports = function() {
-        const url = `http://localhost:5000/api/bug-report/all?appId=${appId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report/all?appId=${appId}`
 
         axios.get(url).then(res => {
             console.log(res.data)
@@ -53,7 +53,7 @@ function BugReportsList() {
     }
 
     // const deleteReport = (id) => {
-    //     const url = 'http://localhost:5000/api/bug-report'
+    //     const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
 
     //     const data = {
     //         id: id
@@ -92,15 +92,6 @@ function BugReportsList() {
             </Button>
             <TableContainer>
                 <Table sx={{ minWidth: 700 }}>
-                    {/* <TableHead
-                        style={{ backgroundColor: '#1976d2' }}
-                    >
-                        <TableRow>
-                            <TableCell sx={tableHeaderStyles}>Title</TableCell>
-                            <TableCell sx={tableHeaderStyles}>Description</TableCell>
-                            <TableCell sx={tableHeaderStyles}>Date</TableCell>
-                        </TableRow>
-                    </TableHead> */}
                     <TableBody>
                         {bugReports.map((report) => (
                             <StyledTableRow key={report.name}>

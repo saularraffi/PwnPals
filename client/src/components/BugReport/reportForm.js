@@ -25,7 +25,7 @@ function BugReportFormPage() {
     const [errorSubmittingReport, setErrorSubmittingReport] = useState(false)
 
     const fetchContainer = function() {
-        const url = `http://localhost:5000/api/container?id=${appId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/container?id=${appId}`
 
         axios.get(url).then(res => {
             console.log(res.data)
@@ -48,7 +48,7 @@ function BugReportFormPage() {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const url = 'http://localhost:5000/api/bug-report'
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
 
         const data = {
             userId: getUserId(),

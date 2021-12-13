@@ -46,7 +46,7 @@ function AppsTable({ apps, getContainers, nav }) {
             containerId: containerId
         }
 
-        const url = `http://localhost:5000/api/container/${action}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/container/${action}`
 
         await axios.post(url, data).then(res => {
             console.log(res.status);
@@ -57,7 +57,7 @@ function AppsTable({ apps, getContainers, nav }) {
     }
 
     const deleteContainer = async (mongoId, containerId) => {
-        const url = "http://localhost:5000/api/container"
+        const url = `${process.env.REACT_APP_BACKEND}/api/container`
 
         const data = {
             mongoId: mongoId,

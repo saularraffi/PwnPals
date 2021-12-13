@@ -19,7 +19,7 @@ function ProfilePage() {
     const [username] = useState(getUser())
 
     const getContainers = async () => {
-        const url = "http://localhost:5000/api/container/all"
+        const url = `${process.env.REACT_APP_BACKEND}/api/container/all`
 
         await axios.get(url).then(res => {
             setAppList(res.data)

@@ -27,7 +27,7 @@ function UserAppUploadPage(props) {
     };
 
     const apiBuildImage = () => {
-        const url = "http://localhost:5000/api/build"
+        const url = `${process.env.REACT_APP_BACKEND}/api/build`
         const data = {
             "user": user,
             "imageName": `${user}-${appName}`,

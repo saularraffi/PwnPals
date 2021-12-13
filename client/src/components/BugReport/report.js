@@ -9,7 +9,7 @@ function BugReportPage() {
     const [didMount, setDidMount] = useState(false)
 
     const fetchBugReports = function() {
-        const url = `http://localhost:5000/api/bug-report?id=${reportId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report?id=${reportId}`
 
         axios.get(url).then(res => {
             console.log(res.data)

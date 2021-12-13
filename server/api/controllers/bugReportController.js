@@ -21,8 +21,14 @@ exports.getReport = function(req, res) {
 
 exports.getAllReports = function(req, res) { 
     const { appId } = req.query
+    const { userId } = req.query
 
-    BugReport.find({ appId: appId }, function(err, bugReports) {
+    let filter = {}
+
+    if (appId !== undefined) { filter['appId'] = appId }
+    else if (userId !== undefined) { filter['userId'] = userId }
+
+    BugReport.find(filter, function(err, bugReports) {
         if (err) {
             console.log(err)
             res.send("Failed to find bug reports")

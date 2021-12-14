@@ -32,6 +32,22 @@ exports.getAllUsers = function(req, res) {
     })
 }
 
+exports.getSearchedUsers = function(req, res) {
+    const search = req.query.search
+
+    const r = new RegExp(search, 'i');
+
+    User.find({ username: { $regex: r, $options: 'i' }}, function(err, users) {
+        if (err) {
+            console.log(err)
+            res.send("Failed to find users")
+        }
+        else {
+            res.send(users) 
+        }
+    })
+}
+
 exports.verifyUser = function(req, res) {
     const username = req.query.username
 

@@ -7,7 +7,8 @@ const Build = mongoose.Schema({
     branch: String,
     imageName: String,
     created: Date,
-    imageId: String
+    imageId: String,
+    description: String,
 })
 
 module.exports = mongoose.model("build", Build)

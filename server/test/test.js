@@ -9,24 +9,12 @@ const path = require('path/posix');
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-const containers = ['one', 'two', 'three', 'four', 'five']
-const containerId = 'two'
+var myDate = "26-02-2013";
+myDate = myDate.split("-");
+var newDate = new Date('2021-12-13T16:43:01.056Z')
 
-function test() {
-  containers.map(c => {
-    if (c === containerId) {
-        return "found"
-    }
-  })  
-}
+var myDate = "26-02-2012";
+myDate = myDate.split("-");
+var newDate2 = new Date('2022-12-13T16:43:01.056Z')
 
-function test2() {
-  for (const c of containers) {
-    if (c === containerId) {
-      return 'found'
-    }
-  }
-}
-
-// test().then(res => console.log(res))
-console.log(test2())
+console.log(newDate > newDate2)

@@ -38,6 +38,7 @@ exports.postBuild = async function(req, res) {
     const username = req.body.username
     const repo = req.body.repo
     const imageName = req.body.imageName
+    const description = req.body.description
 
     console.log("\n[+] Building Image...")
 
@@ -52,7 +53,8 @@ exports.postBuild = async function(req, res) {
             repo: repo,
             imageName: imageName,
             created: Date.now(),
-            imageId: id
+            imageId: id,
+            description: description
         })
         build.save(function(err) {
             if (err) {
@@ -66,7 +68,8 @@ exports.postBuild = async function(req, res) {
                 const data = {
                     userId: userId,
                     username: username,
-                    imageName: imageName
+                    imageName: imageName,
+                    description: description
                 }
 
                 axios.post(url, data).catch(err => {

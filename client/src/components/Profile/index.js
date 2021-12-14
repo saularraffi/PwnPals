@@ -45,7 +45,7 @@ function ProfilePage() {
             <Typography variant='h2'>Your Profile - {username}</Typography>
             <Container sx={{marginTop: 10}}>
                 <Button variant="contained" color="success"
-                    style={{paddingLeft: 5, marginBottom: 5}}
+                    style={{paddingLeft: 5, marginBottom: 10}}
                     onClick={() => navigateOnClick('/upload')}
                 >
                     <AddIcon style={{ marginRight: 10 }} />

@@ -40,6 +40,8 @@ function HomePage() {
                     return activities
                 })
                 .then(activities => {
+                    console.log(friend)
+                    console.log(activities)
                     const activitiesCollection = [
                         ...friendsActivities, 
                         ...activities.apps, 
@@ -50,7 +52,7 @@ function HomePage() {
                         const date2 = new Date(b.created)
                         return date2 - date1
                     })
-                    setFriendsActivities(orderedActivities)
+                    setFriendsActivities([...friendsActivities, ...orderedActivities])
                 })
             }
         })
@@ -152,7 +154,6 @@ function HomePage() {
         if (!fetchedUserDetails) {
             fetchUserDetails()
         }
-        console.log(friendsActivities)
     }, [])
 
     return (

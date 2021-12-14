@@ -9,6 +9,7 @@ import CreateAccountPage from './components/CreateAccount'
 import ProfilePage from './components/Profile'
 import UserAppPage from './components/UserApp'
 import UserAppUploadPage from './components/UserAppUpload'
+import Search from './components/Search'
 import NavBar from './components/NavBar';
 
 import { setLoggedInStatus } from './auth/userInfo'
@@ -30,6 +31,7 @@ function App() {
           <Route path='/profile' element={<ProfilePage />}/>
           <Route path='/app/:id' element={<UserAppPage />}/>
           <Route path='/upload' element={<UserAppUploadPage />}/>
+          <Route path='/search' element={<Search />}/>
           <Route path='/bug-reports/:id' element={<BugReportsListPage />}/>
           <Route path='/app/:id/bug-report' element={<BugReportFormPage />}/>
         </Routes>

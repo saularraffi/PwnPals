@@ -39,12 +39,19 @@ function HomePage() {
                     }
                     return activities
                 })
-                .then(activities => { 
-                    setFriendsActivities([
+                .then(activities => {
+                    const activitiesCollection = [
                         ...friendsActivities, 
                         ...activities.apps, 
                         ...activities.reports
-                    ])
+                    ]
+                    const orderedActivities = activitiesCollection.sort(function(a, b) {
+                        const date1 = new Date(a.created)
+                        const date2 = new Date(b.created)
+                        return date2 - date1
+                    })
+                    console.log(orderedActivities)
+                    setFriendsActivities(orderedActivities)
                 })
             }
         })
@@ -53,12 +60,18 @@ function HomePage() {
         })
     }
 
-    const fetchUsername = () => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/user?id=${userId}`
+    const setDateTime = (date) => {
+        const [year, month, day, time] = date.split(/(?:-|T)+/)
+        let hour = time.split(':')[0]
+        const minute = time.split(':')[1]
+        
+        if (hour > 12) {
+            hour = hour - 12
+        }
 
-        axios.get(url).then(user => {
-            return user.username
-        })
+        console.log(`${hour}:${minute}`)
+
+        return date
     }
 
     const ActivityCard = (activity) => {
@@ -73,6 +86,7 @@ function HomePage() {
         : activity.imageName
 
         const description = activity.description
+        const date = setDateTime(activity.created)
 
         return (
             <Card 
@@ -83,9 +97,12 @@ function HomePage() {
                 }}
             >
                 <CardContent>
-                    <Typography variant="h4" component="div">
-                        <b>{user}</b> {header}
-                    </Typography>
+                    <Box sx={{ display: 'flex' }}>
+                        <Typography variant="h4" component="div">
+                            <b>{user}</b> {header}
+                        </Typography>
+                        <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
+                    </Box>
                     <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
                         {activityTitle}
                     </Typography>

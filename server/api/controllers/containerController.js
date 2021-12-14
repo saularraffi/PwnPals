@@ -35,6 +35,7 @@ exports.createContainer = async function(req, res) {
     const userId = req.body.userId
     const username = req.body.username
     const imageName = req.body.imageName
+    const description = req.body.description
 
     console.log("\n[+] Creating container")
     res.send("Creating container")
@@ -50,6 +51,7 @@ exports.createContainer = async function(req, res) {
             containerId: stats.data.Id,
             port: 80,
             status: stats.data.State.Status,
+            description: description,
             created: Date.now(),
         })
         container.save(function(err) {

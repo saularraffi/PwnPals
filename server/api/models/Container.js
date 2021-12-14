@@ -8,7 +8,8 @@ const Container = mongoose.Schema({
     containerId: String,
     port: Number,
     created: Date,
-    status: String
+    status: String,
+    description: String,
 })
 
 module.exports = mongoose.model("container", Container)

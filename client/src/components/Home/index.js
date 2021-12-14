@@ -39,12 +39,18 @@ function HomePage() {
                     }
                     return activities
                 })
-                .then(activities => { 
-                    setFriendsActivities([
+                .then(activities => {
+                    const activitiesCollection = [
                         ...friendsActivities, 
                         ...activities.apps, 
                         ...activities.reports
-                    ])
+                    ]
+                    const orderedActivities = activitiesCollection.sort(function(a, b) {
+                        const date1 = new Date(a.created)
+                        const date2 = new Date(b.created)
+                        return date2 - date1
+                    })
+                    setFriendsActivities(orderedActivities)
                 })
             }
         })
@@ -53,12 +59,47 @@ function HomePage() {
         })
     }
 
-    const fetchUsername = () => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/user?id=${userId}`
+    const setDateTime = (date) => {
+        date = new Date(date)
+        const year = date.getFullYear()
+        const month = date.getMonth()
+        const day = date.getDate()
+        const hour = date.getHours() + 5
+        const minute = date.getMinutes()
 
-        axios.get(url).then(user => {
-            return user.username
-        })
+        const millisecondsInMinute = 60 * 1000
+        const millisecondsInHour = 60 * 60 * 1000
+        const millisecondsInDay = 1000 * 3600 * 24
+        const millisecondsInWeek = 1000 * 3600 * 24 * 7
+
+        const timeDifference = Math.abs(date.getTime() - Date.now());
+        
+        if (timeDifference < millisecondsInMinute) {
+            return "less than a minute ago"
+        }
+        else if (timeDifference < millisecondsInHour) {
+            const minuteOffset = Math.floor(timeDifference / millisecondsInMinute)
+            if (minuteOffset === 1) {
+                return `${minuteOffset} minute ago`
+            }
+            return `${minuteOffset} minutes ago`
+        }
+        else if (timeDifference < millisecondsInDay) {
+            const hourOffset = Math.floor(timeDifference / millisecondsInHour)
+            if (hourOffset === 1) {
+                return `${hourOffset} hour ago`
+            }
+            return `${hourOffset} hour ago`
+        }
+        else if (timeDifference < millisecondsInWeek) {
+            const dayOffset = Math.floor(timeDifference / millisecondsInDay)
+            if (dayOffset === 1) {
+                return `${dayOffset} day ago`
+            }
+            return `${dayOffset} days ago`
+        }
+
+        return `${day}/${month}/${year}`
     }
 
     const ActivityCard = (activity) => {
@@ -73,6 +114,7 @@ function HomePage() {
         : activity.imageName
 
         const description = activity.description
+        const date = setDateTime(activity.created)
 
         return (
             <Card 
@@ -83,9 +125,15 @@ function HomePage() {
                 }}
             >
                 <CardContent>
-                    <Typography variant="h4" component="div">
-                        <b>{user}</b> {header}
-                    </Typography>
+                    <Box sx={{ display: 'flex' }}>
+                        <Typography variant="h4" component="div" 
+                            style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
+                        >
+                            {user}
+                        </Typography>
+                        <Typography variant="h4" component="div">{header}</Typography>
+                        <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
+                    </Box>
                     <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
                         {activityTitle}
                     </Typography>

@@ -79,8 +79,17 @@ function AppsTable({ apps, getContainers, nav }) {
     const CollapsedRow = (props) => {
         const app = props.app
 
+        console.log(app.description)
+
         return (
             <React.Fragment>
+                <Box sx={{ marginTop: 3 }}>
+                    <Typography sx={{ fontWeight: 'bold' }}>Description:</Typography>
+                    { app.description !== "" && app.description !== undefined
+                        ? <Typography sx={{ marginLeft: 5 }}>{app.description}</Typography>
+                        : <Typography sx={{ marginLeft: 5 }}>No description.</Typography>
+                    }
+                </Box>
                 <Box 
                     sx={{
                         marginTop: 3,

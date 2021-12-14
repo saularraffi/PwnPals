@@ -18,6 +18,7 @@ function UserAppUploadPage(props) {
     const [userId] = useState(getUserId())
     const [appName, setAppName] = useState("")
     const [githubUri, setGithubUri] = useState("")
+    const [description, setDescription] = useState('')
 
     const handleAppNameChange = (evt) => {
         setAppName(evt.target.value)
@@ -27,13 +28,18 @@ function UserAppUploadPage(props) {
         setGithubUri(evt.target.value)
     };
 
+    const handleDescriptionChange = (evt) => {
+        setDescription(evt.target.value)
+    }
+
     const apiBuildImage = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/build`
         const data = {
             "userId": userId,
             "username": getUser(),
             "imageName": `${user}-${appName}`,
-            "repo": githubUri
+            "repo": githubUri,
+            "description": description
         }
         
         axios.post(url, data).then(res => {
@@ -90,6 +96,15 @@ function UserAppUploadPage(props) {
                             variant="standard"
                             label="GitHub URI"
                             onChange={handleUriChange}
+                        />
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <TextField
+                            label="Description"
+                            multiline
+                            fullWidth
+                            rows={5}
+                            onChange={handleDescriptionChange}
                         />
                     </Grid>
                 </Grid>

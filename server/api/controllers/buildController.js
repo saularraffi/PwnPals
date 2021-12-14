@@ -34,7 +34,8 @@ exports.getAllBuilds = function(req, res) {
 }
 
 exports.postBuild = async function(req, res) {
-    const user = req.body.user
+    const userId = req.body.userId
+    const username = req.body.username
     const repo = req.body.repo
     const imageName = req.body.imageName
 
@@ -46,7 +47,8 @@ exports.postBuild = async function(req, res) {
 
     if (id !== null) {
         const build = new Build({ 
-            user: user,
+            userId: userId,
+            username: username,
             repo: repo,
             imageName: imageName,
             created: Date.now(),
@@ -62,8 +64,9 @@ exports.postBuild = async function(req, res) {
                 
                 const url = "http://localhost:5000/api/container/create"
                 const data = {
-                    "user": user,
-                    "imageName": imageName
+                    userId: userId,
+                    username: username,
+                    imageName: imageName
                 }
 
                 axios.post(url, data).catch(err => {

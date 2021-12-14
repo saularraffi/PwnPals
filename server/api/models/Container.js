@@ -1,7 +1,8 @@
 const mongoose = require("mongoose")
 
 const Container = mongoose.Schema({
-    user: String,
+    userId: String,
+    username: String,
     imageId: String,
     imageName: String,
     containerId: String,

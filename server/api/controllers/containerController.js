@@ -18,7 +18,9 @@ exports.getContainer = function(req, res) {
 }
 
 exports.getContainers = function(req, res) {
-    Container.find({}, function(err, containers) {
+    const userId = req.query.userId
+
+    Container.find({ userId: userId }, function(err, containers) {
         if (err) { 
             console.log(err) 
             res.send("Failed to get containers")
@@ -26,11 +28,12 @@ exports.getContainers = function(req, res) {
         else {
             res.json(containers)
         }
-    })
+    })      
 }
 
 exports.createContainer = async function(req, res) {
-    const user = req.body.user
+    const userId = req.body.userId
+    const username = req.body.username
     const imageName = req.body.imageName
 
     console.log("\n[+] Creating container")
@@ -40,7 +43,8 @@ exports.createContainer = async function(req, res) {
 
     if (stats !== null) {
         const container = new Container({ 
-            user: user,
+            userId: userId,
+            username: username,
             imageId: stats.data.Image.split(':')[1],
             imageName: imageName,
             containerId: stats.data.Id,

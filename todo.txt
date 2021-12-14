@@ -1,4 +1,2 @@
 - finish session management --> storing session info on backend and setting/sending cookies
-- add bug report update functionality
-- fix problem with calling api for docker functions (pass container id not mongo id, or pass mongo id)
-- fix error handling with docker functions  
+- when generating the friend activities, you replace the last friends activity witht the current, so you need to append to the array and after looping over all the friends, then and only then should you sort the array by date

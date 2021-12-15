@@ -11,11 +11,12 @@ import {
 } from '@mui/material'
 
 import {
-    Menu as MenuIcon
+    Menu as MenuIcon,
 } from '@material-ui/icons'
 
 import { isLoggedIn, logOut } from '../../auth/userInfo'
 import { useNavigate } from "react-router-dom";
+import SearchBar from './searchBar'
 
 
 function MyNavBar() {
@@ -88,20 +89,26 @@ function MyNavBar() {
     return (
         <Box sx={rootBoxStyles}>
             <AppBar style={{ backgroundColor: '#1976d2' }}>
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h5" component="div" sx={{ flexGrow: 1, color: 'white' }}>
-                        PwnPals
-                    </Typography>
-                    {renderButtons()}
+                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', position: 'relative' }}>
+                    <Box>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="open drawer"
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h5" component="div" 
+                            style={{ color: 'white', marginTop: 8, float: 'right' }}>
+                            PwnPals
+                        </Typography>
+                    </Box>
+                    <SearchBar />
+                    <Box>
+                        {renderButtons()}
+                    </Box>
                 </Toolbar>
             </AppBar>
         </Box>

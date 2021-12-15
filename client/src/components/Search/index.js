@@ -46,7 +46,7 @@ function Search() {
         })
     }
 
-    const filterToggle = () => {
+    const FilterToggle = () => {
         return (
             <Box sx={{ marginBottom: 5 }}>
                 <Button variant="contained" disableElevation 
@@ -79,7 +79,7 @@ function Search() {
         <Container
             sx={{ marginTop: 30 }}
         >   
-            {filterToggle()}
+            <FilterToggle />
             <Box display={{ display: 'flex' }} component="form" onSubmit={handleSubmit}>
                 <ManageSearchIcon 
                     style={{ fontSize: 60 }}

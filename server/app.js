@@ -20,7 +20,8 @@ const bugReportRoute = require("./api/routes/bugReport")
 // variable declarations
 const app = express()
 const basePath = "/api"
-const hostname = '127.0.0.1';
+// const hostname = '127.0.0.1';
+const hostname = '0.0.0.0'
 const port = 5000;
 
 // session stuff

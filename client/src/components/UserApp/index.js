@@ -12,7 +12,7 @@ function UserAppPage() {
     const [didMount, setDidMount] = useState(false)
 
     const fetchContainer = function() {
-        const url = `http://localhost:5000/api/container?id=${appId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/container?id=${appId}`
 
         axios.get(url).then(res => {
             console.log(res.data)

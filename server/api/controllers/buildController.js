@@ -34,9 +34,11 @@ exports.getAllBuilds = function(req, res) {
 }
 
 exports.postBuild = async function(req, res) {
-    const user = req.body.user
+    const userId = req.body.userId
+    const username = req.body.username
     const repo = req.body.repo
     const imageName = req.body.imageName
+    const description = req.body.description
 
     console.log("\n[+] Building Image...")
 
@@ -46,11 +48,13 @@ exports.postBuild = async function(req, res) {
 
     if (id !== null) {
         const build = new Build({ 
-            user: user,
+            userId: userId,
+            username: username,
             repo: repo,
             imageName: imageName,
             created: Date.now(),
-            imageId: id
+            imageId: id,
+            description: description
         })
         build.save(function(err) {
             if (err) {
@@ -62,8 +66,10 @@ exports.postBuild = async function(req, res) {
                 
                 const url = "http://localhost:5000/api/container/create"
                 const data = {
-                    "user": user,
-                    "imageName": imageName
+                    userId: userId,
+                    username: username,
+                    imageName: imageName,
+                    description: description
                 }
 
                 axios.post(url, data).catch(err => {
@@ -81,14 +87,20 @@ exports.deleteBuild = async function(req, res) {
 
     const status = await docker.deleteImage(imageId)
 
-    Build.findOneAndDelete({ imageId: imageId }, (err, doc) => {
-        if (err) {
-            console.log(err)
-            res.send("Image failed to delete")
-        }
-        else {
-            console.log("\n[+] Image deleted successfully")
-            res.send("Image deleted successfully")
-        }
-    })
+    if (status !== undefined || status !== null) {
+        Build.findOneAndDelete({ imageId: imageId }, (err, doc) => {
+            if (err) {
+                console.log(err)
+                res.send("Image failed to delete")
+            }
+            else {
+                console.log("\n[+] Image deleted successfully")
+                res.send("Image deleted successfully")
+            }
+        })
+    }
+    else {
+        console.log("\n[-] Image failed to delete")
+        res.send("Image failed to delete")
+    }
 }

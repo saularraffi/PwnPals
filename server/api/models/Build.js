@@ -1,12 +1,14 @@
 const mongoose = require("mongoose")
 
 const Build = mongoose.Schema({
-    user: String,
+    userId: String,
+    username: String,
     repo: String,
     branch: String,
     imageName: String,
     created: Date,
-    imageId: String
+    imageId: String,
+    description: String,
 })
 
 module.exports = mongoose.model("build", Build)

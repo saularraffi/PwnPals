@@ -1,21 +1,64 @@
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import Container from '@mui/material/Container';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import CardHeader from '@mui/material/CardHeader'
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import { Add as AddIcon } from '@material-ui/icons'
+import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-function BugReportsList(prop) {
-    const [didMount, setDidMount] = useState(false)
+
+import { getUserId } from '../../auth/userInfo'
+
+function BugReportsList() {
+    const navigate = useNavigate();
+    const location = useLocation()
+    const appId = location.pathname.split('/').at(-1)
     const [bugReports, setBugReports] = useState([])
+    const [appDetails, setAppDetails] = useState({})
+    const [userId, setUserId] = useState(getUserId())
+
+    const StyledTableRow = styled(TableRow)(({ theme }) => ({
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
+        // hide last border
+        '&:last-child td, &:last-child th': {
+            border: 0,
+        },
+    }));
 
     const fetchBugReports = function() {
-        const url = `http://localhost:5000/api/bug-report/all?imageId=${prop.imageId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report/all?appId=${appId}`
 
         axios.get(url).then(res => {
-            console.log(res.data)
-            setBugReports(res.data)
+            setBugReports(res.data.reverse())
         }).catch(err => {
             console.log(err)
         })
+    }
 
-        setDidMount(true)
+    const fetchAppDetails = () => {
+        const url = `${process.env.REACT_APP_BACKEND}/api/container?id=${appId}`
+
+        axios.get(url).then(res => {
+            console.log(res.data)
+            setAppDetails(res.data)
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     const displayDescription = (description) => {
@@ -27,7 +70,7 @@ function BugReportsList(prop) {
     }
 
     const deleteReport = (id) => {
-        const url = 'http://localhost:5000/api/bug-report'
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
 
         const data = {
             id: id
@@ -41,40 +84,102 @@ function BugReportsList(prop) {
         })
     }
 
+    const tableHeaderStyles = {
+        fontSize: '1.3em',
+        color: 'white',
+        fontWeight: 'bold'
+    }
+
+    const navigateOnClick = (path) => {
+        navigate(path)
+    }
+
     useEffect(() => {
         fetchBugReports()
-    }, [didMount])
+        fetchAppDetails()
+    }, [])
+
+    const ReportRow = ({ report }) => {
+        return (
+            <React.Fragment>
+                <StyledTableRow key={report.name} sx={{display: 'flex', justifyContent: 'space-between'}}>
+                    <Box sx={{display: 'flex' }}>
+                        <CardHeader
+                            avatar={
+                                <Avatar
+                                    alt="Remy Sharp"
+                                    // src="/static/images/avatar/1.jpg"
+                                />
+                            }
+                        />
+                        <Typography color="#6B6B6B" style={{ 
+                                margin: 'auto',
+                                fontSize: '1.2em',
+                                fontWeight: 'bold',
+                                marginLeft: 3,
+                                color: '#1976d2' }}>
+                            {report.title}
+                        </Typography>
+                        { userId === report.userId &&
+                            <IconButton style={{ margin: 'auto 0 auto 0.5em' }}
+                                onClick={() => deleteReport(report._id)}
+                            >
+                                <DeleteIcon style={{ color: 'red', fontSize: 30 }}/>
+                            </IconButton>
+                        }
+                        <Typography color="#6B6B6B" sx={{ margin: 'auto 1em' }}>
+                            By <Link href={`/profile/${report.userId}`}>{report.username}</Link>
+                        </Typography>
+                    </Box>
+                    <TableCell align="right" sx={{ fontSize: '1.2em' }}>
+                        {report.created}
+                    </TableCell>
+                </StyledTableRow>
+            </React.Fragment>
+        )
+    }
 
     return (
-        <div>
-            <h3>Bug Reports for {prop.appName}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <td></td>
-                        <td><b>Title</b></td>
-                        <td><b>Description</b></td>
-                        <td><b>Date</b></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bugReports.map((report) => {
-                        return (
-                            <tr>
-                                <td>
-                                    <button onClick={() => deleteReport(report._id)}>Delete</button>
-                                </td>
-                                <td>
-                                    <a href={`../bug-report/${report._id}`}>{report.title}</a>
-                                </td>
-                                <td>{displayDescription(report.description)}</td>
-                                <td>{report.created}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
-        </div>
+        <Box sx={{ margin: '10% 10% 10% 10%'}}>
+            <Typography
+                fontSize={40}
+                marginBottom={5}
+                display={'flex'}
+                flexDirection={'column'}
+                alignItems={'center'}
+            >
+                Bug Submission for <strong>{appDetails.imageName}</strong>
+            </Typography>
+            <Button variant="contained" color="success"
+                style={{paddingLeft: 5, marginBottom: 15}}
+                onClick={() => navigateOnClick(`/app/${appId}/bug-report`)}
+            >
+                <AddIcon style={{ marginRight: 10 }} />
+                Submut Report
+            </Button>
+            { bugReports.length == 0 &&
+                <TableContainer>
+                    <Table sx={{ minWidth: 700 }}>
+                        <TableBody>
+                            <TableCell sx={{ fontSize: '1.2em', backgroundColor: '#CCCCCC' }}
+                                align="center"
+                            >
+                                No bugs reported
+                            </TableCell>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            }
+            <TableContainer>
+                <Table sx={{ minWidth: 700 }}>
+                    <TableBody>
+                        {bugReports.map((report) => (
+                            <ReportRow report={report} />
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
     )
 }
 

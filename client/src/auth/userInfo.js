@@ -1,5 +1,10 @@
 export function isLoggedIn() {
-    return localStorage.getItem('loggedIn')
+    if (localStorage.getItem('loggedIn') === 'true') {
+        return true
+    }
+    else {
+        return false
+    }
 }
 
 export function getUser() {

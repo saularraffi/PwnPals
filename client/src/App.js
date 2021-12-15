@@ -1,18 +1,24 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import BugReportPage from './components/BugReport/report'
+import BugReportsListPage from './components/BugReport/reportsList'
 import BugReportFormPage from './components/BugReport/reportForm'
 import HomePage from './components/Home'
 import LandingPage from './components/Landing';
 import LoginPage from './components/Login'
 import CreateAccountPage from './components/CreateAccount'
 import ProfilePage from './components/Profile'
-import UserAppsPage from './components/UserApps'
 import UserAppPage from './components/UserApp'
 import UserAppUploadPage from './components/UserAppUpload'
+import Search from './components/Search'
 import NavBar from './components/NavBar';
 
+import { setLoggedInStatus } from './auth/userInfo'
+
 function App() {
+  if (localStorage.getItem('loggedIn') === null) {
+    setLoggedInStatus(false)
+  }
+  
   return (
     <div className="App">
       <BrowserRouter>
@@ -22,11 +28,11 @@ function App() {
           <Route path='/home' element={<HomePage />}/>
           <Route path='/login' element={<LoginPage />}/>
           <Route path='/register' element={<CreateAccountPage />}/>
-          <Route path='/profile' element={<ProfilePage />}/>
-          <Route path='/apps' element={<UserAppsPage />}/>
+          <Route path='/profile/:id' element={<ProfilePage />}/>
           <Route path='/app/:id' element={<UserAppPage />}/>
           <Route path='/upload' element={<UserAppUploadPage />}/>
-          <Route path='/bug-report/:id' element={<BugReportPage />}/>
+          <Route path='/search' element={<Search />}/>
+          <Route path='/bug-reports/:id' element={<BugReportsListPage />}/>
           <Route path='/app/:id/bug-report' element={<BugReportFormPage />}/>
         </Routes>
       </BrowserRouter>

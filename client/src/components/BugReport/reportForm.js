@@ -1,9 +1,21 @@
-import { useLocation } from 'react-router-dom';
+import { 
+    Box, 
+    Checkbox, 
+    Grid, 
+    TextField, 
+    FormControlLabel,
+    Button,
+    Typography
+} from '@mui/material'
+
 import React, { useEffect, useState } from "react";
-import { getUserId } from '../../auth/userInfo'
+import { getUser, getUserId } from '../../auth/userInfo'
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 
+
 function BugReportFormPage() {
+    const navigate = useNavigate();
     const location = useLocation()
     const appId = location.pathname.split('/').at(-2)
     const [appData, setAppData] = useState({})
@@ -13,7 +25,7 @@ function BugReportFormPage() {
     const [errorSubmittingReport, setErrorSubmittingReport] = useState(false)
 
     const fetchContainer = function() {
-        const url = `http://localhost:5000/api/container?id=${appId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/container?id=${appId}`
 
         axios.get(url).then(res => {
             console.log(res.data)
@@ -36,18 +48,22 @@ function BugReportFormPage() {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const url = 'http://localhost:5000/api/bug-report'
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
 
         const data = {
             userId: getUserId(),
+            username: getUser(),
             title: title,
             description: description,
-            imageId: appData.imageId
+            appId: appData._id
         }
 
         axios.post(url, data).then(res => {
             console.log(res)
             window.history.back()
+        })
+        .then(() => {
+            navigate(`/bug-reports/${appId}`)
         })
         .catch(err => {
             console.log(err)
@@ -60,24 +76,52 @@ function BugReportFormPage() {
     }, [didMount])
 
     return (
-        <div>
-            <h1>Bug Report for {appData.imageName}</h1>
-            {errorSubmittingReport == true &&
-                <p>There was an error submitting the report.</p>
-            }
-            <form onSubmit={handleSubmit}>
-                <label>Title:
-                    <input type="text" name="title" onChange={handleTitleChange} />
-                </label>
-                <br/>
-                <label>Description:
-                    <br/>
-                    <textarea type="text" name="description" onChange={handleDescriptionChange}></textarea>
-                </label>
-                <br/>
-                <input type="submit" value="Submit" />
-            </form>
-        </div>
+        <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            display='flex'
+            flexDirection='column'
+            margin='auto'
+            width={800}
+            marginTop='10%'
+            onSubmit={handleSubmit}
+        >
+            <Typography
+                fontSize={40}
+                marginBottom={5}
+                display={'flex'}
+                flexDirection={'column'}
+                alignItems={'center'}
+            >
+                Bug Submissions for <strong>{appData.imageName}</strong>
+            </Typography>
+            <Grid container spacing={4}>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <TextField
+                        fullWidth
+                        variant="standard"
+                        label="Title"
+                        onChange={handleTitleChange}
+                        sx={{ width: '50%' }}
+                    />
+                </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <TextField
+                        label="Description"
+                        multiline
+                        fullWidth
+                        rows={5}
+                        onChange={handleDescriptionChange}
+                    />
+                </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <Button sx={{ width: '20%' }} type="submit" variant="contained">
+                        Submit Bug
+                    </Button>
+                </Grid>
+            </Grid>
+        </Box>
     )
 }
 

@@ -17,7 +17,7 @@ async function containerHelper(action, containerId) {
         all: listAll
     })
     .then(async (containers) => {
-        return await Promise.all(containers.map(c => {
+        for (const c of containers) {
             if (c.data.Id === containerId) {
                 if (action === 'start') {
                     return c.start()
@@ -29,10 +29,7 @@ async function containerHelper(action, containerId) {
                     return c.delete({ force: true })
                 }
             }
-        }))
-    })
-    .then(res => {
-        return res
+        }
     })
     .catch(error => {
         console.log(error)
@@ -132,14 +129,14 @@ exports.createContainer = async function(imageName) {
     });
 }
 
-exports.startContainer = async function(containerId) {
-    return await containerHelper('start', containerId)
+exports.startContainer = function(containerId) {
+    return containerHelper('start', containerId)
 }
 
-exports.stopContainer = async function(containerId) {
-    return await containerHelper('stop', containerId)
+exports.stopContainer = function(containerId) {
+    return containerHelper('stop', containerId)
 }
 
-exports.deleteContainer = async function(containerId) {
-    return await containerHelper('delete', containerId)
+exports.deleteContainer = function(containerId) {
+    return containerHelper('delete', containerId)
 }

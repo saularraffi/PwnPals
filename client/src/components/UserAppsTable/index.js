@@ -19,7 +19,7 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
 
-function AppsTable({ apps, getContainers, nav }) {
+function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.action.hover,
@@ -185,7 +185,7 @@ function AppsTable({ apps, getContainers, nav }) {
                     paddingBottom: 1
                 }}
             >
-                My Apps
+                { isMyProfile ? 'My Apps'  :  `${username}'s Apps` }
             </Typography>
             <Table>
                 <TableHead sx={{ backgroundColor: '#1976d2' }}>

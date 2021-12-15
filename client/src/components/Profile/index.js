@@ -79,7 +79,13 @@ function ProfilePage() {
                     <AddIcon style={{ marginRight: 10 }} />
                     New
                 </Button>
-                <Table apps={appList} getContainers={getContainers} nav={navigateOnClick}/>
+                <Table 
+                    isMyProfile={isMyProfile} 
+                    username={username}
+                    apps={appList} 
+                    getContainers={getContainers} 
+                    nav={navigateOnClick}
+                />
             </Container>
         </Box>
     )

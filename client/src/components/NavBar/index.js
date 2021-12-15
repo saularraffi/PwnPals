@@ -12,7 +12,7 @@ import {
     Menu as MenuIcon,
 } from '@material-ui/icons'
 
-import { isLoggedIn, logOut } from '../../auth/userInfo'
+import { isLoggedIn, logOut, getUserId } from '../../auth/userInfo'
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import SearchBar from './searchBar'
@@ -21,6 +21,7 @@ import SearchBar from './searchBar'
 function MyNavBar() {
     const navigate = useNavigate();
     const [userIsLoggedIn, setUserIsLoggedIn] = useState(isLoggedIn())
+    const [userId, setUserId] = useState(getUserId())
 
     const rootBoxStyles = {
         flexGrow: 1,
@@ -62,7 +63,7 @@ function MyNavBar() {
                     </Button>
                     <Button variant="contained" disableElevation 
                         style={{ color: 'white', fontSize: '1.1em' }}
-                        onClick={() => navigateOnClick('/profile')}
+                        onClick={() => navigateOnClick(`/profile/${userId}`)}
                     >
                         Profile
                     </Button>

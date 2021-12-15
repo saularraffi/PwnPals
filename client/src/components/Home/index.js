@@ -27,6 +27,8 @@ function HomePage() {
         axios.get(url).then(async (res) => {
             setFetchedUserDetails(true)
             const friends = res.data.friends
+            let totalActivities = []
+
             for (const friend of friends) {
                 await Promise.all([
                     axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${friend}`),
@@ -40,20 +42,18 @@ function HomePage() {
                     return activities
                 })
                 .then(activities => {
-                    console.log(friend)
-                    console.log(activities)
-                    const activitiesCollection = [
-                        ...friendsActivities, 
+                    totalActivities = [
+                        ...totalActivities, 
                         ...activities.apps, 
                         ...activities.reports
                     ]
-                    const orderedActivities = activitiesCollection.sort(function(a, b) {
-                        const date1 = new Date(a.created)
-                        const date2 = new Date(b.created)
-                        return date2 - date1
-                    })
-                    setFriendsActivities([...friendsActivities, ...orderedActivities])
                 })
+                const orderedActivities = totalActivities.sort(function(a, b) {
+                    const date1 = new Date(a.created)
+                    const date2 = new Date(b.created)
+                    return date2 - date1
+                })
+                setFriendsActivities(orderedActivities)
             }
         })
         .catch(err => {

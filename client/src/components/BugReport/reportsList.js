@@ -12,11 +12,15 @@ import CardHeader from '@mui/material/CardHeader'
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import { Add as AddIcon } from '@material-ui/icons'
+import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
+
+import { getUserId } from '../../auth/userInfo'
 
 function BugReportsList() {
     const navigate = useNavigate();
@@ -24,6 +28,7 @@ function BugReportsList() {
     const appId = location.pathname.split('/').at(-1)
     const [bugReports, setBugReports] = useState([])
     const [appDetails, setAppDetails] = useState({})
+    const [userId, setUserId] = useState(getUserId())
 
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
@@ -64,20 +69,20 @@ function BugReportsList() {
         return description
     }
 
-    // const deleteReport = (id) => {
-    //     const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
+    const deleteReport = (id) => {
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
 
-    //     const data = {
-    //         id: id
-    //     }
+        const data = {
+            id: id
+        }
 
-    //     axios.delete(url, { data: data }).then(res => {
-    //         console.log(res)
-    //         fetchBugReports()
-    //     }).catch(err => {
-    //         console.log(err)
-    //     })
-    // }
+        axios.delete(url, { data: data }).then(res => {
+            console.log(res)
+            fetchBugReports()
+        }).catch(err => {
+            console.log(err)
+        })
+    }
 
     const tableHeaderStyles = {
         fontSize: '1.3em',
@@ -93,6 +98,46 @@ function BugReportsList() {
         fetchBugReports()
         fetchAppDetails()
     }, [])
+
+    const ReportRow = ({ report }) => {
+        return (
+            <React.Fragment>
+                <StyledTableRow key={report.name} sx={{display: 'flex', justifyContent: 'space-between'}}>
+                    <Box sx={{display: 'flex' }}>
+                        <CardHeader
+                            avatar={
+                                <Avatar
+                                    alt="Remy Sharp"
+                                    // src="/static/images/avatar/1.jpg"
+                                />
+                            }
+                        />
+                        <Typography color="#6B6B6B" style={{ 
+                                margin: 'auto',
+                                fontSize: '1.2em',
+                                fontWeight: 'bold',
+                                marginLeft: 3,
+                                color: '#1976d2' }}>
+                            {report.title}
+                        </Typography>
+                        { userId === report.userId &&
+                            <IconButton style={{ margin: 'auto 0 auto 0.5em' }}
+                                onClick={() => deleteReport(report._id)}
+                            >
+                                <DeleteIcon style={{ color: 'red', fontSize: 30 }}/>
+                            </IconButton>
+                        }
+                        <Typography color="#6B6B6B" sx={{ margin: 'auto 1em' }}>
+                            By <Link href={`/profile/${report.userId}`}>{report.username}</Link>
+                        </Typography>
+                    </Box>
+                    <TableCell align="right" sx={{ fontSize: '1.2em' }}>
+                        {report.created}
+                    </TableCell>
+                </StyledTableRow>
+            </React.Fragment>
+        )
+    }
 
     return (
         <Box sx={{ margin: '10% 10% 10% 10%'}}>
@@ -129,31 +174,7 @@ function BugReportsList() {
                 <Table sx={{ minWidth: 700 }}>
                     <TableBody>
                         {bugReports.map((report) => (
-                            <StyledTableRow key={report.name} sx={{display: 'flex', justifyContent: 'space-between'}}>
-                                <Box sx={{display: 'flex' }}>
-                                    <CardHeader
-                                        avatar={
-                                            <Avatar
-                                                alt="Remy Sharp"
-                                                // src="/static/images/avatar/1.jpg"
-                                            />
-                                        }
-                                        title={report.title}
-                                        titleTypographyProps={{
-                                            fontSize: '1.2em',
-                                            fontWeight: 'bold',
-                                            marginLeft: 3,
-                                            color: '#1976d2'
-                                        }}
-                                    />
-                                    <Typography color="#6B6B6B" sx={{ margin: 'auto 1em' }}>
-                                        By <Link href={`/profile/${report.userId}`}>{report.username}</Link>
-                                    </Typography>
-                                </Box>
-                                <TableCell align="right" sx={{ fontSize: '1.2em' }}>
-                                    {report.created}
-                                </TableCell>
-                            </StyledTableRow>
+                            <ReportRow report={report} />
                         ))}
                     </TableBody>
                 </Table>

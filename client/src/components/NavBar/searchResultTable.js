@@ -12,7 +12,18 @@ function SearchResultTable({ results }) {
         <Box>
             {results.map(result => {
                 return (
-                    <Link href={`/profile/${result._id}`} sx={{color: 'black'}}>{result.username}</Link>
+                    <Box sx={{ padding: '0.1em 35em 0.1em 1em', backgroundColor: 'white' }}>
+                        <Link href={`/profile/${result._id}`} underline="none"
+                            sx={{
+                                color: 'black', 
+                                fontSize: 30, 
+                                color: 'blue',
+                            }}
+                        >
+                            {result.username}
+                        </Link>
+                        <br />
+                    </Box>
                 )
             })}
         </Box>

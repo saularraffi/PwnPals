@@ -156,7 +156,7 @@ function AppsTable({ apps, getContainers, nav }) {
                     </TableCell>
                     <TableCell>
                         <CircleIcon 
-                            style={{color: app.status === 'running' ? 'green' : 'red'}}
+                            style={{ color: app.status === 'running' ? 'green' : 'red' }}
                         />
                     </TableCell>
                     <TableCell sx={tableRowStyles}>{app.imageName}</TableCell>

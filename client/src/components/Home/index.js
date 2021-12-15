@@ -5,6 +5,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
@@ -131,7 +132,9 @@ function HomePage() {
                         <Typography variant="h4" component="div" 
                             style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
                         >
-                            {user}
+                            <Link underline="none" href={`/profile/${activity.userId}`}>
+                                {user}
+                            </Link>
                         </Typography>
                         <Typography variant="h4" component="div">{header}</Typography>
                         <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
@@ -143,9 +146,9 @@ function HomePage() {
                         {description}
                     </Typography>
                 </CardContent>
-                <CardActions>
+                {/* <CardActions>
                     <Button size="small">Check Out</Button>
-                </CardActions>
+                </CardActions> */}
             </Card>
         )
     }

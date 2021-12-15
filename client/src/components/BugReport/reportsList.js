@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import Container from '@mui/material/Container';
@@ -128,22 +129,27 @@ function BugReportsList() {
                 <Table sx={{ minWidth: 700 }}>
                     <TableBody>
                         {bugReports.map((report) => (
-                            <StyledTableRow key={report.name}>
-                                <CardHeader
-                                    avatar={
-                                        <Avatar
-                                            alt="Remy Sharp"
-                                            // src="/static/images/avatar/1.jpg"
-                                        />
-                                    }
-                                    title={report.title}
-                                    titleTypographyProps={{
-                                        fontSize: '1.2em',
-                                        fontWeight: 'bold',
-                                        marginLeft: 3,
-                                        color: '#1976d2'
-                                    }}
-                                />
+                            <StyledTableRow key={report.name} sx={{display: 'flex', justifyContent: 'space-between'}}>
+                                <Box sx={{display: 'flex' }}>
+                                    <CardHeader
+                                        avatar={
+                                            <Avatar
+                                                alt="Remy Sharp"
+                                                // src="/static/images/avatar/1.jpg"
+                                            />
+                                        }
+                                        title={report.title}
+                                        titleTypographyProps={{
+                                            fontSize: '1.2em',
+                                            fontWeight: 'bold',
+                                            marginLeft: 3,
+                                            color: '#1976d2'
+                                        }}
+                                    />
+                                    <Typography color="#6B6B6B" sx={{ margin: 'auto 1em' }}>
+                                        By <Link href={`/profile/${report.userId}`}>{report.username}</Link>
+                                    </Typography>
+                                </Box>
                                 <TableCell align="right" sx={{ fontSize: '1.2em' }}>
                                     {report.created}
                                 </TableCell>

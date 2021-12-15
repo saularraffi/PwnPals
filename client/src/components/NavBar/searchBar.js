@@ -1,6 +1,7 @@
 import {
     Box,
-    InputBase
+    InputBase,
+    Typography
 } from '@mui/material'
 
 import {
@@ -11,9 +12,11 @@ import { useState, useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import axios from 'axios';
 
+import SearchResultTable from './searchResultTable';
+
 function SearchBar() {
     const [searchString, setSearchString] = useState("")
-    const [searchResults, setSearchResults] = useState({})
+    const [searchResults, setSearchResults] = useState([])
     const [userIsSearching, setUserIsSearching] = useState(false)
 
     const Search = styled('div')(({ theme }) => ({
@@ -59,11 +62,16 @@ function SearchBar() {
 
         setSearchString(evt.target.value)
         
+        if (evt.target.value === "") {
+            setSearchResults([])
+            return
+        }
+
         const url = `${process.env.REACT_APP_BACKEND}/api/user/search?search=${evt.target.value}`
 
         axios.get(url).then(res => {
-            setSearchResults(res)
-            console.log(res.data)
+            setSearchResults(res.data)
+            // console.log(res.data)
         }).catch(err => {
             console.log(err)
         })
@@ -73,10 +81,7 @@ function SearchBar() {
         setUserIsSearching(true)
     }
 
-    useEffect(() => { 
-        console.log("detecting")
-        console.log(document.activeElement) 
-    }, [])
+    useEffect(() => { }, [])
 
     return (
         <Box sx={{ flexGrow: 0.6 }}>
@@ -95,8 +100,14 @@ function SearchBar() {
             </Search>
             {/* the table that shows up needs to have an absolute position */}
             <Box sx={{
+                // padding: 35.75,
+                // backgroundColor: 'pink',
                 position: 'absolute',
-            }}/>
+            }}>
+                {searchResults.length !== 0 &&
+                    <SearchResultTable results={searchResults}/>
+                }
+            </Box>
         </Box>
     )
 }

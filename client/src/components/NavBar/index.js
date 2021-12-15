@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 import {
     AppBar,
     Toolbar,
@@ -15,12 +13,14 @@ import {
 } from '@material-ui/icons'
 
 import { isLoggedIn, logOut } from '../../auth/userInfo'
+import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import SearchBar from './searchBar'
 
 
 function MyNavBar() {
     const navigate = useNavigate();
+    const [userIsLoggedIn, setUserIsLoggedIn] = useState(isLoggedIn())
 
     const rootBoxStyles = {
         flexGrow: 1,
@@ -36,6 +36,7 @@ function MyNavBar() {
 
     const handleLogOut = () => {
         logOut()
+        setUserIsLoggedIn(false)
         navigate('/')
     }
 
@@ -43,8 +44,8 @@ function MyNavBar() {
         navigate(path)
     }
 
-    const renderButtons = () => {
-        if (isLoggedIn()) {
+    const RenderButtons = () => {
+        if (userIsLoggedIn) {
             return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Button variant="contained" disableElevation 
@@ -86,6 +87,10 @@ function MyNavBar() {
         }
     }
 
+    useEffect(() => {
+        setUserIsLoggedIn(isLoggedIn())
+    })
+
     return (
         <Box sx={rootBoxStyles}>
             <AppBar style={{ backgroundColor: '#1976d2' }}>
@@ -105,9 +110,11 @@ function MyNavBar() {
                             PwnPals
                         </Typography>
                     </Box>
-                    <SearchBar />
+                    { userIsLoggedIn &&
+                        <SearchBar />
+                    }
                     <Box>
-                        {renderButtons()}
+                        <RenderButtons />
                     </Box>
                 </Toolbar>
             </AppBar>

@@ -14,6 +14,7 @@ import axios from 'axios';
 function SearchBar() {
     const [searchString, setSearchString] = useState("")
     const [searchResults, setSearchResults] = useState({})
+    const [userIsSearching, setUserIsSearching] = useState(false)
 
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
@@ -53,23 +54,29 @@ function SearchBar() {
         },
     }));
 
-    const handleSearchStringChange = (evt) => {
+    const handleSearch = (evt) => {
         evt.preventDefault();
 
-        // setSearchString(evt.target.value)
-        console.log(evt.target.value)
+        setSearchString(evt.target.value)
         
         const url = `${process.env.REACT_APP_BACKEND}/api/user/search?search=${evt.target.value}`
 
         axios.get(url).then(res => {
-            // setSearchResults(res)
+            setSearchResults(res)
             console.log(res.data)
         }).catch(err => {
             console.log(err)
         })
     }
 
-    useEffect(() => { }, [])
+    const onFocus = () => {
+        setUserIsSearching(true)
+    }
+
+    useEffect(() => { 
+        console.log("detecting")
+        console.log(document.activeElement) 
+    }, [])
 
     return (
         <Box sx={{ flexGrow: 0.6 }}>
@@ -80,7 +87,10 @@ function SearchBar() {
                 <StyledInputBase
                     placeholder="Search…"
                     inputProps={{ 'aria-label': 'search' }}
-                    onChange={handleSearchStringChange}
+                    onChange={handleSearch}
+                    value={searchString}
+                    onFocus={onFocus}
+                    autoFocus={userIsSearching}
                 />
             </Search>
             {/* the table that shows up needs to have an absolute position */}

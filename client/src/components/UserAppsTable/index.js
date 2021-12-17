@@ -216,7 +216,7 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                 </TableHead>
                 <TableBody>
                     {apps.map((row) => (  
-                        <Row key={row.name} row={row} />
+                        <Row key={row._id} row={row} />
                     ))}
                 </TableBody>
             </Table>

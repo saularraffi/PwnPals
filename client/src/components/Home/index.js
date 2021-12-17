@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getUser, getUserId } from '../../auth/userInfo'
 import { getReadableDateTime } from '../../lib/globalFunctions'
 import axios from 'axios';
@@ -62,7 +62,7 @@ function HomePage() {
         })
     }
 
-    const ActivityCard = (activity) => {
+    const ActivityCard = ({ activity }) => {
         const user = activity.username
 
         const header = activity.imageId !== undefined 
@@ -77,36 +77,38 @@ function HomePage() {
         const date = getReadableDateTime(activity.created)
 
         return (
-            <Card 
-                sx={{
-                    minWidth: 700,
-                    maxWidth: 1000,
-                    margin: '2em auto'
-                }}
-            >
-                <CardContent>
-                    <Box sx={{ display: 'flex' }}>
-                        <Typography variant="h4" component="div" 
-                            style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
-                        >
-                            <Link underline="none" href={`/profile/${activity.userId}`}>
-                                {user}
-                            </Link>
+            <React.Fragment>
+                <Card 
+                    sx={{
+                        minWidth: 700,
+                        maxWidth: 1000,
+                        margin: '2em auto'
+                    }}
+                >
+                    <CardContent>
+                        <Box sx={{ display: 'flex' }}>
+                            <Typography variant="h4" component="div" 
+                                style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
+                            >
+                                <Link underline="none" href={`/profile/${activity.userId}`}>
+                                    {user}
+                                </Link>
+                            </Typography>
+                            <Typography variant="h4" component="div">{header}</Typography>
+                            <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
+                        </Box>
+                        <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
+                            {activityTitle}
                         </Typography>
-                        <Typography variant="h4" component="div">{header}</Typography>
-                        <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
-                    </Box>
-                    <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
-                        {activityTitle}
-                    </Typography>
-                    <Typography sx={{ mb: 1.5, marginLeft: 5 }} color="text.secondary">
-                        {description}
-                    </Typography>
-                </CardContent>
-                {/* <CardActions>
-                    <Button size="small">Check Out</Button>
-                </CardActions> */}
-            </Card>
+                        <Typography sx={{ mb: 1.5, marginLeft: 5 }} color="text.secondary">
+                            {description}
+                        </Typography>
+                    </CardContent>
+                    {/* <CardActions>
+                        <Button size="small">Check Out</Button>
+                    </CardActions> */}
+                </Card>
+            </React.Fragment>
         )
     }
 
@@ -122,8 +124,8 @@ function HomePage() {
             <Box sx={{ marginTop: 10 }}>
                 {
                     friendsActivities.map((activity) => {
-                        return (
-                            ActivityCard(activity)
+                        return(
+                            <ActivityCard key={activity._id} activity={activity} />
                         )
                     })
                 }

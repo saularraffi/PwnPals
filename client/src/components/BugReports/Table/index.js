@@ -5,8 +5,6 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import Container from '@mui/material/Container';
-import TableHead from '@mui/material/TableHead';
 import Collapse from '@mui/material/Collapse';
 import TableRow from '@mui/material/TableRow';
 import CardHeader from '@mui/material/CardHeader'
@@ -17,8 +15,6 @@ import IconButton from '@mui/material/IconButton';
 import { Add as AddIcon } from '@material-ui/icons'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { TextField } from '@mui/material';
 
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,15 +22,16 @@ import axios from 'axios';
 
 import { getUserId, getUser } from '../../../auth/userInfo'
 import { getReadableDateTime } from '../../../lib/globalFunctions'
+import CollapsedRow from './reportsCollapsedRow'
 
 function BugReportsList() {
     const navigate = useNavigate();
     const location = useLocation()
     const [appId] = useState(location.pathname.split('/').at(-1))
-    const [username] = useState(getUser())
     const [bugReports, setBugReports] = useState([])
     const [appDetails, setAppDetails] = useState({})
     const [userId, setUserId] = useState(getUserId())
+    const [username] = useState(getUser())
 
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
@@ -51,6 +48,7 @@ function BugReportsList() {
 
         axios.get(url).then(res => {
             setBugReports(res.data.reverse())
+            console.log(res.data.length)
         }).catch(err => {
             console.log(err)
         })
@@ -65,6 +63,16 @@ function BugReportsList() {
         }).catch(err => {
             console.log(err)
         })
+    }
+
+    const tableHeaderStyles = {
+        fontSize: '1.3em',
+        color: 'white',
+        fontWeight: 'bold'
+    }
+
+    const navigateOnClick = (path) => {
+        navigate(path)
     }
 
     const deleteReport = (id) => {
@@ -82,119 +90,13 @@ function BugReportsList() {
         })
     }
 
-    const tableHeaderStyles = {
-        fontSize: '1.3em',
-        color: 'white',
-        fontWeight: 'bold'
-    }
-
-    const navigateOnClick = (path) => {
-        navigate(path)
-    }
-
     useEffect(() => {
         fetchBugReports()
         fetchAppDetails()
     }, [])
 
-    const CollapsedRow = ({ report }) => {
-        const [comment, setComment] = useState("")
-        const [viewComments, setViewComments] = useState(false)
-        const [makeComment, setMakeComment] = useState(false)
-
-        const handleCommentChange = (evt) => {
-            setComment(evt.target.value)
-        }
-
-        const handleViewCommentsClick = () => {
-            setViewComments(true)
-        }
-
-        const handleHideCommentsClick = () => {
-            setViewComments(false)
-        }
-
-        const handleMakeCommentClick = () => {
-            if (makeComment) {
-                setMakeComment(false)
-            }
-            else {
-                setMakeComment(true)
-            }
-        }
-
-        const handleSubmit = (evt) => {
-            evt.preventDefault()
-
-            const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
-
-            const data = {
-                id: report._id,
-                comment: {userId: userId, username: username, body: comment}
-            }
-
-            axios.put(url, data).then(res => {
-                console.log(res)
-                setComment("")
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        }
-
-        return (
-            <Box sx={{ margin: '2em' }}>
-                <Typography sx={{ marginLeft: 1, marginBottom: 1 }}>{report.description}</Typography>
-                <Button sx={{ marginRight: 1 }} onClick={handleMakeCommentClick}>
-                    Comment
-                </Button>
-                <Button
-                    onClick={viewComments ? handleHideCommentsClick : handleViewCommentsClick}>
-                    { viewComments ? "Hide Comments" : "View Comments"}
-                </Button>
-                { makeComment &&
-                    <Box sx={{ margin: '2em 4em 5em 4em' }} component="form"
-                        onSubmit={handleSubmit}
-                    >
-                        <Box sx={{ display: 'flex' }}>
-                            <Avatar alt="Remy Sharp" sx={{ marginRight: 3 }} />
-                            <TextField multiline variant="standard" 
-                                onChange={handleCommentChange}
-                                value={comment}
-                                style={{ height: '10px', width: '100%' }} 
-                            />
-                        </Box>
-                        <Button variant="contained" type="submit"
-                            sx={{ borderRadius: 0, float: 'right', position: 'relative' }}
-                        >
-                            Submit
-                        </Button>
-                    </Box>
-                }
-                <Collapse in={viewComments} timeout="auto" unmountOnExit>
-                    <Box sx={{ margin: '2em 4em 2em 4em' }}>
-                        Comments: <br />
-                        --------------------------------------------------
-                        <TableContainer>
-                            <Table sx={{ minWidth: 700 }}>
-                                <TableBody>
-                                    {report.comments.map(comment => {
-                                        return (
-                                            <Typography>{comment.comment}</Typography>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        
-                    </Box>
-                </Collapse>
-            </Box>
-        )
-    }
-
     const ReportRow = ({ report }) => {
-        const [open, setOpen] = React.useState(false);
+        const [open, setOpen] = useState(false);
 
         return (
             <React.Fragment>
@@ -211,10 +113,7 @@ function BugReportsList() {
                         </IconButton>
                         <CardHeader
                             avatar={
-                                <Avatar
-                                    alt="Remy Sharp"
-                                    // src="/static/images/avatar/1.jpg"
-                                />
+                                <Avatar alt="Remy Sharp" />
                             }
                         />
                         <Typography color="#6B6B6B" style={{ 
@@ -228,12 +127,6 @@ function BugReportsList() {
                         <Typography color="#6B6B6B" sx={{ margin: 'auto 1em' }}>
                             By <Link href={`/profile/${report.userId}`}>{report.username}</Link>
                         </Typography>
-                        { userId === report.userId &&
-                            <Button style={{ color: 'red' }} 
-                                onClick={() => deleteReport(report._id)}>
-                                Delete
-                            </Button>
-                        }
                     </Box>
                     <TableCell align="right" sx={{ fontSize: '1.2em' }}>
                         {getReadableDateTime(report.created)}
@@ -241,7 +134,11 @@ function BugReportsList() {
                 </StyledTableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <CollapsedRow report={report}/>
+                        <CollapsedRow
+                            report={report}
+                            deleteReport={deleteReport}
+                            fetchBugReports={fetchBugReports}
+                        />
                     </Collapse>
                 </TableCell>
             </React.Fragment>
@@ -283,7 +180,7 @@ function BugReportsList() {
                 <Table sx={{ minWidth: 700 }}>
                     <TableBody>
                         {bugReports.map((report) => (
-                            <ReportRow report={report} />
+                            <ReportRow key={report._id} report={report} />
                         ))}
                     </TableBody>
                 </Table>

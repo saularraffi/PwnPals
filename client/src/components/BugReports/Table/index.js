@@ -30,8 +30,6 @@ function BugReportsList() {
     const [appId] = useState(location.pathname.split('/').at(-1))
     const [bugReports, setBugReports] = useState([])
     const [appDetails, setAppDetails] = useState({})
-    const [userId, setUserId] = useState(getUserId())
-    const [username] = useState(getUser())
 
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
@@ -63,12 +61,6 @@ function BugReportsList() {
         }).catch(err => {
             console.log(err)
         })
-    }
-
-    const tableHeaderStyles = {
-        fontSize: '1.3em',
-        color: 'white',
-        fontWeight: 'bold'
     }
 
     const navigateOnClick = (path) => {

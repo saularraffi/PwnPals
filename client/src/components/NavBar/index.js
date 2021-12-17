@@ -51,12 +51,6 @@ function MyNavBar() {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Button variant="contained" disableElevation 
                         style={{ color: 'white', fontSize: '1.1em' }}
-                        onClick={() => navigateOnClick('/')}
-                    >
-                        Home
-                    </Button>
-                    <Button variant="contained" disableElevation 
-                        style={{ color: 'white', fontSize: '1.1em' }}
                         onClick={() => navigateOnClick('/search')}
                     >
                         Search
@@ -106,10 +100,12 @@ function MyNavBar() {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h5" component="div" 
-                            style={{ color: 'white', marginTop: 8, float: 'right' }}>
-                            PwnPals
-                        </Typography>
+                        <Button onClick={() => navigateOnClick('/home')}>
+                            <Typography variant="h5" component="div" 
+                                style={{ color: 'white' }}>
+                                PwnPals
+                            </Typography>
+                        </Button>
                     </Box>
                     { userIsLoggedIn &&
                         <SearchBar />

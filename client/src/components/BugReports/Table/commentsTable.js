@@ -17,7 +17,7 @@ export default function Comments({ comments }) {
                 <TableRow>
                     <TableCell sx={{ borderBottom: "none" }}>
                         <Box sx={{ display: 'flex' }}>
-                            <Avatar />
+                            <Avatar>{comment.username[0]}</Avatar>
                             <Box sx={{ margin: 'auto 1em auto 2em' }}>
                                 <Typography>By <strong>{comment.username}</strong></Typography>
                             </Box>

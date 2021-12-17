@@ -67,10 +67,12 @@ function ProfilePage() {
 
     return (
         <Box sx={{ margin: 20 }}>
-            { isMyProfile
-                ? <Typography variant='h2'>Your Profile - {username}</Typography>
-                : <Typography variant='h2'>{username}'s Profile</Typography>
-            }
+            <Box sx={{ display: 'flex' }}>
+                <Avatar sx={{ margin: 'auto 2em auto 0', width: 80, height: 80 }}>
+                    <Typography sx={{ fontSize: 50 }}>{username[0]}</Typography>
+                </Avatar>
+                <Typography sx={{ margin: 'auto 0', fontSize: 60 }}>{username}</Typography>
+            </Box>
             <Container sx={{marginTop: 10}}>
                 <Button variant="contained" color="success"
                     style={{paddingLeft: 5, marginBottom: 10}}

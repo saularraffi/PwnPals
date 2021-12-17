@@ -14,6 +14,7 @@ import { getUser, getUserId } from '../../auth/userInfo'
 import { getReadableDateTime } from '../../lib/globalFunctions'
 import axios from 'axios';
 import { FlashOnRounded } from '@material-ui/icons';
+import { Avatar } from '@mui/material';
 
 function HomePage() {
     const [user] = useState(getUser())
@@ -69,9 +70,13 @@ function HomePage() {
         ? 'has submitted a new app' 
         : 'has submitted a new bug'
 
-        const activityTitle = activity.title !== undefined 
-        ? activity.title 
-        : activity.imageName
+        const activityTitle = activity.imageId !== undefined 
+        ? activity.imageName 
+        : activity.title
+
+        const link = activity.imageId !== undefined
+        ? `/profile/${activity.userId}`
+        : `/bug-reports/${activity.appId}`
 
         const description = activity.description
         const date = getReadableDateTime(activity.created)
@@ -87,6 +92,7 @@ function HomePage() {
                 >
                     <CardContent>
                         <Box sx={{ display: 'flex' }}>
+                            <Avatar sx={{ marginRight: 3 }}>{user[0]}</Avatar>
                             <Typography variant="h4" component="div" 
                                 style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
                             >
@@ -97,9 +103,11 @@ function HomePage() {
                             <Typography variant="h4" component="div">{header}</Typography>
                             <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
                         </Box>
-                        <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
-                            {activityTitle}
-                        </Typography>
+                        <Link underline="none" href={link}>
+                            <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
+                                {activityTitle}
+                            </Typography>
+                        </Link>
                         <Typography sx={{ mb: 1.5, marginLeft: 5 }} color="text.secondary">
                             {description}
                         </Typography>

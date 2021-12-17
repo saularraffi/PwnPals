@@ -105,7 +105,7 @@ function BugReportsList() {
                         </IconButton>
                         <CardHeader
                             avatar={
-                                <Avatar alt="Remy Sharp" />
+                                <Avatar>{report.username[0]}</Avatar>
                             }
                         />
                         <Typography color="#6B6B6B" style={{ 

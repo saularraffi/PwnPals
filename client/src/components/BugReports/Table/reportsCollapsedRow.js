@@ -94,7 +94,7 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
                     onSubmit={handleSubmit}
                 >
                     <Box sx={{ display: 'flex' }}>
-                        <Avatar alt="Remy Sharp" sx={{ marginRight: 3 }} />
+                        <Avatar sx={{ marginRight: 3 }}>{username[0]}</Avatar>
                         <TextField multiline variant="standard" 
                             onChange={handleCommentChange}
                             value={comment}

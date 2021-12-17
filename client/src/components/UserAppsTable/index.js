@@ -18,8 +18,13 @@ import CircleIcon from '@mui/icons-material/Circle';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
+import { useState } from "react";
+import { getUserId } from '../../auth/userInfo'
+import { getReadableDateTime } from '../../lib/globalFunctions'
 
 function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
+    const [userId, setUserId] = useState(getUserId())
+
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.action.hover,
@@ -76,10 +81,10 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
         window.open(`http://localhost:${port}`);
     }
 
-    const CollapsedRow = (props) => {
-        const app = props.app
-
-        console.log(app.description)
+    const CollapsedRow = ({ app }) => {
+        const buttonStyles = {
+            marginRight: 1
+        }
 
         return (
             <React.Fragment>
@@ -95,42 +100,52 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                         marginTop: 3,
                         marginBottom: 3,
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        width: app.status === 'running' ? '45%' : '40%'
+                        // justifyContent: 'space-between',
+                        // width: app.status === 'running' ? '45%' : '40%'
+                        // width: '30%'
                     }}
                 >
                         { app.status === 'running' &&
-                            <Button variant="contained" onClick={() => openApp(app.port)}>
+                            <Button variant="contained" onClick={() => openApp(app.port)}
+                                sx={buttonStyles}
+                            >
                                 Open
                             </Button>
                         }
                         { app.status === 'running'
                             ?   <Button variant="contained" color="error"
                                     onClick={() => toggleContainerState(app._id, app.containerId, 'stop')}
+                                    sx={buttonStyles}
                                 >
                                     Stop
                                 </Button>
                             :   <Button variant="contained" color="success"
                                     onClick={() => toggleContainerState(app._id, app.containerId, 'start')}
+                                    sx={buttonStyles}
                                 >
                                     Start
                                 </Button>
                         }
                         <Button variant="contained" color="info"
                             onClick={() => nav(`/bug-reports/${app._id}`)}
+                            sx={buttonStyles}
                         >
                             View Bugs
                         </Button>
                         <Button variant="contained" color="warning"
                             onClick={() => nav(`/app/${app._id}/bug-report`)}
+                            sx={buttonStyles}
                         >
                             Submit Bug
                         </Button>
-                        <Button variant="contained" color="error"
-                            onClick={() => deleteContainer(app._id, app.containerId)}
-                        >
-                            Delete
-                        </Button>
+                        { userId === app.userId &&
+                            <Button variant="contained" color="error"
+                                onClick={() => deleteContainer(app._id, app.containerId)}
+                                sx={buttonStyles}
+                            >
+                                Delete
+                            </Button>
+                        }
                     </Box>
             </React.Fragment>
         )
@@ -145,7 +160,7 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                 <StyledTableRow
                     key={app.name}
                 >
-                    <TableCell>
+                    <TableCell sx={{ display: 'flex', width: '100%' }}>
                         <IconButton
                             aria-label="expand row"
                             size="small"
@@ -153,16 +168,18 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                         >
                             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                         </IconButton>
-                    </TableCell>
-                    <TableCell>
+
                         <CircleIcon 
-                            style={{ color: app.status === 'running' ? 'green' : 'red' }}
+                            style={{
+                                margin: 'auto', 
+                                color: app.status === 'running' ? 'green' : 'red'
+                            }}
                         />
                     </TableCell>
                     <TableCell sx={tableRowStyles}>{app.imageName}</TableCell>
                     <TableCell sx={tableRowStyles}>{app.port}</TableCell>
                     <TableCell sx={tableRowStyles}>{app.status}</TableCell>
-                    <TableCell sx={tableRowStyles}>{app.created}</TableCell>
+                    <TableCell sx={tableRowStyles}>{getReadableDateTime(app.created)}</TableCell>
                 </StyledTableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
@@ -191,7 +208,6 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                 <TableHead sx={{ backgroundColor: '#1976d2' }}>
                     <TableRow>
                         <TableCell />
-                        <TableCell />
                         <TableCell sx={tableHeaderStyles}>Name</TableCell>
                         <TableCell sx={tableHeaderStyles}>Port</TableCell>
                         <TableCell sx={tableHeaderStyles}>Status</TableCell>
@@ -200,7 +216,7 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                 </TableHead>
                 <TableBody>
                     {apps.map((row) => (  
-                        <Row key={row.name} row={row} />
+                        <Row key={row._id} row={row} />
                     ))}
                 </TableBody>
             </Table>

@@ -9,11 +9,11 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getUser, getUserId } from '../../auth/userInfo'
+import { getReadableDateTime } from '../../lib/globalFunctions'
 import axios from 'axios';
 import { FlashOnRounded } from '@material-ui/icons';
-
 
 function HomePage() {
     const [user] = useState(getUser())
@@ -62,50 +62,7 @@ function HomePage() {
         })
     }
 
-    const setDateTime = (date) => {
-        date = new Date(date)
-        const year = date.getFullYear()
-        const month = date.getMonth()
-        const day = date.getDate()
-        const hour = date.getHours() + 5
-        const minute = date.getMinutes()
-
-        const millisecondsInMinute = 60 * 1000
-        const millisecondsInHour = 60 * 60 * 1000
-        const millisecondsInDay = 1000 * 3600 * 24
-        const millisecondsInWeek = 1000 * 3600 * 24 * 7
-
-        const timeDifference = Math.abs(date.getTime() - Date.now());
-        
-        if (timeDifference < millisecondsInMinute) {
-            return "less than a minute ago"
-        }
-        else if (timeDifference < millisecondsInHour) {
-            const minuteOffset = Math.floor(timeDifference / millisecondsInMinute)
-            if (minuteOffset === 1) {
-                return `${minuteOffset} minute ago`
-            }
-            return `${minuteOffset} minutes ago`
-        }
-        else if (timeDifference < millisecondsInDay) {
-            const hourOffset = Math.floor(timeDifference / millisecondsInHour)
-            if (hourOffset === 1) {
-                return `${hourOffset} hour ago`
-            }
-            return `${hourOffset} hour ago`
-        }
-        else if (timeDifference < millisecondsInWeek) {
-            const dayOffset = Math.floor(timeDifference / millisecondsInDay)
-            if (dayOffset === 1) {
-                return `${dayOffset} day ago`
-            }
-            return `${dayOffset} days ago`
-        }
-
-        return `${day}/${month}/${year}`
-    }
-
-    const ActivityCard = (activity) => {
+    const ActivityCard = ({ activity }) => {
         const user = activity.username
 
         const header = activity.imageId !== undefined 
@@ -117,39 +74,41 @@ function HomePage() {
         : activity.imageName
 
         const description = activity.description
-        const date = setDateTime(activity.created)
+        const date = getReadableDateTime(activity.created)
 
         return (
-            <Card 
-                sx={{
-                    minWidth: 700,
-                    maxWidth: 1000,
-                    margin: '2em auto'
-                }}
-            >
-                <CardContent>
-                    <Box sx={{ display: 'flex' }}>
-                        <Typography variant="h4" component="div" 
-                            style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
-                        >
-                            <Link underline="none" href={`/profile/${activity.userId}`}>
-                                {user}
-                            </Link>
+            <React.Fragment>
+                <Card 
+                    sx={{
+                        minWidth: 700,
+                        maxWidth: 1000,
+                        margin: '2em auto'
+                    }}
+                >
+                    <CardContent>
+                        <Box sx={{ display: 'flex' }}>
+                            <Typography variant="h4" component="div" 
+                                style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
+                            >
+                                <Link underline="none" href={`/profile/${activity.userId}`}>
+                                    {user}
+                                </Link>
+                            </Typography>
+                            <Typography variant="h4" component="div">{header}</Typography>
+                            <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
+                        </Box>
+                        <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
+                            {activityTitle}
                         </Typography>
-                        <Typography variant="h4" component="div">{header}</Typography>
-                        <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
-                    </Box>
-                    <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
-                        {activityTitle}
-                    </Typography>
-                    <Typography sx={{ mb: 1.5, marginLeft: 5 }} color="text.secondary">
-                        {description}
-                    </Typography>
-                </CardContent>
-                {/* <CardActions>
-                    <Button size="small">Check Out</Button>
-                </CardActions> */}
-            </Card>
+                        <Typography sx={{ mb: 1.5, marginLeft: 5 }} color="text.secondary">
+                            {description}
+                        </Typography>
+                    </CardContent>
+                    {/* <CardActions>
+                        <Button size="small">Check Out</Button>
+                    </CardActions> */}
+                </Card>
+            </React.Fragment>
         )
     }
 
@@ -165,8 +124,8 @@ function HomePage() {
             <Box sx={{ marginTop: 10 }}>
                 {
                     friendsActivities.map((activity) => {
-                        return (
-                            ActivityCard(activity)
+                        return(
+                            <ActivityCard key={activity._id} activity={activity} />
                         )
                     })
                 }

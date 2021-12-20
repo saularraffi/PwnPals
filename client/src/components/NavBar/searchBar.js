@@ -67,12 +67,19 @@ function SearchBar() {
             return
         }
 
-        const url = `${process.env.REACT_APP_BACKEND}/api/user/search?search=${evt.target.value}`
-
-        axios.get(url).then(res => {
-            setSearchResults(res.data)
-            // console.log(res.data)
-        }).catch(err => {
+        axios.get(`${process.env.REACT_APP_BACKEND}/api/user/search?search=${evt.target.value}`).then(res => {
+            return res.data
+        })
+        .then(data => {
+            axios.get(`${process.env.REACT_APP_BACKEND}/api/container/search?search=${evt.target.value}`).then(res => {
+                const allData = [...data, ...res.data]
+                setSearchResults(allData)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        })
+        .catch(err => {
             console.log(err)
         })
     }
@@ -84,7 +91,7 @@ function SearchBar() {
     useEffect(() => { }, [])
 
     return (
-        <Box sx={{ flexGrow: 0.6 }}>
+        <Box sx={{ flexGrow: 0.6, }}>
             <Search sx={{ width: '100%' }}>
                 <SearchIconWrapper>
                     <SearchIcon />
@@ -97,17 +104,17 @@ function SearchBar() {
                     onFocus={onFocus}
                     autoFocus={userIsSearching}
                 />
+                <Box sx={{
+                    // padding: 35.75,
+                    // backgroundColor: 'pink',
+                    position: 'absolute',
+                    width: '100%'
+                }}>
+                    {searchResults.length !== 0 &&
+                        <SearchResultTable results={searchResults}/>
+                    }
+                </Box>
             </Search>
-            {/* the table that shows up needs to have an absolute position */}
-            <Box sx={{
-                // padding: 35.75,
-                // backgroundColor: 'pink',
-                position: 'absolute',
-            }}>
-                {searchResults.length !== 0 &&
-                    <SearchResultTable results={searchResults}/>
-                }
-            </Box>
         </Box>
     )
 }

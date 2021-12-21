@@ -92,7 +92,7 @@ function SearchBar() {
     useEffect(() => { }, [])
 
     return (
-        <Box sx={{ flexGrow: 0.6, }}>
+        <Box sx={{ flexGrow: 0.6 }}>
             <Search sx={{ width: '100%' }}>
                 <SearchIconWrapper>
                     <SearchIcon />

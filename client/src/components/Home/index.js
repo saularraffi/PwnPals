@@ -119,7 +119,7 @@ function HomePage() {
         )
     }
 
-    useEffect(() => {
+    useEffect(() => {        
         if (!fetchedUserDetails) {
             fetchUserDetails()
         }

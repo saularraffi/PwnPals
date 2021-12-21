@@ -106,6 +106,8 @@ function ProfilePage() {
     }
 
     const FollowButton = () => {
+        if (isMyProfile) return null
+
         return (
             <Button variant="contained"
                 sx={{ margin: 'auto 3em' }}
@@ -118,6 +120,8 @@ function ProfilePage() {
     }
 
     const UnfollowButton = () => {
+        if (isMyProfile) return null
+
         return (
             <Button variant="contained"
                 sx={{ margin: 'auto 3em', ':hover': { backgroundColor: '#F73636' }}}
@@ -142,7 +146,7 @@ function ProfilePage() {
                     <Typography sx={{ fontSize: 50 }}>{username[0]}</Typography>
                 </Avatar>
                 <Typography sx={{ margin: 'auto 0', fontSize: 60 }}>{username}</Typography>
-                { isFollowing
+                { isFollowing 
                     ? <UnfollowButton />
                     : <FollowButton /> 
                 }

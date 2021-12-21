@@ -13,13 +13,15 @@ import NavBar from './components/NavBar';
 
 import { setLoggedInStatus } from './auth/userInfo'
 
+import Box from '@mui/material/Box'
+
 function App() {
   if (localStorage.getItem('loggedIn') === null) {
     setLoggedInStatus(false)
   }
   
   return (
-    <div className="App">
+    <Box className="App">
       <BrowserRouter>
         <NavBar />
         <Routes>
@@ -34,7 +36,7 @@ function App() {
           <Route path='/app/:id/bug-report' element={<BugReportFormPage />}/>
         </Routes>
       </BrowserRouter>
-    </div>
+    </Box>
   );
 }
 

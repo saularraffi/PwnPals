@@ -5,11 +5,13 @@ import {
     Box,
     Typography,
     IconButton,
-    Grid
+    Grid,
+    Badge
 } from '@mui/material'
 
 import {
     Menu as MenuIcon,
+    Notifications as NotificationsIcon,
 } from '@material-ui/icons'
 
 import { isLoggedIn, logOut, getUserId } from '../../auth/userInfo'
@@ -49,6 +51,13 @@ function MyNavBar() {
         if (userIsLoggedIn) {
             return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <IconButton sx={{ margin: 'auto 0.5em' }}>
+                        <Badge badgeContent={17} color="error" 
+                            sx={{ color: 'white' }}
+                        >
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
                     <Button variant="contained" disableElevation 
                         style={{ color: 'white', fontSize: '1.1em' }}
                         onClick={() => navigateOnClick('/search')}

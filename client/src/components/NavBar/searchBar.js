@@ -72,6 +72,7 @@ function SearchBar() {
         })
         .then(data => {
             axios.get(`${process.env.REACT_APP_BACKEND}/api/container/search?search=${evt.target.value}`).then(res => {
+                console.log(res.data)
                 const allData = [...data, ...res.data]
                 setSearchResults(allData)
             })

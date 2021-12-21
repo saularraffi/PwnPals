@@ -19,22 +19,21 @@ import { Avatar } from '@mui/material';
 function HomePage() {
     const [user] = useState(getUser())
     const [userId] = useState(getUserId())
-    const [friendsActivities, setFriendsActivities] = useState([])
+    const [followingUserActivities, setFollowingUserActivities] = useState([])
     const [fetchedUserDetails, setFetchedUserDetails] = useState(false)
-    const [reload, setReload] = useState(0)
 
     const fetchUserDetails = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/user?id=${userId}`
 
         axios.get(url).then(async (res) => {
             setFetchedUserDetails(true)
-            const friends = res.data.friends
+            const following = res.data.following
             let totalActivities = []
 
-            for (const friend of friends) {
+            for (const user of following) {
                 await Promise.all([
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${friend}`),
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${friend}`)
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${user}`),
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${user}`)
                 ])
                 .then(res => {
                     const activities = {
@@ -55,7 +54,7 @@ function HomePage() {
                     const date2 = new Date(b.created)
                     return date2 - date1
                 })
-                setFriendsActivities(orderedActivities)
+                setFollowingUserActivities(orderedActivities)
             }
         })
         .catch(err => {
@@ -131,7 +130,7 @@ function HomePage() {
             <Typography variant='h2'>Hi, {user}!<br />Welcome to PwnPals!</Typography>
             <Box sx={{ marginTop: 10 }}>
                 {
-                    friendsActivities.map((activity) => {
+                    followingUserActivities.map((activity) => {
                         return(
                             <ActivityCard key={activity._id} activity={activity} />
                         )

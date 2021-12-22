@@ -33,7 +33,8 @@ function App() {
           <Route path='/upload' element={<UserAppUploadPage />}/>
           <Route path='/search' element={<Search />}/>
           <Route path='/bug-reports/:id' element={<BugReportsListPage />}/>
-          <Route path='/app/:id/bug-report' element={<BugReportFormPage />}/>
+          <Route path='/app/:id/bug-report' element={<BugReportFormPage edit={false} />}/>
+          <Route path='/app/:id/bug-report/:id/edit' element={<BugReportFormPage edit={true} />}/>
         </Routes>
       </BrowserRouter>
     </Box>

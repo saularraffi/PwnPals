@@ -9,8 +9,25 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 
 import React, { useEffect, useState } from "react";
+import axios from 'axios';
 
-export default function Comments({ comments }) {
+export default function Comments({ comments, reportId, fetchBugReports }) {
+    const deleteComment = (comment) => {
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
+
+        const data = {
+            id: reportId,
+            deleteCommentId: comment._id
+        }
+
+        axios.put(url, data).then(res => {
+            console.log(res)
+            fetchBugReports()
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     const CommentRow = ({ comment }) => {
         return (
             <React.Fragment>
@@ -25,7 +42,11 @@ export default function Comments({ comments }) {
                         <Typography sx={{ marginLeft: 8.5 }}>{comment.body}</Typography>
                         <Box sx={{ marginLeft: 6.5 }}>
                             <Button>Edit</Button>
-                            <Button sx={{ color: 'red' }}>Delete</Button>
+                            <Button sx={{ color: 'red' }}
+                                onClick={() => deleteComment(comment)}
+                            >
+                                Delete
+                            </Button>
                         </Box>
                     </TableCell>
                 </TableRow>
@@ -49,7 +70,7 @@ export default function Comments({ comments }) {
                         {comments.map(comment => {
                             return (
                                 <CommentRow comment={comment}
-                                    key={comment.useId + " - " + comment.body}                                
+                                    key={comment.userId + " - " + comment.body}                                
                                 />
                             )
                         })}

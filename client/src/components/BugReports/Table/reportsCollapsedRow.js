@@ -9,10 +9,12 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 
 import { getUserId, getUser } from '../../../auth/userInfo'
+import { useNavigate } from "react-router-dom";
 import Comments from './commentsTable'
 
 
 export default function CollapsedRow({ report, deleteReport, fetchBugReports }) {
+    const navigate = useNavigate()
     const [comment, setComment] = useState("")
     const [viewComments, setViewComments] = useState(false)
     const [makeComment, setMakeComment] = useState(false)
@@ -42,7 +44,7 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
     }
 
     const editReport = () => {
-        console.log("editing report")
+        navigate(`/app/${report.appId}/bug-report/${report._id}/edit`)
     }
 
     const handleSubmit = (evt) => {
@@ -114,7 +116,7 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
                 </Box>
             }
             <Collapse in={viewComments} timeout="auto" unmountOnExit>
-                <Comments comments={report.comments} />
+                <Comments comments={report.comments} reportId={report._id} fetchBugReports={fetchBugReports} />
             </Collapse>
         </Box>
     )

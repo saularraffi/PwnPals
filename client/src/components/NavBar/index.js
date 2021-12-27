@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 import {
     AppBar,
     Toolbar,
@@ -7,26 +5,36 @@ import {
     Box,
     Typography,
     IconButton,
-    Grid
+    Grid,
+    Badge,
+    Menu,
+    MenuItem,
 } from '@mui/material'
 
 import {
-    Menu as MenuIcon
+    Menu as MenuIcon,
+    Notifications as NotificationsIcon,
+    AccountCircle as AccountCircleIcon,
 } from '@material-ui/icons'
 
-import { isLoggedIn, logOut } from '../../auth/userInfo'
+import { isLoggedIn, logOut, getUserId } from '../../auth/userInfo'
+import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import SearchBar from './searchBar'
 
 
 function MyNavBar() {
     const navigate = useNavigate();
+    const [userIsLoggedIn, setUserIsLoggedIn] = useState(isLoggedIn())
+    const [userId, setUserId] = useState(getUserId())
 
     const rootBoxStyles = {
         flexGrow: 1,
         width: '100%',
         position: 'sticky',
         top: 0,
-        marginBottom: 7
+        marginBottom: 7,
+        zIndex: 9999
     }
 
     const handleLogIn = () => {
@@ -35,25 +43,76 @@ function MyNavBar() {
 
     const handleLogOut = () => {
         logOut()
+        setUserIsLoggedIn(false)
         navigate('/')
     }
 
     const navigateOnClick = (path) => {
+        if (window.location.pathname === path) {
+            window.location.reload(false)
+        }
         navigate(path)
     }
 
-    const renderButtons = () => {
-        if (isLoggedIn()) {
+    useEffect(() => {
+        setUserIsLoggedIn(isLoggedIn())
+    })
+
+    const NavMenu = () => {
+        const [menuIsOpen, setMenuIsOpen] = useState(false)
+
+        const handleMenuClose = () => {
+            setMenuIsOpen(true)
+        }
+
+        return (
+            <Menu
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={menuIsOpen}
+                onClose={handleMenuClose}
+            >
+                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            </Menu>
+        )
+    }
+
+    const NavMenuButton = () => {
+        return (
+            <IconButton>
+                <AccountCircleIcon style={{ color: 'white', fontSize: 35 }} />
+            </IconButton>
+        )
+    }
+
+    const NavButtons = () => {
+        if (userIsLoggedIn) {
             return (
-                <Box>
-                    <Button sx={{ color: 'white', fontSize: '1.1em' }}
-                        onClick={() => navigateOnClick('/')}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <IconButton sx={{ margin: 'auto 0.5em' }}>
+                        <Badge badgeContent={17} color="error" 
+                            sx={{ color: 'white' }}
+                        >
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
+                    <Button variant="contained" disableElevation 
+                        style={{ color: 'white', fontSize: '1.1em' }}
+                        onClick={() => navigateOnClick('/search')}
                     >
-                        Home
+                        Search
                     </Button>
                     <Button variant="contained" disableElevation 
-                        style={{ paddingRight: 15, color: 'white', fontSize: '1.1em' }}
-                        onClick={() => navigateOnClick('/profile')}
+                        style={{ color: 'white', fontSize: '1.1em' }}
+                        onClick={() => navigateOnClick(`/profile/${userId}`)}
                     >
                         Profile
                     </Button>
@@ -63,6 +122,7 @@ function MyNavBar() {
                     >
                         Logout
                     </Button>
+                    <NavMenuButton />
                 </Box>
             )
         }
@@ -80,21 +140,32 @@ function MyNavBar() {
 
     return (
         <Box sx={rootBoxStyles}>
-            <AppBar style={{ backgroundColor: '#1976d2' }}>
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h5" component="div" sx={{ flexGrow: 1, color: 'white' }}>
-                        PwnPals
-                    </Typography>
-                    {renderButtons()}
+            <AppBar elevation={userIsLoggedIn ? 5 : 0} style={{ backgroundColor: '#1976d2' }}>
+                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', position: 'relative' }}>
+                    <Box>
+                        <IconButton
+                            size="large"
+                            edge="start"
+                            color="inherit"
+                            aria-label="open drawer"
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Button onClick={() => navigateOnClick('/home')}>
+                            <Typography variant="h5" component="div" 
+                                style={{ color: 'white' }}>
+                                PwnPals
+                            </Typography>
+                        </Button>
+                    </Box>
+                    { userIsLoggedIn &&
+                        <SearchBar />
+                    }
+                    <Box>
+                        <NavButtons />
+                        <NavMenu />
+                    </Box>
                 </Toolbar>
             </AppBar>
         </Box>

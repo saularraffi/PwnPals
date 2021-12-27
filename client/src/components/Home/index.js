@@ -5,32 +5,35 @@ import CardMedia from '@mui/material/CardMedia';
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getUser, getUserId } from '../../auth/userInfo'
+import { getReadableDateTime } from '../../lib/globalFunctions'
 import axios from 'axios';
 import { FlashOnRounded } from '@material-ui/icons';
-
+import { Avatar } from '@mui/material';
 
 function HomePage() {
     const [user] = useState(getUser())
     const [userId] = useState(getUserId())
-    const [friendsActivities, setFriendsActivities] = useState([])
+    const [followingUserActivities, setFollowingUserActivities] = useState([])
     const [fetchedUserDetails, setFetchedUserDetails] = useState(false)
-    const [reload, setReload] = useState(0)
 
     const fetchUserDetails = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/user?id=${userId}`
 
         axios.get(url).then(async (res) => {
             setFetchedUserDetails(true)
-            const friends = res.data.friends
-            for (const friend of friends) {
+            const following = res.data.following
+            let totalActivities = []
+
+            for (const user of following) {
                 await Promise.all([
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${friend}`),
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${friend}`)
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${user}`),
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${user}`)
                 ])
                 .then(res => {
                     const activities = {
@@ -40,18 +43,18 @@ function HomePage() {
                     return activities
                 })
                 .then(activities => {
-                    const activitiesCollection = [
-                        ...friendsActivities, 
+                    totalActivities = [
+                        ...totalActivities, 
                         ...activities.apps, 
                         ...activities.reports
                     ]
-                    const orderedActivities = activitiesCollection.sort(function(a, b) {
-                        const date1 = new Date(a.created)
-                        const date2 = new Date(b.created)
-                        return date2 - date1
-                    })
-                    setFriendsActivities(orderedActivities)
                 })
+                const orderedActivities = totalActivities.sort(function(a, b) {
+                    const date1 = new Date(a.created)
+                    const date2 = new Date(b.created)
+                    return date2 - date1
+                })
+                setFollowingUserActivities(orderedActivities)
             }
         })
         .catch(err => {
@@ -59,100 +62,67 @@ function HomePage() {
         })
     }
 
-    const setDateTime = (date) => {
-        date = new Date(date)
-        const year = date.getFullYear()
-        const month = date.getMonth()
-        const day = date.getDate()
-        const hour = date.getHours() + 5
-        const minute = date.getMinutes()
-
-        const millisecondsInMinute = 60 * 1000
-        const millisecondsInHour = 60 * 60 * 1000
-        const millisecondsInDay = 1000 * 3600 * 24
-        const millisecondsInWeek = 1000 * 3600 * 24 * 7
-
-        const timeDifference = Math.abs(date.getTime() - Date.now());
-        
-        if (timeDifference < millisecondsInMinute) {
-            return "less than a minute ago"
-        }
-        else if (timeDifference < millisecondsInHour) {
-            const minuteOffset = Math.floor(timeDifference / millisecondsInMinute)
-            if (minuteOffset === 1) {
-                return `${minuteOffset} minute ago`
-            }
-            return `${minuteOffset} minutes ago`
-        }
-        else if (timeDifference < millisecondsInDay) {
-            const hourOffset = Math.floor(timeDifference / millisecondsInHour)
-            if (hourOffset === 1) {
-                return `${hourOffset} hour ago`
-            }
-            return `${hourOffset} hour ago`
-        }
-        else if (timeDifference < millisecondsInWeek) {
-            const dayOffset = Math.floor(timeDifference / millisecondsInDay)
-            if (dayOffset === 1) {
-                return `${dayOffset} day ago`
-            }
-            return `${dayOffset} days ago`
-        }
-
-        return `${day}/${month}/${year}`
-    }
-
-    const ActivityCard = (activity) => {
+    const ActivityCard = ({ activity }) => {
         const user = activity.username
 
         const header = activity.imageId !== undefined 
         ? 'has submitted a new app' 
         : 'has submitted a new bug'
 
-        const activityTitle = activity.title !== undefined 
-        ? activity.title 
-        : activity.imageName
+        const activityTitle = activity.imageId !== undefined 
+        ? activity.imageName 
+        : activity.title
+
+        const link = activity.imageId !== undefined
+        ? `/profile/${activity.userId}`
+        : `/bug-reports/${activity.appId}`
 
         const description = activity.description
-        const date = setDateTime(activity.created)
+        const date = getReadableDateTime(activity.created)
 
         return (
-            <Card 
-                sx={{
-                    minWidth: 700,
-                    maxWidth: 1000,
-                    margin: '2em auto'
-                }}
-            >
-                <CardContent>
-                    <Box sx={{ display: 'flex' }}>
-                        <Typography variant="h4" component="div" 
-                            style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
-                        >
-                            {user}
+            <React.Fragment>
+                <Card 
+                    sx={{
+                        minWidth: 700,
+                        maxWidth: 1000,
+                        margin: '2em auto'
+                    }}
+                >
+                    <CardContent>
+                        <Box sx={{ display: 'flex' }}>
+                            <Avatar sx={{ marginRight: 3 }}>{user[0]}</Avatar>
+                            <Typography variant="h4" component="div" 
+                                style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
+                            >
+                                <Link underline="none" href={`/profile/${activity.userId}`}>
+                                    {user}
+                                </Link>
+                            </Typography>
+                            <Typography variant="h4" component="div">{header}</Typography>
+                            <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
+                        </Box>
+                        <Link underline="none" href={link}>
+                            <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
+                                {activityTitle}
+                            </Typography>
+                        </Link>
+                        <Typography sx={{ mb: 1.5, marginLeft: 5 }} color="text.secondary">
+                            {description}
                         </Typography>
-                        <Typography variant="h4" component="div">{header}</Typography>
-                        <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
-                    </Box>
-                    <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
-                        {activityTitle}
-                    </Typography>
-                    <Typography sx={{ mb: 1.5, marginLeft: 5 }} color="text.secondary">
-                        {description}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small">Check Out</Button>
-                </CardActions>
-            </Card>
+                    </CardContent>
+                    {/* <CardActions>
+                        <Button size="small">Check Out</Button>
+                    </CardActions> */}
+                </Card>
+            </React.Fragment>
         )
     }
 
-    useEffect(() => {
+    useEffect(() => {        
         if (!fetchedUserDetails) {
             fetchUserDetails()
         }
-        console.log(friendsActivities)
     }, [])
 
     return (
@@ -160,9 +130,9 @@ function HomePage() {
             <Typography variant='h2'>Hi, {user}!<br />Welcome to PwnPals!</Typography>
             <Box sx={{ marginTop: 10 }}>
                 {
-                    friendsActivities.map((activity) => {
-                        return (
-                            ActivityCard(activity)
+                    followingUserActivities.map((activity) => {
+                        return(
+                            <ActivityCard key={activity._id} activity={activity} />
                         )
                     })
                 }

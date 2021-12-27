@@ -56,7 +56,7 @@ function UserAppUploadPage(props) {
 
         apiBuildImage()
 
-        navigate('/profile');
+        navigate(`/profile/${userId}`);
     }
 
     return (

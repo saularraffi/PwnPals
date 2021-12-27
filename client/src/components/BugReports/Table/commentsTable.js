@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 
 export default function Comments({ comments, reportId, fetchBugReports, handleEditCommentClick, 
-    setEditComment, setMakeComment, setComment, setCommentId
+    setEditComment, setMakeComment, setComment, setCommentId, handleMakeCommentClick
 }) {
     const deleteComment = (comment) => {
         const url = `${process.env.REACT_APP_BACKEND}/api/comment`
@@ -40,6 +40,13 @@ export default function Comments({ comments, reportId, fetchBugReports, handleEd
         handleEditCommentClick()
     }
 
+    const replyToComment = (comment) => {
+        console.log("replying to comment")
+        setMakeComment(true)
+        setComment(`@${comment.username} `)
+        handleMakeCommentClick()
+    }
+
     const CommentRow = ({ comment }) => {
         return (
             <React.Fragment>
@@ -53,6 +60,7 @@ export default function Comments({ comments, reportId, fetchBugReports, handleEd
                         </Box>
                         <Typography sx={{ marginLeft: 8.5 }}>{comment.body}</Typography>
                         <Box sx={{ marginLeft: 6.5 }}>
+                            <Button onClick={() => replyToComment(comment)}>Reply</Button>
                             <Button onClick={() => editComment(comment)}>Edit</Button>
                             <Button sx={{ color: 'red' }}
                                 onClick={() => deleteComment(comment)}

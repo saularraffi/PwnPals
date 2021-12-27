@@ -11,21 +11,33 @@ import Button from '@mui/material/Button';
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 
-export default function Comments({ comments, reportId, fetchBugReports }) {
+export default function Comments({ comments, reportId, fetchBugReports, handleEditCommentClick, 
+    setEditComment, setMakeComment, setComment, setCommentId
+}) {
     const deleteComment = (comment) => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
+        const url = `${process.env.REACT_APP_BACKEND}/api/comment`
 
         const data = {
-            id: reportId,
-            deleteCommentId: comment._id
+            reportId: reportId,
+            commentId: comment._id
         }
 
-        axios.put(url, data).then(res => {
+        console.log(data)
+
+        axios.delete(url, { data: data }).then(res => {
             console.log(res)
             fetchBugReports()
         }).catch(err => {
             console.log(err)
         })
+    }
+
+    const editComment = (comment) => {
+        setEditComment(true)
+        setMakeComment(false)
+        setComment(comment.body)
+        setCommentId(comment._id)
+        handleEditCommentClick()
     }
 
     const CommentRow = ({ comment }) => {
@@ -41,7 +53,7 @@ export default function Comments({ comments, reportId, fetchBugReports }) {
                         </Box>
                         <Typography sx={{ marginLeft: 8.5 }}>{comment.body}</Typography>
                         <Box sx={{ marginLeft: 6.5 }}>
-                            <Button>Edit</Button>
+                            <Button onClick={() => editComment(comment)}>Edit</Button>
                             <Button sx={{ color: 'red' }}
                                 onClick={() => deleteComment(comment)}
                             >

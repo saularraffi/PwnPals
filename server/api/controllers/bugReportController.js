@@ -45,6 +45,7 @@ exports.postReport = function(req, res) {
     const { title } = req.body
     const { description } = req.body
     const { appId } = req.body
+    const { comments } = req.body
 
     const bugReport = new BugReport({
         userId: userId,
@@ -52,6 +53,7 @@ exports.postReport = function(req, res) {
         title: title,
         description: description,
         appId: appId,
+        comments: comments,
         created: Date.now()
     })
     bugReport.save(function(err) {
@@ -66,7 +68,7 @@ exports.postReport = function(req, res) {
     })
 }
 
-exports.updateReport = function(req, res) {
+exports.updateReport = async function(req, res) {
     const { id } = req.body
     const { userId } = req.body
     const { title } = req.body
@@ -75,10 +77,10 @@ exports.updateReport = function(req, res) {
 
     let update = {}
 
-    if (userId !== undefined) { update['userId'] = userId }
-    if (title !== undefined) { update['title'] = title }
-    if (description !== undefined) { update['description'] = description }
-    if (imageId !== undefined) { update['imageId'] = imageId }
+    if (userId !== undefined) { update.userId = userId }
+    if (title !== undefined) { update.title = title }
+    if (description !== undefined) { update.description = description }
+    if (imageId !== undefined) { update.imageId = imageId }
 
     BugReport.findByIdAndUpdate(id, update, function(err, bugReport) {
         if (err) {

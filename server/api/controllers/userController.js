@@ -89,15 +89,27 @@ exports.postUser = async function(req, res) {
     })
 }
 
-exports.updateUser = function(req, res) {
+exports.updateUser = async function(req, res) {
     const id = req.body.id
     const username = req.body.username
     const password = req.body.password
+    const follow = req.body.follow
+    const unfollow = req.body.unfollow
 
     let update = {}
 
-    if (username !== undefined) { update['username'] = username }
-    if (password !== undefined) { update['password'] = password }
+    if (username !== undefined) { update.username = username }
+    if (password !== undefined) { update.password = password }
+    if (follow !== undefined) {
+        await User.findById(id, async (err, user) => {
+            update.following = await user.addUserToFollowings(follow)
+        })
+    }
+    if (unfollow !== undefined) {
+        await User.findById(id, async (err, user) => {
+            update.following = await user.removeUserFromFollowings(unfollow)
+        })
+    }
 
     User.findByIdAndUpdate(id, update, function(err, user) {
         if (err) {

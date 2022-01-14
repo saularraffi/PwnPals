@@ -10,10 +10,15 @@ router.post(`${endpoint}/local`, passport.authenticate('local'), (req, res) => {
     // console.log(req.headers)
     // res.cookie('sessionId', req.session.passport.user.id)
     req.session.cookie['sessionId'] = req.session.id
-    console.log(req.session.id)
-    console.log(req.session.cookie)
+    // console.log(req.session.id)
+    // console.log(req.session.cookie)
+
+    // console.log(req.session)
+    // console.log(req.user)
+
+    console.log(req.headers)
     // res.redirect('http://localhost:3000/apps')
-    res.send(req.user.id)
+    res.send(req.user.id)   
 })
 
 module.exports = router

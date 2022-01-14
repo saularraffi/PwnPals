@@ -25,12 +25,17 @@ const basePath = "/api"
 const hostname = '0.0.0.0'
 const port = 5000;
 
+// using body parser
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json())
+app.use(cors({ credentials: true }))
+
 // session stuff
 const oneDay = 1000 * 60 * 60 * 24;
 const sessionSecret = 'thisisnotmysecret'  // save this as an env variable
 app.use(session({
     secret: sessionSecret,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { maxAge: oneDay },
     resave: false,
     store: new MongoStore({
@@ -50,19 +55,6 @@ app.use(passport.initialize())
 app.use(passport.session())
 const setupPassport = require('./auth/setup')
 setupPassport()
-
-app.use(cors())
-// app.use(function (req, res, next) {
-//     res.setHeader('Access-Control-Allow-Origin', '*');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-//     next();
-// });
-
-// using body parser
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json())
 
 // using routes in app
 app.use(basePath, testRoute)

@@ -110,9 +110,7 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
                 </Button>
                 { userId === report.userId &&
                     <Box>
-                        <Button onClick={editReport}>
-                            Edit
-                        </Button>
+                        <Button onClick={editReport}>Edit</Button>
                         <Button style={{ color: 'red' }} onClick={() => deleteReport(report._id)}>
                             Delete
                         </Button>
@@ -128,6 +126,12 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
                         <TextField multiline variant="standard" 
                             onChange={handleCommentChange}
                             value={comment}
+                            autoFocus
+                            onFocus={function(e) {
+                                var val = e.target.value;
+                                e.target.value = '';
+                                e.target.value = val;
+                            }}
                             style={{ height: '10px', width: '100%' }}
                         />
                     </Box>
@@ -156,6 +160,7 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
                     setMakeComment={setMakeComment}
                     setComment={setComment}
                     setCommentId={setCommentId}
+                    handleMakeCommentClick={handleMakeCommentClick}
                 />
             </Collapse>
         </Box>

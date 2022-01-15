@@ -10,13 +10,15 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 import React, { useState, useEffect } from 'react'
-import { getUser, getUserId } from '../../auth/userInfo'
+import { isLoggedIn, getUser, getUserId } from '../../auth/userInfo'
+import { useNavigate } from "react-router-dom";
 import { getReadableDateTime } from '../../lib/globalFunctions'
 import axios from 'axios';
 import { FlashOnRounded } from '@material-ui/icons';
 import { Avatar } from '@mui/material';
 
 function HomePage() {
+    const navigate = useNavigate();
     const [user] = useState(getUser())
     const [userId] = useState(getUserId())
     const [followingUserActivities, setFollowingUserActivities] = useState([])
@@ -119,8 +121,11 @@ function HomePage() {
         )
     }
 
-    useEffect(() => {        
-        if (!fetchedUserDetails) {
+    useEffect(() => {   
+        if (!isLoggedIn()) {
+            navigate('/')
+        }     
+        else if (!fetchedUserDetails) {
             fetchUserDetails()
         }
     }, [])

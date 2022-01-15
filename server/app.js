@@ -28,7 +28,7 @@ const port = 5000;
 // using body parser
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json())
-app.use(cors({ credentials: true }))
+app.use(cors({ origin: true, credentials: true, exposedHeaders: ["set-cookie", "Set-Cookie", "test"] }))
 
 // session stuff
 const oneDay = 1000 * 60 * 60 * 24;

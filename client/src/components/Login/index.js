@@ -48,9 +48,17 @@ function LoginForm() {
             password: password
         }
 
-        axios.post(`${process.env.REACT_APP_BACKEND}/api/auth/local`, data)
+        const headers = {
+            'Content-Type': 'application/json',
+        }
+
+        axios.defaults.withCredentials = true;
+        axios.post(`${process.env.REACT_APP_BACKEND}/api/auth/local`, data, { 
+            headers: headers,
+            withCredentials: true,
+        })
         .then(res => {
-            console.log(res)
+            console.log(res.headers)
             setLoggedInStatus(true)
             setUser(username)
             setUserId(res.data)
@@ -70,6 +78,8 @@ function LoginForm() {
     const navigateOnClick = function(path) {
         navigate(path)
     }
+
+    useEffect(() => { }, [])
 
     return (
         <Box

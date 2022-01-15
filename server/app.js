@@ -25,10 +25,16 @@ const basePath = "/api"
 const hostname = '0.0.0.0'
 const port = 5000;
 
+app.use(cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, 
+    exposedHeaders: ["set-cookie", "Set-Cookie", "test"] 
+}))
+
 // using body parser
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
-app.use(cors({ origin: true, credentials: true, exposedHeaders: ["set-cookie", "Set-Cookie", "test"] }))
 
 // session stuff
 const oneDay = 1000 * 60 * 60 * 24;

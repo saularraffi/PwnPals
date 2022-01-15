@@ -14,10 +14,10 @@ router.post(`${endpoint}/local`, passport.authenticate('local'), (req, res) => {
 
     // console.log(req.session)
     // console.log(req.user)
-    res.cookie('cookie', req.session.cookie, {
+    res.cookie('sessionId', req.session.id, {
         httpOnly: false,
         secure: false,
-        sameSite: true,
+        sameSite: false,
         signed: false,
     })
     // res.setHeader('test', 'blablabla')

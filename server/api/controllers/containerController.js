@@ -31,6 +31,22 @@ exports.getContainers = function(req, res) {
     })      
 }
 
+exports.getSearchedContainers = function(req, res) {
+    const search = req.query.search
+
+    const r = new RegExp(search, 'i');
+
+    Container.find({ imageName: { $regex: r, $options: 'i' }}, function(err, containers) {
+        if (err) {
+            console.log(err)
+            res.send("Failed to find containers")
+        }
+        else {
+            res.send(containers) 
+        }
+    })
+}
+
 exports.createContainer = async function(req, res) {
     const userId = req.body.userId
     const username = req.body.username

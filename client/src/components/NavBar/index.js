@@ -5,11 +5,16 @@ import {
     Box,
     Typography,
     IconButton,
-    Grid
+    Grid,
+    Badge,
+    Menu,
+    MenuItem,
 } from '@mui/material'
 
 import {
     Menu as MenuIcon,
+    Notifications as NotificationsIcon,
+    AccountCircle as AccountCircleIcon,
 } from '@material-ui/icons'
 
 import { isLoggedIn, logOut, getUserId } from '../../auth/userInfo'
@@ -28,7 +33,8 @@ function MyNavBar() {
         width: '100%',
         position: 'sticky',
         top: 0,
-        marginBottom: 7
+        marginBottom: 7,
+        zIndex: 9999
     }
 
     const handleLogIn = () => {
@@ -42,19 +48,62 @@ function MyNavBar() {
     }
 
     const navigateOnClick = (path) => {
+        if (window.location.pathname === path) {
+            window.location.reload(false)
+        }
         navigate(path)
     }
 
-    const RenderButtons = () => {
+    useEffect(() => {
+        setUserIsLoggedIn(isLoggedIn())
+    })
+
+    const NavMenu = () => {
+        const [menuIsOpen, setMenuIsOpen] = useState(false)
+
+        const handleMenuClose = () => {
+            setMenuIsOpen(true)
+        }
+
+        return (
+            <Menu
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={menuIsOpen}
+                onClose={handleMenuClose}
+            >
+                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            </Menu>
+        )
+    }
+
+    const NavMenuButton = () => {
+        return (
+            <IconButton>
+                <AccountCircleIcon style={{ color: 'white', fontSize: 35 }} />
+            </IconButton>
+        )
+    }
+
+    const NavButtons = () => {
         if (userIsLoggedIn) {
             return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button variant="contained" disableElevation 
-                        style={{ color: 'white', fontSize: '1.1em' }}
-                        onClick={() => navigateOnClick('/')}
-                    >
-                        Home
-                    </Button>
+                    <IconButton sx={{ margin: 'auto 0.5em' }}>
+                        <Badge badgeContent={17} color="error" 
+                            sx={{ color: 'white' }}
+                        >
+                            <NotificationsIcon />
+                        </Badge>
+                    </IconButton>
                     <Button variant="contained" disableElevation 
                         style={{ color: 'white', fontSize: '1.1em' }}
                         onClick={() => navigateOnClick('/search')}
@@ -73,6 +122,7 @@ function MyNavBar() {
                     >
                         Logout
                     </Button>
+                    <NavMenuButton />
                 </Box>
             )
         }
@@ -88,13 +138,9 @@ function MyNavBar() {
         }
     }
 
-    useEffect(() => {
-        setUserIsLoggedIn(isLoggedIn())
-    })
-
     return (
         <Box sx={rootBoxStyles}>
-            <AppBar style={{ backgroundColor: '#1976d2' }}>
+            <AppBar elevation={userIsLoggedIn ? 5 : 0} style={{ backgroundColor: '#1976d2' }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', position: 'relative' }}>
                     <Box>
                         <IconButton
@@ -106,16 +152,19 @@ function MyNavBar() {
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h5" component="div" 
-                            style={{ color: 'white', marginTop: 8, float: 'right' }}>
-                            PwnPals
-                        </Typography>
+                        <Button onClick={() => navigateOnClick('/home')}>
+                            <Typography variant="h5" component="div" 
+                                style={{ color: 'white' }}>
+                                PwnPals
+                            </Typography>
+                        </Button>
                     </Box>
                     { userIsLoggedIn &&
                         <SearchBar />
                     }
                     <Box>
-                        <RenderButtons />
+                        <NavButtons />
+                        <NavMenu />
                     </Box>
                 </Toolbar>
             </AppBar>

@@ -9,15 +9,19 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 
 import { getUserId, getUser } from '../../../auth/userInfo'
+import { useNavigate } from "react-router-dom";
 import Comments from './commentsTable'
 
 
 export default function CollapsedRow({ report, deleteReport, fetchBugReports }) {
+    const navigate = useNavigate()
     const [comment, setComment] = useState("")
     const [viewComments, setViewComments] = useState(false)
     const [makeComment, setMakeComment] = useState(false)
+    const [editComment, setEditComment] = useState(false)
     const [userId] = useState(getUserId())
     const [username] = useState(getUser())
+    const [commentId, setCommentId] = useState("")
 
     const handleCommentChange = (evt) => {
         setComment(evt.target.value)
@@ -33,34 +37,60 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
     }
 
     const handleMakeCommentClick = () => {
+        setEditComment(false)
+
         if (makeComment) {
             setMakeComment(false)
+            setComment("")
         }
         else {
             setMakeComment(true)
         }
     }
 
-    const editReport = () => {
-        console.log("editing report")
+    const handleEditCommentClick = () => {
+        setEditComment(true)
     }
 
-    const handleSubmit = (evt) => {
+    const editReport = () => {
+        navigate(`/app/${report.appId}/bug-report/${report._id}/edit`)
+    }
+
+    const handleSubmitComment = (evt) => {
         evt.preventDefault()
 
-        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report`
+        const url = `${process.env.REACT_APP_BACKEND}/api/comment`
 
         const data = {
-            id: report._id,
+            reportId: report._id,
             comment: {userId: userId, username: username, body: comment}
         }
 
-        axios.put(url, data).then(res => {
+        axios.post(url, data).then(res => {
             console.log(res)
             setComment("")
             fetchBugReports()
         })
         .catch(err => {
+            console.log(err)
+        })
+    }
+
+    const handleEditComment = (evt) => {
+        evt.preventDefault()
+
+        const url = `${process.env.REACT_APP_BACKEND}/api/comment`
+
+        const data = {
+            reportId: report._id,
+            commentId: commentId,
+            commentBody: comment
+        }
+
+        axios.put(url, data).then(res => {
+            console.log(res)
+            fetchBugReports()
+        }).catch(err => {
             console.log(err)
         })
     }
@@ -80,24 +110,28 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
                 </Button>
                 { userId === report.userId &&
                     <Box>
-                        <Button onClick={editReport}>
-                            Edit
-                        </Button>
+                        <Button onClick={editReport}>Edit</Button>
                         <Button style={{ color: 'red' }} onClick={() => deleteReport(report._id)}>
                             Delete
                         </Button>
                     </Box>
                 }
             </Box>
-            { makeComment && 
-                <Box sx={{ margin: '2em 4em 5em 4em' }} component="form"
-                    onSubmit={handleSubmit}
+            { (makeComment || editComment) &&
+                <Box sx={{ margin: '2em 4em 4em 4em' }} component="form"
+                    onSubmit={makeComment ? handleSubmitComment : handleEditComment}
                 >
                     <Box sx={{ display: 'flex' }}>
-                        <Avatar alt="Remy Sharp" sx={{ marginRight: 3 }} />
+                        <Avatar sx={{ marginRight: 3 }}>{username[0]}</Avatar>
                         <TextField multiline variant="standard" 
                             onChange={handleCommentChange}
                             value={comment}
+                            autoFocus
+                            onFocus={function(e) {
+                                var val = e.target.value;
+                                e.target.value = '';
+                                e.target.value = val;
+                            }}
                             style={{ height: '10px', width: '100%' }}
                         />
                     </Box>
@@ -109,12 +143,25 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
                             marginTop: 1
                         }}
                     >
-                        Submit
+                        { makeComment
+                            ? <Typography>Submut</Typography>
+                            : <Typography>Save</Typography>
+                        }
                     </Button>
                 </Box>
             }
             <Collapse in={viewComments} timeout="auto" unmountOnExit>
-                <Comments comments={report.comments} />
+                <Comments
+                    comments={report.comments}
+                    reportId={report._id}
+                    fetchBugReports={fetchBugReports}
+                    handleEditCommentClick={handleEditCommentClick}
+                    setEditComment={setEditComment}
+                    setMakeComment={setMakeComment}
+                    setComment={setComment}
+                    setCommentId={setCommentId}
+                    handleMakeCommentClick={handleMakeCommentClick}
+                />
             </Collapse>
         </Box>
     )

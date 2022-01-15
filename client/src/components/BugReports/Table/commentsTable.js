@@ -9,23 +9,64 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 
 import React, { useEffect, useState } from "react";
+import axios from 'axios';
 
-export default function Comments({ comments }) {
+export default function Comments({ comments, reportId, fetchBugReports, handleEditCommentClick, 
+    setEditComment, setMakeComment, setComment, setCommentId, handleMakeCommentClick
+}) {
+    const deleteComment = (comment) => {
+        const url = `${process.env.REACT_APP_BACKEND}/api/comment`
+
+        const data = {
+            reportId: reportId,
+            commentId: comment._id
+        }
+
+        console.log(data)
+
+        axios.delete(url, { data: data }).then(res => {
+            console.log(res)
+            fetchBugReports()
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const editComment = (comment) => {
+        setEditComment(true)
+        setMakeComment(false)
+        setComment(comment.body)
+        setCommentId(comment._id)
+        handleEditCommentClick()
+    }
+
+    const replyToComment = (comment) => {
+        console.log("replying to comment")
+        setMakeComment(true)
+        setComment(`@${comment.username} `)
+        handleMakeCommentClick()
+    }
+
     const CommentRow = ({ comment }) => {
         return (
             <React.Fragment>
                 <TableRow>
                     <TableCell sx={{ borderBottom: "none" }}>
                         <Box sx={{ display: 'flex' }}>
-                            <Avatar />
+                            <Avatar>{comment.username[0]}</Avatar>
                             <Box sx={{ margin: 'auto 1em auto 2em' }}>
                                 <Typography>By <strong>{comment.username}</strong></Typography>
                             </Box>
                         </Box>
                         <Typography sx={{ marginLeft: 8.5 }}>{comment.body}</Typography>
                         <Box sx={{ marginLeft: 6.5 }}>
-                            <Button>Edit</Button>
-                            <Button sx={{ color: 'red' }}>Delete</Button>
+                            <Button onClick={() => replyToComment(comment)}>Reply</Button>
+                            <Button onClick={() => editComment(comment)}>Edit</Button>
+                            <Button sx={{ color: 'red' }}
+                                onClick={() => deleteComment(comment)}
+                            >
+                                Delete
+                            </Button>
                         </Box>
                     </TableCell>
                 </TableRow>
@@ -49,7 +90,7 @@ export default function Comments({ comments }) {
                         {comments.map(comment => {
                             return (
                                 <CommentRow comment={comment}
-                                    key={comment.useId + " - " + comment.body}                                
+                                    key={comment.userId + " - " + comment.body}                                
                                 />
                             )
                         })}

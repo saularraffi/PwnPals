@@ -6,6 +6,7 @@ const endpoint = "/container"
 
 router.get(endpoint, containerController.getContainer)
 router.get(`${endpoint}/all`, containerController.getContainers)
+router.get(`${endpoint}/search`, containerController.getSearchedContainers)
 router.post(`${endpoint}/create`, containerController.createContainer)
 router.post(`${endpoint}/start`, containerController.startContainer)
 router.post(`${endpoint}/stop`, containerController.stopContainer)

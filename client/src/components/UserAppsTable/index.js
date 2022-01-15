@@ -18,12 +18,12 @@ import CircleIcon from '@mui/icons-material/Circle';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getUserId } from '../../auth/userInfo'
 import { getReadableDateTime } from '../../lib/globalFunctions'
 
 function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
-    const [userId, setUserId] = useState(getUserId())
+    const [userId] = useState(getUserId())
 
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
@@ -100,9 +100,6 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                         marginTop: 3,
                         marginBottom: 3,
                         display: 'flex',
-                        // justifyContent: 'space-between',
-                        // width: app.status === 'running' ? '45%' : '40%'
-                        // width: '30%'
                     }}
                 >
                         { app.status === 'running' &&
@@ -151,10 +148,9 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
         )
     }
 
-    const Row = (props) => {
-        const app = props.row;
+    const Row = ({ app }) => {
         const [open, setOpen] = React.useState(false);
-      
+              
         return (
             <React.Fragment>
                 <StyledTableRow
@@ -215,8 +211,8 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {apps.map((row) => (  
-                        <Row key={row._id} row={row} />
+                    {apps.map((app) => (  
+                        <Row key={app._id} app={app} />
                     ))}
                 </TableBody>
             </Table>

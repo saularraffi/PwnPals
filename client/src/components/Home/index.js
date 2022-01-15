@@ -10,30 +10,32 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 import React, { useState, useEffect } from 'react'
-import { getUser, getUserId } from '../../auth/userInfo'
+import { isLoggedIn, getUser, getUserId } from '../../auth/userInfo'
+import { useNavigate } from "react-router-dom";
 import { getReadableDateTime } from '../../lib/globalFunctions'
 import axios from 'axios';
 import { FlashOnRounded } from '@material-ui/icons';
+import { Avatar } from '@mui/material';
 
 function HomePage() {
+    const navigate = useNavigate();
     const [user] = useState(getUser())
     const [userId] = useState(getUserId())
-    const [friendsActivities, setFriendsActivities] = useState([])
+    const [followingUserActivities, setFollowingUserActivities] = useState([])
     const [fetchedUserDetails, setFetchedUserDetails] = useState(false)
-    const [reload, setReload] = useState(0)
 
     const fetchUserDetails = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/user?id=${userId}`
 
         axios.get(url).then(async (res) => {
             setFetchedUserDetails(true)
-            const friends = res.data.friends
+            const following = res.data.following
             let totalActivities = []
 
-            for (const friend of friends) {
+            for (const user of following) {
                 await Promise.all([
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${friend}`),
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${friend}`)
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${user}`),
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${user}`)
                 ])
                 .then(res => {
                     const activities = {
@@ -54,7 +56,7 @@ function HomePage() {
                     const date2 = new Date(b.created)
                     return date2 - date1
                 })
-                setFriendsActivities(orderedActivities)
+                setFollowingUserActivities(orderedActivities)
             }
         })
         .catch(err => {
@@ -69,9 +71,13 @@ function HomePage() {
         ? 'has submitted a new app' 
         : 'has submitted a new bug'
 
-        const activityTitle = activity.title !== undefined 
-        ? activity.title 
-        : activity.imageName
+        const activityTitle = activity.imageId !== undefined 
+        ? activity.imageName 
+        : activity.title
+
+        const link = activity.imageId !== undefined
+        ? `/profile/${activity.userId}`
+        : `/bug-reports/${activity.appId}`
 
         const description = activity.description
         const date = getReadableDateTime(activity.created)
@@ -87,6 +93,7 @@ function HomePage() {
                 >
                     <CardContent>
                         <Box sx={{ display: 'flex' }}>
+                            <Avatar sx={{ marginRight: 3 }}>{user[0]}</Avatar>
                             <Typography variant="h4" component="div" 
                                 style={{ fontWeight: 'bold', color: '#1976d2', marginRight: 15 }}
                             >
@@ -97,9 +104,11 @@ function HomePage() {
                             <Typography variant="h4" component="div">{header}</Typography>
                             <Typography sx={{ 'marginLeft': 'auto' }}>{date}</Typography>
                         </Box>
-                        <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
-                            {activityTitle}
-                        </Typography>
+                        <Link underline="none" href={link}>
+                            <Typography sx={{ mb: 1.5, marginTop: 3, fontSize: '1.5em' }}>
+                                {activityTitle}
+                            </Typography>
+                        </Link>
                         <Typography sx={{ mb: 1.5, marginLeft: 5 }} color="text.secondary">
                             {description}
                         </Typography>
@@ -112,8 +121,11 @@ function HomePage() {
         )
     }
 
-    useEffect(() => {
-        if (!fetchedUserDetails) {
+    useEffect(() => {   
+        if (!isLoggedIn()) {
+            navigate('/')
+        }     
+        else if (!fetchedUserDetails) {
             fetchUserDetails()
         }
     }, [])
@@ -123,7 +135,7 @@ function HomePage() {
             <Typography variant='h2'>Hi, {user}!<br />Welcome to PwnPals!</Typography>
             <Box sx={{ marginTop: 10 }}>
                 {
-                    friendsActivities.map((activity) => {
+                    followingUserActivities.map((activity) => {
                         return(
                             <ActivityCard key={activity._id} activity={activity} />
                         )

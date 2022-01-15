@@ -48,13 +48,8 @@ function LoginForm() {
             password: password
         }
 
-        const headers = {
-            'Content-Type': 'application/json',
-        }
-
         axios.defaults.withCredentials = true;
         axios.post(`${process.env.REACT_APP_BACKEND}/api/auth/local`, data, { 
-            headers: headers,
             withCredentials: true,
         })
         .then(res => {

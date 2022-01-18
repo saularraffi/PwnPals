@@ -4,7 +4,10 @@ const https = require('https');
 const axios = require('axios')
 
 // handle single object retrieval
-function getTest(req, res) { 
+function getTest(req, res) {
+
+    // console.log(req.user)
+    
     Test.find({}, function(err, docs) {
         console.log(docs)
 

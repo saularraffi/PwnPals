@@ -1,2 +1,14 @@
-- finish session management --> storing session info on backend and setting/sending cookies
-- when generating the friend activities, you replace the last friends activity witht the current, so you need to append to the array and after looping over all the friends, then and only then should you sort the array by date
+Needed for MVP 
+
+- finish auth with sessions and cookies
+- when clicking on an app or a bug report and taken to another page, the corresponding table row needs to be uncollapsed and in the center of the page
+- deploy the app
+- add the table of your bug reports to your profile
+- allow for custom port when uploading a new app
+
+Not needed for MVP
+
+- optimize search functionality
+- implement comment tree
+- allow for pictures and media to be uploaded with a bug report
+- add critical rating for bug report

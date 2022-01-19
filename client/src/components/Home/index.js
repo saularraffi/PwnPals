@@ -76,7 +76,7 @@ function HomePage() {
         : activity.title
 
         const link = activity.imageId !== undefined
-        ? `/profile/${activity.userId}`
+        ? `/profile/${activity.userId}?app=${activity._id}`
         : `/bug-reports/${activity.appId}`
 
         const description = activity.description

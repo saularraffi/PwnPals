@@ -86,7 +86,6 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
 
     useEffect(() => {
         console.log("these are the row statuses")
-        console.log(rowOpenStatuses)
     })
 
     const CollapsedRow = ({ app }) => {

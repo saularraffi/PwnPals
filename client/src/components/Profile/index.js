@@ -14,7 +14,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 
-import Table from '../UserAppsTable'
+import AppTable from '../UserAppsTable'
+import BugReportsTable from '../UserBugReportsTable'
 import { getUser, getUserId } from '../../auth/userInfo'
 
 function ProfilePage() {
@@ -23,6 +24,7 @@ function ProfilePage() {
     const [userId] = useState(getUserId())
     const [profileUserId] = useState(location.pathname.split('/').at(-1))
     const [appList, setAppList] = useState([])
+    const [bugReportList, setBugReportList] = useState([])
     const [username, setUsername] = useState("")
     const [isMyProfile, setIsMyProfile] = useState(false)
     const [isFollowing, setIsFollowing] = useState(false)
@@ -59,11 +61,21 @@ function ProfilePage() {
         })
     }
 
-    const getContainers = async () => {
+    const fetchContainers = async () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/container/all?userId=${profileUserId}`
 
         await axios.get(url).then(res => {
             setAppList(res.data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const fetchBugReports = async () => {
+        const url = `${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${profileUserId}`
+
+        await axios.get(url).then(res => {
+            setBugReportList(res.data)
         }).catch(err => {
             console.log(err)
         })
@@ -132,9 +144,10 @@ function ProfilePage() {
     }
 
     useEffect(() => {
-        getContainers()
         getUsername()
         checkFollowStatus()
+        fetchContainers()
+        fetchBugReports()
     }, [])
 
     return (
@@ -157,12 +170,19 @@ function ProfilePage() {
                     <AddIcon style={{ marginRight: 10 }} />
                     New
                 </Button>
-                <Table 
+                <AppTable 
                     isMyProfile={isMyProfile} 
                     username={username}
                     apps={appList} 
-                    getContainers={getContainers} 
+                    fetchContainers={fetchContainers} 
                     nav={navigateOnClick}
+                />
+            </Container>
+            <Container sx={{ marginTop: 10 }}>
+                <BugReportsTable 
+                    bugReports={bugReportList}
+                    isMyProfile={isMyProfile} 
+                    username={username}
                 />
             </Container>
         </Box>

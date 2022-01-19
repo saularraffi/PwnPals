@@ -22,7 +22,7 @@ import { useState, useEffect, useRef } from "react";
 import { getUserId } from '../../auth/userInfo'
 import { getReadableDateTime } from '../../lib/globalFunctions'
 
-function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
+function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
     const [userId] = useState(getUserId())
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -57,7 +57,7 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
 
         await axios.post(url, data).then(res => {
             console.log(res.status);
-            getContainers()
+            fetchContainers()
         }).catch(err => {
             console.log(err)
         })
@@ -72,7 +72,7 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
         }
 
         await axios.delete(url, { data: data }).then(res => {
-            getContainers()
+            fetchContainers()
         }).catch(err => {
             console.log(err)
         })

@@ -31,6 +31,8 @@ function BugReportsList() {
     const [bugReports, setBugReports] = useState([])
     const [appDetails, setAppDetails] = useState({})
 
+    const urlParams = new URLSearchParams(window.location.search);
+
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.action.hover,
@@ -88,7 +90,8 @@ function BugReportsList() {
     }, [])
 
     const ReportRow = ({ report }) => {
-        const [open, setOpen] = useState(false);
+        const reportId = urlParams.get('report')
+        const [open, setOpen] = useState(report._id === reportId ? true : false);
 
         return (
             <React.Fragment>

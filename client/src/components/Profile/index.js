@@ -178,7 +178,7 @@ function ProfilePage() {
                     nav={navigateOnClick}
                 />
             </Container>
-            <Container sx={{ marginTop: 10 }}>
+            <Container sx={{ marginTop: 15 }}>
                 <BugReportsTable 
                     bugReports={bugReportList}
                     isMyProfile={isMyProfile} 

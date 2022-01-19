@@ -77,7 +77,7 @@ function HomePage() {
 
         const link = activity.imageId !== undefined
         ? `/profile/${activity.userId}?app=${activity._id}`
-        : `/bug-reports/${activity.appId}`
+        : `/bug-reports/${activity.appId}?report=${activity._id}`
 
         const description = activity.description
         const date = getReadableDateTime(activity.created)

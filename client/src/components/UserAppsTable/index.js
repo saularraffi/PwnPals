@@ -24,7 +24,6 @@ import { getReadableDateTime } from '../../lib/globalFunctions'
 
 function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
     const [userId] = useState(getUserId())
-    const [reload, setReload] = useState(false)
 
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -85,8 +84,8 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
     }
 
     useEffect(() => {
-        console.log("these are the row statuses")
-    })
+        
+    }, [])
 
     const CollapsedRow = ({ app }) => {
         const buttonStyles = {
@@ -157,8 +156,8 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
 
     const Row = ({ app }) => {
         const appId = urlParams.get('app')
-        const [open, setOpen] = React.useState(app._id === appId ? true : false);
-              
+        const [open, setOpen] = useState(app._id === appId ? true : false);
+
         return (
             <React.Fragment>
                 <StyledTableRow
@@ -220,7 +219,7 @@ function AppsTable({ apps, getContainers, nav, isMyProfile, username }) {
                 </TableHead>
                 <TableBody>
                     {apps.map((app) => (  
-                        <Row key={app._id} app={app} />
+                        <Row key={app._id} id={app._id} app={app} />
                     ))}
                 </TableBody>
             </Table>

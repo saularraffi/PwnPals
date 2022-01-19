@@ -37,7 +37,7 @@ function SearchResultTable({ results }) {
             <TableRow>
                 <TableCell sx={{ borderBottom: "none", padding: 1, display: 'flex' }}>
                     <Avatar sx={{ margin: 'auto 0' }}><CodeIcon /></Avatar>
-                    <Link href={`/profile/${result.userId}`} underline="none">
+                    <Link href={`/profile/${result.userId}?app=${result._id}`} underline="none">
                         <Typography 
                             sx={{ fontSize: 30,  color: '#1976d2', marginLeft: 2 }}
                         >

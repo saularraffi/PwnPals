@@ -10,6 +10,7 @@ import ProfilePage from './components/Profile'
 import UserAppUploadPage from './components/UserAppUpload'
 import Search from './components/Search'
 import NavBar from './components/NavBar';
+import Test from './components/Test'
 
 import { setLoggedInStatus } from './auth/userInfo'
 
@@ -35,6 +36,7 @@ function App() {
           <Route path='/bug-reports/:id' element={<BugReportsListPage />}/>
           <Route path='/app/:id/bug-report' element={<BugReportFormPage edit={false} />}/>
           <Route path='/app/:id/bug-report/:id/edit' element={<BugReportFormPage edit={true} />}/>
+          <Route path='/test' element={<Test />} />
         </Routes>
       </BrowserRouter>
     </Box>

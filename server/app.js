@@ -40,6 +40,7 @@ const oneDay = 1000 * 60 * 60 * 24;
 const sessionSecret = 'thisisnotmysecret'  // save this as an env variable
 app.use(cookieParser(sessionSecret))
 app.use(session({
+    name : 'sessionId',
     secret: sessionSecret,
     saveUninitialized: false,
     resave: false,

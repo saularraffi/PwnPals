@@ -44,7 +44,7 @@ app.use(session({
     secret: sessionSecret,
     saveUninitialized: false,
     resave: false,
-    cookie: { maxAge: oneDay },
+    cookie: { maxAge: oneDay, httpOnly: false },
     store: new MongoStore({
         mongoUrl: 'mongodb://localhost:27017/pwnpals-sessions',
         autoRemove: 'native',

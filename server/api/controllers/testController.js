@@ -4,16 +4,11 @@ const https = require('https');
 const axios = require('axios')
 
 // handle single object retrieval
-function getTest(req, res) {
-
-    console.log(req.session)
-    console.log(req.isAuthenticated())
-    console.log(req.session.user)
-    
+function getTest(req, res) {    
     Test.find({}, function(err, docs) {
         if (err) { console.log(err) }
     })
-    res.send("GET test") 
+    res.send("this_is_the_secret") 
 }
 
 // handle single object creation

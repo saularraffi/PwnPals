@@ -6,7 +6,7 @@ const router = express.Router()
 
 const endpoint = "/test"
 
-router.get(endpoint, testController.getTest)
+router.get(endpoint, isLoggedIn, testController.getTest)
 router.post(endpoint, testController.postTest)
 router.put(endpoint, testController.updateTest)
 router.delete(endpoint, testController.deleteTest)

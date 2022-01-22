@@ -12,15 +12,9 @@ import Search from './components/Search'
 import NavBar from './components/NavBar';
 import Test from './components/Test'
 
-import { setLoggedInStatus } from './auth/userInfo'
-
 import Box from '@mui/material/Box'
 
 function App() {
-  if (localStorage.getItem('loggedIn') === null) {
-    setLoggedInStatus(false)
-  }
-  
   return (
     <Box className="App">
       <BrowserRouter>

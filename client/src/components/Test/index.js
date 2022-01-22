@@ -7,11 +7,11 @@ import { useCookies } from 'react-cookie'
 function Test() {
     const [secret, setSecret] = useState("")
     const navigate = useNavigate();
-    const [cookie1] = useState(jsCookies.get('sessionId'))
+    const [cookie1] = useState(jsCookies.get('sessionIdd'))
     const [cookie2] = useCookies()
 
     useEffect(() => {
-        console.log(cookie2.sessionId)
+        console.log(cookie1)
 
         axios.get(`${process.env.REACT_APP_BACKEND}/api/test`, { withCredentials: true })
         .then(res => setSecret(res.data))

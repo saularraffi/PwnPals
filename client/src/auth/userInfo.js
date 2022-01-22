@@ -1,7 +1,12 @@
+import cookies from 'js-cookie';
+
 export function isLoggedIn() {
-    if (localStorage.getItem('loggedIn') === 'true') {
+    if (cookies.get('connect.sid')) {
         return true
     }
+    // if (localStorage.getItem('loggedIn') === 'true') {
+    //     return true
+    // }
     else {
         return false
     }
@@ -23,11 +28,12 @@ export function setUserId(userId) {
     localStorage.setItem('userId', userId)
 }
 
-export function setLoggedInStatus(status) {
-    localStorage.setItem('loggedIn', status)
-}
+// export function setLoggedInStatus(status) {
+//     localStorage.setItem('loggedIn', status)
+// }
 
 export function logOut() {
-    setLoggedInStatus(false)
+    cookies.remove('connect.sid')
     localStorage.removeItem('username')
+    localStorage.removeItem('userId')
 }

@@ -11,7 +11,7 @@ import {
 import { makeStyles } from '@mui/styles'
 
 import { useState, useEffect } from 'react'
-import { setLoggedInStatus, setUser, isLoggedIn, setUserId } from '../../auth/userInfo'
+import { setUser, isLoggedIn, setUserId } from '../../auth/userInfo'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 
@@ -54,7 +54,6 @@ function LoginForm() {
         })
         .then(res => {
             console.log(res.headers)
-            setLoggedInStatus(true)
             setUser(username)
             setUserId(res.data)
             navigate('/home')

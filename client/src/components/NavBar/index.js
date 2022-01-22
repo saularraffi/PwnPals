@@ -94,6 +94,7 @@ function MyNavBar() {
     }
 
     const NavButtons = () => {
+        console.log(userIsLoggedIn)
         if (userIsLoggedIn) {
             return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

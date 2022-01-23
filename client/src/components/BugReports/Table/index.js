@@ -44,7 +44,7 @@ function BugReportsList() {
     const fetchBugReports = function() {
         const url = `${process.env.REACT_APP_BACKEND}/api/bug-report/all?appId=${appId}`
 
-        axios.get(url).then(res => {
+        axios.get(url, { withCredentials: true }).then(res => {
             setBugReports(res.data.reverse())
             console.log(res.data.length)
         }).catch(err => {
@@ -55,7 +55,7 @@ function BugReportsList() {
     const fetchAppDetails = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/container?id=${appId}`
 
-        axios.get(url).then(res => {
+        axios.get(url, { withCredentials: true }).then(res => {
             console.log(res.data)
             setAppDetails(res.data)
         }).catch(err => {
@@ -74,7 +74,7 @@ function BugReportsList() {
             id: id
         }
 
-        axios.delete(url, { data: data }).then(res => {
+        axios.delete(url, { data: data, withCredentials: true }).then(res => {
             console.log(res)
             fetchBugReports()
         }).catch(err => {

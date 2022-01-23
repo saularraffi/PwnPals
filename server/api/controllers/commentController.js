@@ -1,7 +1,6 @@
 const BugReport = require("../models/BugReport")
 
 function updateBugReport(res, id, comments) {
-    console.log(comments)
     BugReport.findByIdAndUpdate(id, { comments: comments }, function(err, bugReport) {
         if (err) {
             console.log(err)
@@ -21,9 +20,11 @@ function updateBugReport(res, id, comments) {
 exports.postComment = function(req, res) {
     const { reportId } = req.body
     const { comment } = req.body
+    const userId = req.session.user.id
+    const username = req.session.user.username
 
     BugReport.findById(reportId, async (err, report) => {
-        const comments = await report.addComment(comment)
+        const comments = await report.addComment(comment, userId, username)
         updateBugReport(res, reportId, comments)
     })
 }

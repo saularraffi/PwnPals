@@ -7,12 +7,8 @@ import { useCookies } from 'react-cookie'
 function Test() {
     const [secret, setSecret] = useState("")
     const navigate = useNavigate();
-    const [cookie1] = useState(jsCookies.get('sessionIdd'))
-    const [cookie2] = useCookies()
 
-    useEffect(() => {
-        console.log(cookie1)
-
+    const testApi = () => {
         axios.get(`${process.env.REACT_APP_BACKEND}/api/test`, { withCredentials: true })
         .then(res => setSecret(res.data))
         .catch(err => {
@@ -20,7 +16,18 @@ function Test() {
                 navigate("/login")
             }
         })
-    })
+    }
+
+    const logout = () => {
+        console.log("logging out")
+        axios.post(`${process.env.REACT_APP_BACKEND}/api/auth/logout`, {}, { withCredentials: true })
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err))
+    }
+
+    useEffect(() => {
+        logout()
+    }, [])
 
     return (
         <h1>Secret: {secret}</h1>

@@ -1,4 +1,6 @@
-import cookies from 'js-cookie';
+import cookies from 'js-cookie'
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 
 export function isLoggedIn() {
     if (cookies.get('connect.sid')) {
@@ -32,8 +34,12 @@ export function setUserId(userId) {
 //     localStorage.setItem('loggedIn', status)
 // }
 
-export function logOut() {
-    cookies.remove('connect.sid')
-    localStorage.removeItem('username')
-    localStorage.removeItem('userId')
-}
+// export function logOut() {
+//     axios.post(`${process.env.REACT_APP_BACKEND}/api/auth/logout`, {}, { withCredentials: true })
+//     .then(res => {
+//         localStorage.removeItem('username')
+//         localStorage.removeItem('userId')
+//         navigate('/')
+//     })
+//     .catch(err => console.log(err))
+// }

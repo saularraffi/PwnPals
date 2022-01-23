@@ -9,5 +9,10 @@ router.post(`${endpoint}/local`, passport.authenticate('local'), (req, res) => {
     req.session.user = { id: req.user.id, username: req.user.username }
     res.send(req.user.id)
 })
+router.post(`${endpoint}/logout`, (req, res) => {
+    req.session.destroy();
+    res.clearCookie('connect.sid');
+    res.send("OK")
+})
 
 module.exports = router

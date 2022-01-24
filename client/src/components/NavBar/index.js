@@ -17,7 +17,8 @@ import {
     AccountCircle as AccountCircleIcon,
 } from '@material-ui/icons'
 
-import { isLoggedIn, logOut, getUserId } from '../../auth/userInfo'
+import axios from 'axios'
+import { isLoggedIn, getUserId } from '../../auth/userInfo'
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import SearchBar from './searchBar'
@@ -42,9 +43,13 @@ function MyNavBar() {
     }
 
     const handleLogOut = () => {
-        logOut()
-        setUserIsLoggedIn(false)
-        navigate('/')
+        axios.post(`${process.env.REACT_APP_BACKEND}/api/auth/logout`, {}, { withCredentials: true })
+        .then(res => {
+            localStorage.removeItem('username')
+            localStorage.removeItem('userId')
+            navigate('/')
+        })
+        .catch(err => console.log(err))
     }
 
     const navigateOnClick = (path) => {
@@ -94,6 +99,7 @@ function MyNavBar() {
     }
 
     const NavButtons = () => {
+        console.log(userIsLoggedIn)
         if (userIsLoggedIn) {
             return (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

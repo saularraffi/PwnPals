@@ -27,15 +27,19 @@ function HomePage() {
     const fetchUserDetails = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/user?id=${userId}`
 
-        axios.get(url).then(async (res) => {
+        axios.get(url, { withCredentials: true }).then(async (res) => {
             setFetchedUserDetails(true)
             const following = res.data.following
             let totalActivities = []
 
             for (const user of following) {
                 await Promise.all([
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${user}`),
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${user}`)
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${user}`,
+                        { withCredentials: true }
+                    ),
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${user}`,
+                        { withCredentials: true }
+                    )
                 ])
                 .then(res => {
                     const activities = {

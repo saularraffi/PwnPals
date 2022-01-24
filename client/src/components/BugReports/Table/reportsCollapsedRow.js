@@ -63,10 +63,10 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
 
         const data = {
             reportId: report._id,
-            comment: {userId: userId, username: username, body: comment}
+            comment: comment
         }
 
-        axios.post(url, data).then(res => {
+        axios.post(url, data, { withCredentials: true }).then(res => {
             console.log(res)
             setComment("")
             fetchBugReports()
@@ -87,7 +87,7 @@ export default function CollapsedRow({ report, deleteReport, fetchBugReports }) 
             commentBody: comment
         }
 
-        axios.put(url, data).then(res => {
+        axios.put(url, data, { withCredentials: true }).then(res => {
             console.log(res)
             fetchBugReports()
         }).catch(err => {

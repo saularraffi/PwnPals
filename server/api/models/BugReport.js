@@ -16,8 +16,13 @@ const BugReport = mongoose.Schema({
     ]
 })
 
-BugReport.methods.addComment = async function(comment) {
-    this.comments.push(comment)
+BugReport.methods.addComment = async function(comment, userId, username) {
+    const commentObj = {
+        userId: userId,
+        username: username,
+        body: comment
+    }
+    this.comments.push(commentObj)
     return await this.comments
 }
 

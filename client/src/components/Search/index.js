@@ -38,7 +38,7 @@ function Search() {
         
         const url = `${process.env.REACT_APP_BACKEND}/api/user/search?search=${searchString}`
 
-        axios.get(url).then(res => {
+        axios.get(url, { withCredentials: true }).then(res => {
             setSearchResults(res)
             console.log(res.data)
         }).catch(err => {

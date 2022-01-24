@@ -90,8 +90,8 @@ exports.postUser = async function(req, res) {
 }
 
 exports.updateUser = async function(req, res) {
-    const id = req.body.id
-    const username = req.body.username
+    const id = req.session.user.id
+    const username = req.session.user.username
     const password = req.body.password
     const follow = req.body.follow
     const unfollow = req.body.unfollow
@@ -128,7 +128,7 @@ exports.updateUser = async function(req, res) {
 }
 
 exports.deleteUser = function(req, res) { 
-    const id = req.body.id
+    const id = req.session.user.id
 
     User.findByIdAndDelete(id, function(err, user) {
         if (err) {

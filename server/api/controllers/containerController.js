@@ -19,7 +19,7 @@ exports.getContainer = function(req, res) {
 
 exports.getContainers = function(req, res) {
     const userId = req.query.userId
-
+    
     Container.find({ userId: userId }, function(err, containers) {
         if (err) { 
             console.log(err) 
@@ -87,8 +87,6 @@ exports.startContainer = async function(req, res) {
     const containerId = req.body.containerId
 
     const status = await docker.startContainer(containerId)
-
-    console.log(status)
 
     if (status !== undefined || status !== null) {
         Container.findOneAndUpdate({ _id: mongoId }, { status: "running" }, (err, doc) => {

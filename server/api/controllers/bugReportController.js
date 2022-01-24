@@ -40,8 +40,8 @@ exports.getAllReports = function(req, res) {
 }
 
 exports.postReport = function(req, res) {
-    const { userId } = req.body
-    const { username } = req.body
+    const userId = req.session.user.id
+    const username = req.session.user.username
     const { title } = req.body
     const { description } = req.body
     const { appId } = req.body
@@ -70,7 +70,7 @@ exports.postReport = function(req, res) {
 
 exports.updateReport = async function(req, res) {
     const { id } = req.body
-    const { userId } = req.body
+    const userId = req.session.user.id
     const { title } = req.body
     const { description } = req.body
     const { imageId } = req.body

@@ -1,5 +1,9 @@
+import cookies from 'js-cookie'
+import axios from 'axios'
+import { useNavigate } from "react-router-dom";
+
 export function isLoggedIn() {
-    if (localStorage.getItem('loggedIn') === 'true') {
+    if (cookies.get('connect.sid')) {
         return true
     }
     else {
@@ -21,13 +25,4 @@ export function getUserId() {
 
 export function setUserId(userId) {
     localStorage.setItem('userId', userId)
-}
-
-export function setLoggedInStatus(status) {
-    localStorage.setItem('loggedIn', status)
-}
-
-export function logOut() {
-    setLoggedInStatus(false)
-    localStorage.removeItem('username')
 }

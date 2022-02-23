@@ -72,15 +72,11 @@ app.use(basePath, containerRoute)
 app.use(basePath, bugReportRoute)
 app.use(basePath, commentRoute)
 
-//ca = [fs.readFileSync(`${__dirname}/ca-certificate.crt`, 'utf8')];
-//console.log(ca)
-
-//mongoose.connect(`mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/admin?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals&tls=true&tlsCAFile=${__dirname}/ca-certificate.crt`,
+//mongoose.connect('mongodb://localhost:27017/pwnpals', 
 mongoose.connect(`mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/pwnpals?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals`,
 { 
     useNewUrlParser: true, 
     useUnifiedTopology: true,
-    //useFindAndModify: false,
     ssl: true,
     sslValidate: false,
     sslCA: `${__dirname}/ca-certificate.crt`

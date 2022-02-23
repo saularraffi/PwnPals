@@ -24,7 +24,7 @@ export default function Comments({ comments, reportId, fetchBugReports, handleEd
 
         console.log(data)
 
-        axios.delete(url, { data: data }).then(res => {
+        axios.delete(url, { data: data, withCredentials: true }).then(res => {
             console.log(res)
             fetchBugReports()
         }).catch(err => {

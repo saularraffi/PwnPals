@@ -42,7 +42,7 @@ function UserAppUploadPage(props) {
             "description": description
         }
         
-        axios.post(url, data).then(res => {
+        axios.post(url, data, { withCredentials: true }).then(res => {
             console.log(res.status);
         }).catch(err => {
             console.log(err)

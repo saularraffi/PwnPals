@@ -55,7 +55,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
 
         const url = `${process.env.REACT_APP_BACKEND}/api/container/${action}`
 
-        await axios.post(url, data).then(res => {
+        await axios.post(url, data, { withCredentials: true }).then(res => {
             console.log(res.status);
             fetchContainers()
         }).catch(err => {
@@ -71,7 +71,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
             containerId: containerId
         }
 
-        await axios.delete(url, { data: data }).then(res => {
+        await axios.delete(url, { data: data, withCredentials: true }).then(res => {
             fetchContainers()
         }).catch(err => {
             console.log(err)

@@ -34,8 +34,8 @@ exports.getAllBuilds = function(req, res) {
 }
 
 exports.postBuild = async function(req, res) {
-    const userId = req.body.userId
-    const username = req.body.username
+    const userId = req.session.user.id
+    const username = req.session.user.username
     const repo = req.body.repo
     const imageName = req.body.imageName
     const description = req.body.description

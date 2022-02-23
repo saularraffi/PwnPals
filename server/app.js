@@ -22,15 +22,14 @@ const commentRoute = require("./api/routes/comment")
 // variable declarations
 const app = express()
 const basePath = "/api"
-// const hostname = '127.0.0.1';
 const hostname = '0.0.0.0'
 const port = 5000;
 
 app.use(cors({
     origin: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, 
-    exposedHeaders: ["set-cookie", "Set-Cookie", "test"] 
+    credentials: true,
+    exposedHeaders: ["set-cookie", "Set-Cookie", "test"]
 }))
 
 // using body parser
@@ -40,23 +39,23 @@ app.use(bodyParser.json())
 // session stuff
 const oneDay = 1000 * 60 * 60 * 24;
 const sessionSecret = 'thisisnotmysecret'  // save this as an env variable
+app.use(cookieParser(sessionSecret))
 app.use(session({
     secret: sessionSecret,
     saveUninitialized: false,
-    cookie: { maxAge: oneDay },
     resave: false,
+    cookie: { maxAge: oneDay, httpOnly: false },
     store: new MongoStore({
         //mongoUrl: 'mongodb://localhost:27017/pwnpals-sessions',
 	mongoUrl: `mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/pwnpals-sessions?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals&tls=true&tlsCAFile=${__dirname}/ca-certificate.crt`,
         autoRemove: 'native',
         ttl: oneDay,
         mongoOptions: {
-            useNewUrlParser: true, 
+            useNewUrlParser: true,
             useUnifiedTopology: true
         }
     })
 }))
-app.use(cookieParser(sessionSecret))
 
 // passport auth stuff
 app.use(passport.initialize())

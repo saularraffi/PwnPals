@@ -10,19 +10,11 @@ import ProfilePage from './components/Profile'
 import UserAppUploadPage from './components/UserAppUpload'
 import Search from './components/Search'
 import NavBar from './components/NavBar';
-
-import { setLoggedInStatus } from './auth/userInfo'
+import Test from './components/Test'
 
 import Box from '@mui/material/Box'
 
 function App() {
-  if (localStorage.getItem('loggedIn') === null) {
-    setLoggedInStatus(false)
-  }
-
-  console.log("Environment varibles")
-  console.log(process.env)
-
   return (
     <Box className="App">
       <BrowserRouter>
@@ -38,6 +30,7 @@ function App() {
           <Route path='/bug-reports/:id' element={<BugReportsListPage />}/>
           <Route path='/app/:id/bug-report' element={<BugReportFormPage edit={false} />}/>
           <Route path='/app/:id/bug-report/:id/edit' element={<BugReportFormPage edit={true} />}/>
+          <Route path='/test' element={<Test />} />
         </Routes>
       </BrowserRouter>
     </Box>

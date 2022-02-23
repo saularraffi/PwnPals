@@ -38,7 +38,7 @@ function BugReportFormPage({ edit }) {
     const fetchContainer = function() {
         const url = `${process.env.REACT_APP_BACKEND}/api/container?id=${appId}`
 
-        axios.get(url).then(res => {
+        axios.get(url, { withCredentials: true }).then(res => {
             console.log(res.data)
             setAppData(res.data)
         }).catch(err => {
@@ -51,7 +51,7 @@ function BugReportFormPage({ edit }) {
     const fetchBugReport = function() {
         const url = `${process.env.REACT_APP_BACKEND}/api/bug-report?id=${reportId}`
 
-        axios.get(url).then(res => {
+        axios.get(url, { withCredentials: true }).then(res => {
             setReportDetails(res.data)
             setTitle(res.data.title)
             setDescription(res.data.description)
@@ -83,7 +83,7 @@ function BugReportFormPage({ edit }) {
             appId: appData._id
         }
 
-        axios.post(url, data).then(res => {
+        axios.post(url, data, { withCredentials: true }).then(res => {
             console.log(res)
             window.history.back()
         })
@@ -104,7 +104,7 @@ function BugReportFormPage({ edit }) {
             description: description,
         }
 
-        axios.put(url, data).then(res => {
+        axios.put(url, data, { withCredentials: true }).then(res => {
             window.history.back()
         })
         .catch(err => {

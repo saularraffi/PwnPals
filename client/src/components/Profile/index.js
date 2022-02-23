@@ -44,7 +44,7 @@ function ProfilePage() {
     const checkFollowStatus = () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/user/?id=${userId}`
 
-        axios.get(url).then(res => {
+        axios.get(url, { withCredentials: true }).then(res => {
             setIsFollowing(res.data.following.includes(profileUserId))
         }).catch(err => {
             console.log(err)
@@ -54,7 +54,7 @@ function ProfilePage() {
     const fetchUsername = async () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/user/?id=${profileUserId}`
 
-        return await axios.get(url).then(res => {
+        return await axios.get(url, { withCredentials: true }).then(res => {
             return res.data.username
         }).catch(err => {
             console.log(err)
@@ -64,7 +64,7 @@ function ProfilePage() {
     const fetchContainers = async () => {
         const url = `${process.env.REACT_APP_BACKEND}/api/container/all?userId=${profileUserId}`
 
-        await axios.get(url).then(res => {
+        await axios.get(url, { withCredentials: true }).then(res => {
             setAppList(res.data)
         }).catch(err => {
             console.log(err)
@@ -93,7 +93,7 @@ function ProfilePage() {
             follow: profileUserId
         }
 
-        await axios.put(url, data).then(res => {
+        await axios.put(url, data, { withCredentials: true }).then(res => {
             setIsFollowing(true)
         }).catch(err => {
             console.log(err)
@@ -108,7 +108,7 @@ function ProfilePage() {
             unfollow: profileUserId
         }
 
-        await axios.put(url, data).then(res => {
+        await axios.put(url, data, { withCredentials: true }).then(res => {
             setIsFollowing(false)
         }).catch(err => {
             console.log(err)

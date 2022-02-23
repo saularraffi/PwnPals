@@ -8,6 +8,7 @@ const passport = require('passport')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const MongoStore = require('connect-mongo')
+const fs = require('fs')
 
 // requiring routes
 const testRoute = require("./api/routes/test")
@@ -45,7 +46,8 @@ app.use(session({
     cookie: { maxAge: oneDay },
     resave: false,
     store: new MongoStore({
-        mongoUrl: 'mongodb://localhost:27017/pwnpals-sessions',
+        //mongoUrl: 'mongodb://localhost:27017/pwnpals-sessions',
+	mongoUrl: `mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/pwnpals-sessions?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals&tls=true&tlsCAFile=${__dirname}/ca-certificate.crt`,
         autoRemove: 'native',
         ttl: oneDay,
         mongoOptions: {
@@ -71,19 +73,27 @@ app.use(basePath, containerRoute)
 app.use(basePath, bugReportRoute)
 app.use(basePath, commentRoute)
 
-mongoose.connect('mongodb://localhost:27017/pwnpals', 
+//ca = [fs.readFileSync(`${__dirname}/ca-certificate.crt`, 'utf8')];
+//console.log(ca)
+
+//mongoose.connect(`mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/admin?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals&tls=true&tlsCAFile=${__dirname}/ca-certificate.crt`,
+mongoose.connect(`mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/pwnpals?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals`,
 { 
     useNewUrlParser: true, 
     useUnifiedTopology: true,
-    useFindAndModify: false
+    //useFindAndModify: false,
+    ssl: true,
+    sslValidate: false,
+    sslCA: `${__dirname}/ca-certificate.crt`
 })
-.then(() => {
+.then((res) => {
     console.log("\n[+] MongoDB connection successful")
-
+    
     app.listen(port, hostname, () => {
         console.log(`\n[+] Server running at http://${hostname}:${port}/`);
     });    
 })
-.catch(() => {
-    console.log("\n[-] MongoDB connection failed")
+.catch((err) => {
+    console.log("\n[-] MongoDB connection failed\n")
+    console.log(err)
 })

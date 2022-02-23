@@ -19,7 +19,10 @@ function App() {
   if (localStorage.getItem('loggedIn') === null) {
     setLoggedInStatus(false)
   }
-  
+
+  console.log("Environment varibles")
+  console.log(process.env)
+
   return (
     <Box className="App">
       <BrowserRouter>

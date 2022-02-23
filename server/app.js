@@ -19,6 +19,7 @@ const buildRoute = require("./api/routes/build")
 const containerRoute = require("./api/routes/container")
 const bugReportRoute = require("./api/routes/bugReport")
 const commentRoute = require("./api/routes/comment")
+// const proxyRoute = require("./api/routes/proxy")
 
 // variable declarations
 const app = express()
@@ -71,6 +72,25 @@ app.use(basePath, buildRoute)
 app.use(basePath, containerRoute)
 app.use(basePath, bugReportRoute)
 app.use(basePath, commentRoute)
+// app.use(basePath, proxyRoute)
+
+const Container = require("./api/models/Container")
+const proxy = require('http-proxy').createProxyServer();
+
+app.get(`/app/:appId`, (req, res, next) => {
+    const id = mongoose.Types.ObjectId(req.params.appId)
+    Container.findById(id, function(err, container) {
+        if (err) { 
+            console.log(err) 
+            res.send("Failed to get container")
+        }
+        else {
+            proxy.web(req, res, {
+                target: `http://localhost:${container.port}`
+            }, next);
+        }
+    })
+})
 
 mongoose.connect(config.db.connectionString, config.db.options)
 .then((res) => {

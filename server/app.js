@@ -47,8 +47,7 @@ app.use(session({
     resave: false,
     cookie: { maxAge: oneDay, httpOnly: false },
     store: new MongoStore({
-        mongoUrl: 'mongodb://localhost:27017/pwnpals-sessions',
-	    // mongoUrl: `mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/pwnpals-sessions?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals&tls=true&tlsCAFile=${__dirname}/ca-certificate.crt`,
+        mongoUrl: config.sessionStore.connectionString,
         autoRemove: 'native',
         ttl: oneDay,
         mongoOptions: {

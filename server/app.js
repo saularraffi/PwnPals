@@ -9,6 +9,7 @@ const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const MongoStore = require('connect-mongo')
 const fs = require('fs')
+const config = require('./config')
 
 // requiring routes
 const testRoute = require("./api/routes/test")
@@ -22,8 +23,8 @@ const commentRoute = require("./api/routes/comment")
 // variable declarations
 const app = express()
 const basePath = "/api"
-const hostname = '0.0.0.0'
-const port = 5000;
+
+require('dotenv').config()
 
 app.use(cors({
     origin: true,
@@ -46,8 +47,8 @@ app.use(session({
     resave: false,
     cookie: { maxAge: oneDay, httpOnly: false },
     store: new MongoStore({
-        //mongoUrl: 'mongodb://localhost:27017/pwnpals-sessions',
-	mongoUrl: `mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/pwnpals-sessions?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals&tls=true&tlsCAFile=${__dirname}/ca-certificate.crt`,
+        mongoUrl: 'mongodb://localhost:27017/pwnpals-sessions',
+	    // mongoUrl: `mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/pwnpals-sessions?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals&tls=true&tlsCAFile=${__dirname}/ca-certificate.crt`,
         autoRemove: 'native',
         ttl: oneDay,
         mongoOptions: {
@@ -72,20 +73,12 @@ app.use(basePath, containerRoute)
 app.use(basePath, bugReportRoute)
 app.use(basePath, commentRoute)
 
-//mongoose.connect('mongodb://localhost:27017/pwnpals', 
-mongoose.connect(`mongodb+srv://doadmin:m4Q319aG50p8TB6H@db-mongodb-nyc1-pwnpals-64d3ae37.mongo.ondigitalocean.com/pwnpals?authSource=admin&replicaSet=db-mongodb-nyc1-pwnpals`,
-{ 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    ssl: true,
-    sslValidate: false,
-    sslCA: `${__dirname}/ca-certificate.crt`
-})
+mongoose.connect(config.db.connectionString, config.db.options)
 .then((res) => {
     console.log("\n[+] MongoDB connection successful")
     
-    app.listen(port, hostname, () => {
-        console.log(`\n[+] Server running at http://${hostname}:${port}/`);
+    app.listen(config.app.port, config.app.host, () => {
+        console.log(`\n[+] Server running at http://${config.app.host}:${config.app.port}/`);
     });    
 })
 .catch((err) => {

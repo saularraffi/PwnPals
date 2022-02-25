@@ -108,23 +108,27 @@ exports.deleteImage = async function(imageId) {
     })
 }
 
-exports.createContainer = async function(imageName) {
+exports.createContainer = async function(appName) {
+    console.log(`\n\n${appName}\n\n`)
+
     return portfinder.getPortPromise()
     .then(portFound => {
         const exposedPort = portFound
         const exposedPortKey = `${exposedPort}/tcp`
 
-        console.log(`\n port found - ${portFound}\n`)
+        console.log(`\nport found - ${portFound}\n`)
 
         return docker.container.create({
-            Image: imageName,
-            name: imageName,
+            Image: appName,
+            name: appName,
             HostConfig: {
                 PortBindings: { "1234/tcp": [{ "HostPort": `${exposedPort}` }]}
             }
         })
-        .then(container => { return container.start() })
-        .then(container => { return container.stop() })
+        .then(container => {
+            return container.start()
+        })
+        // .then(container => { return container.stop() })
         .then(container => { return container.status() })
         .catch(error => {
             console.log(error)
@@ -134,14 +138,29 @@ exports.createContainer = async function(imageName) {
     .catch(err => console.log(err));
 }
 
-exports.startContainer = function(containerId) {
-    return containerHelper('start', containerId)
-}
+// exports.startContainer = function(containerId) {
+//     return containerHelper('start', containerId)
+// }
 
 exports.stopContainer = function(containerId) {
     return containerHelper('stop', containerId)
 }
 
 exports.deleteContainer = function(containerId) {
-    return containerHelper('delete', containerId)
+    // return containerHelper('delete', containerId)
+
+    return docker.container.list({
+        all: true
+    })
+    .then(async (containers) => {
+        for (const container of containers) {
+            if (container.data.Id === containerId) {
+                return container.delete({ force: true })
+            }
+        }
+    })
+    .catch(error => {
+        console.log(error)
+        return null
+    });
 }

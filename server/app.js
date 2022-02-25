@@ -15,10 +15,9 @@ const config = require('./config')
 const testRoute = require("./api/routes/test")
 const userRoute = require("./api/routes/user")
 const authRoute = require("./api/routes/auth")
-const buildRoute = require("./api/routes/build")
-const containerRoute = require("./api/routes/container")
 const bugReportRoute = require("./api/routes/bugReport")
 const commentRoute = require("./api/routes/comment")
+const userAppRoute = require("./api/routes/userApp")
 
 // variable declarations
 const app = express()
@@ -67,24 +66,23 @@ setupPassport()
 app.use(basePath, testRoute)
 app.use(basePath, userRoute)
 app.use(basePath, authRoute)
-app.use(basePath, buildRoute)
-app.use(basePath, containerRoute)
 app.use(basePath, bugReportRoute)
 app.use(basePath, commentRoute)
+app.use(basePath, userAppRoute)
 
-const Container = require("./api/models/Container")
+const UserApp = require("./api/models/UserApp")
 const proxy = require('http-proxy').createProxyServer();
 
 app.get(`/app/:appId`, (req, res, next) => {
     const id = mongoose.Types.ObjectId(req.params.appId)
-    Container.findById(id, function(err, container) {
+    UserApp.findById(id, function(err, userApp) {
         if (err) { 
             console.log(err) 
-            res.send("Failed to get container")
+            res.send("Failed to get user app")
         }
         else {
             proxy.web(req, res, {
-                target: `http://localhost:${container.port}`
+                target: `http://localhost:${userApp.port}`
             }, next);
         }
     })

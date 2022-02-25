@@ -62,7 +62,7 @@ function ProfilePage() {
     }
 
     const fetchContainers = async () => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/container/all?userId=${profileUserId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/user-app/all?userId=${profileUserId}`
 
         await axios.get(url, { withCredentials: true }).then(res => {
             setAppList(res.data)

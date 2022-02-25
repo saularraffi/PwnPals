@@ -47,13 +47,14 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
         fontSize: '1.2em'
     }
 
-    const toggleContainerState = async (mongoId, containerId, action) => {
+    const toggleContainerState = async (mongoId, containerId, appName, action) => {
         const data = {
             mongoId: mongoId,
-            containerId: containerId
+            containerId: containerId,
+            appName: appName
         }
 
-        const url = `${process.env.REACT_APP_BACKEND}/api/container/${action}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/user-app/${action}`
 
         await axios.post(url, data, { withCredentials: true }).then(res => {
             console.log(res.status);
@@ -63,12 +64,12 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
         })
     }
 
-    const deleteContainer = async (mongoId, containerId) => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/container`
+    const deleteContainer = async (mongoId, appName) => {
+        const url = `${process.env.REACT_APP_BACKEND}/api/user-app`
 
         const data = {
             mongoId: mongoId,
-            containerId: containerId
+            appName: appName
         }
 
         await axios.delete(url, { data: data, withCredentials: true }).then(res => {
@@ -117,13 +118,13 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
                         }
                         { app.status === 'running'
                             ?   <Button variant="contained" color="error"
-                                    onClick={() => toggleContainerState(app._id, app.containerId, 'stop')}
+                                    onClick={() => toggleContainerState(app._id, app.containerId, app.appName, 'stop')}
                                     sx={buttonStyles}
                                 >
                                     Stop
                                 </Button>
                             :   <Button variant="contained" color="success"
-                                    onClick={() => toggleContainerState(app._id, app.containerId, 'start')}
+                                    onClick={() => toggleContainerState(app._id, app.containerId, app.appName, 'start')}
                                     sx={buttonStyles}
                                 >
                                     Start
@@ -143,7 +144,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
                         </Button>
                         { userId === app.userId &&
                             <Button variant="contained" color="error"
-                                onClick={() => deleteContainer(app._id, app.containerId)}
+                                onClick={() => deleteContainer(app._id, app.appName)}
                                 sx={buttonStyles}
                             >
                                 Delete
@@ -179,7 +180,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
                             }}
                         />
                     </TableCell>
-                    <TableCell sx={tableRowStyles}>{app.imageName}</TableCell>
+                    <TableCell sx={tableRowStyles}>{app.appName}</TableCell>
                     <TableCell sx={tableRowStyles}>{app.port}</TableCell>
                     <TableCell sx={tableRowStyles}>{app.status}</TableCell>
                     <TableCell sx={tableRowStyles}>{getReadableDateTime(app.created)}</TableCell>

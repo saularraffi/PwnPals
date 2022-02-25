@@ -47,6 +47,8 @@ exports.postReport = function(req, res) {
     const { appId } = req.body
     const { comments } = req.body
 
+    console.log(req.body)
+
     const bugReport = new BugReport({
         userId: userId,
         username: username,

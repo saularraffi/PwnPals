@@ -85,10 +85,8 @@ exports.createUserApp = async function(req, res) {
 
 exports.startUserApp = async function(req, res) {
     const mongoId = req.body.mongoId
-    // const containerId = req.body.containerId
     const appName = req.body.appName
 
-    // const status = await docker.startContainer(containerId)
     const status = await docker.createContainer(appName)
 
     const data = status.data.HostConfig.PortBindings

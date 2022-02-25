@@ -7,35 +7,6 @@ const portfinder = require('portfinder');
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-async function containerHelper(action, containerId) {
-    let listAll = true
-    if (action === 'stop') {
-        listAll = false
-    }
-
-    return docker.container.list({
-        all: listAll
-    })
-    .then(async (containers) => {
-        for (const c of containers) {
-            if (c.data.Id === containerId) {
-                if (action === 'start') {
-                    return c.start()
-                }
-                else if (action === 'stop') {
-                    return c.stop()
-                }
-                else if (action === 'delete') {
-                    return c.delete({ force: true })
-                }
-            }
-        }
-    })
-    .catch(error => {
-        console.log(error)
-        return null
-    });
-}
 
 exports.buildImage = async function(imageName, repo) {
     const repoOwner = repo.split('/')[3]
@@ -128,7 +99,6 @@ exports.createContainer = async function(appName) {
         .then(container => {
             return container.start()
         })
-        // .then(container => { return container.stop() })
         .then(container => { return container.status() })
         .catch(error => {
             console.log(error)
@@ -138,17 +108,7 @@ exports.createContainer = async function(appName) {
     .catch(err => console.log(err));
 }
 
-// exports.startContainer = function(containerId) {
-//     return containerHelper('start', containerId)
-// }
-
-exports.stopContainer = function(containerId) {
-    return containerHelper('stop', containerId)
-}
-
 exports.deleteContainer = function(containerId) {
-    // return containerHelper('delete', containerId)
-
     return docker.container.list({
         all: true
     })

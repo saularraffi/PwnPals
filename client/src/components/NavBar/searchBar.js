@@ -73,7 +73,7 @@ function SearchBar() {
             return res.data
         })
         .then(data => {
-            axios.get(`${process.env.REACT_APP_BACKEND}/api/container/search?search=${evt.target.value}`,
+            axios.get(`${process.env.REACT_APP_BACKEND}/api/user-app/search?search=${evt.target.value}`,
                 { withCredentials: true }
             ).then(res => {
                 console.log(res.data)

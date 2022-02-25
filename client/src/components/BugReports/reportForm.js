@@ -36,7 +36,7 @@ function BugReportFormPage({ edit }) {
     }
 
     const fetchContainer = function() {
-        const url = `${process.env.REACT_APP_BACKEND}/api/container?id=${appId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/user-app?id=${appId}`
 
         axios.get(url, { withCredentials: true }).then(res => {
             console.log(res.data)
@@ -135,7 +135,7 @@ function BugReportFormPage({ edit }) {
                     flexDirection={'column'}
                     alignItems={'center'}
                 >
-                    Bug Submissions for <strong>{appData.imageName}</strong>
+                    Bug Submission for <strong>{appData.username}</strong>
                 </Typography>
             )
         }

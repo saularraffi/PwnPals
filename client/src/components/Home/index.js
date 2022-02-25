@@ -34,7 +34,7 @@ function HomePage() {
 
             for (const user of following) {
                 await Promise.all([
-                    axios.get(`${process.env.REACT_APP_BACKEND}/api/container/all?userId=${user}`,
+                    axios.get(`${process.env.REACT_APP_BACKEND}/api/user-app/all?userId=${user}`,
                         { withCredentials: true }
                     ),
                     axios.get(`${process.env.REACT_APP_BACKEND}/api/bug-report/all?userId=${user}`,
@@ -76,7 +76,7 @@ function HomePage() {
         : 'has submitted a new bug'
 
         const activityTitle = activity.imageId !== undefined 
-        ? activity.imageName 
+        ? activity.appName 
         : activity.title
 
         const link = activity.imageId !== undefined

@@ -3,7 +3,7 @@ const { spawnProcess } = require('./spawnProcess')
 const tar = require('tar-fs')
 const path = require('path')
 const fs = require('fs');
-
+const portfinder = require('portfinder');
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
@@ -109,24 +109,29 @@ exports.deleteImage = async function(imageId) {
 }
 
 exports.createContainer = async function(imageName) {
-    const port = 80
-    const exposedPort = `${port}/tcp`
+    return portfinder.getPortPromise()
+    .then(portFound => {
+        const exposedPort = portFound
+        const exposedPortKey = `${exposedPort}/tcp`
 
-    return docker.container.create({
-        Image: imageName,
-        name: imageName,
-        ExposedPorts: { exposedPort: {} },
-        HostConfig: {
-            NetworkMode: 'host'
-        }
+        console.log(`\n port found - ${portFound}\n`)
+
+        return docker.container.create({
+            Image: imageName,
+            name: imageName,
+            HostConfig: {
+                PortBindings: { "1234/tcp": [{ "HostPort": `${exposedPort}` }]}
+            }
+        })
+        .then(container => { return container.start() })
+        .then(container => { return container.stop() })
+        .then(container => { return container.status() })
+        .catch(error => {
+            console.log(error)
+            return null
+        });
     })
-    .then(container => { return container.start() })
-    .then(container => { return container.stop() })
-    .then(container => { return container.status() })
-    .catch(error => {
-        console.log(error)
-        return null
-    });
+    .catch(err => console.log(err));
 }
 
 exports.startContainer = function(containerId) {

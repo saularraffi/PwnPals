@@ -72,6 +72,24 @@ app.use(basePath, containerRoute)
 app.use(basePath, bugReportRoute)
 app.use(basePath, commentRoute)
 
+const Container = require("./api/models/Container")
+const proxy = require('http-proxy').createProxyServer();
+
+app.get(`/app/:appId`, (req, res, next) => {
+    const id = mongoose.Types.ObjectId(req.params.appId)
+    Container.findById(id, function(err, container) {
+        if (err) { 
+            console.log(err) 
+            res.send("Failed to get container")
+        }
+        else {
+            proxy.web(req, res, {
+                target: `http://localhost:${container.port}`
+            }, next);
+        }
+    })
+})
+
 mongoose.connect(config.db.connectionString, config.db.options)
 .then((res) => {
     console.log("\n[+] MongoDB connection successful")

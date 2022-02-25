@@ -78,9 +78,9 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
         })
     }
 
-    const openApp = function(port) {
+    const openApp = function(id) {
         console.log("opening app")
-        window.open(`http://localhost:${port}`);
+        window.open(`http://${process.env.REACT_APP_BACKEND}/app/${id}`);
     }
 
     useEffect(() => {
@@ -109,7 +109,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
                     }}
                 >
                         { app.status === 'running' &&
-                            <Button variant="contained" onClick={() => openApp(app.port)}
+                            <Button variant="contained" onClick={() => openApp(app._id)}
                                 sx={buttonStyles}
                             >
                                 Open

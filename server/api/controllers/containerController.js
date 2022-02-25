@@ -58,6 +58,12 @@ exports.createContainer = async function(req, res) {
 
     const stats = await docker.createContainer(imageName)
 
+    const data = stats.data.HostConfig.PortBindings
+    const exposedPortKey = Object.keys(data)[0]
+    const exposedPort = data[exposedPortKey][0].HostPort
+
+    console.log(exposedPort)
+
     if (stats !== null) {
         const container = new Container({ 
             userId: userId,
@@ -65,7 +71,7 @@ exports.createContainer = async function(req, res) {
             imageId: stats.data.Image.split(':')[1],
             imageName: imageName,
             containerId: stats.data.Id,
-            port: 80,
+            port: exposedPort,
             status: stats.data.State.Status,
             description: description,
             created: Date.now(),

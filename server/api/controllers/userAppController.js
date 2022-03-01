@@ -56,17 +56,18 @@ exports.createUserApp = async function(req, res) {
 
     res.send("Creating user app")
 
-    const id = await docker.buildImage(appName, repo)
+    const data = await docker.buildImage(appName, repo)
 
-    if (id !== null) {
+    if (data.id !== null) {
         const userApp = new UserApp({ 
             userId: userId,
             username: username,
             repo: repo,
             appName: appName,
             created: Date.now(),
-            imageId: id,
+            imageId: data.id,
             description: description,
+            dockerExposedPort: data.dockerExposedPort,
             status: "exited",
             port: null,
             containerId: null,
@@ -86,14 +87,15 @@ exports.createUserApp = async function(req, res) {
 exports.startUserApp = async function(req, res) {
     const mongoId = req.body.mongoId
     const appName = req.body.appName
+    const dockerExposedPort = req.body.dockerExposedPort
 
-    const status = await docker.createContainer(appName)
+    const status = await docker.createContainer(appName, dockerExposedPort)
 
-    const data = status.data.HostConfig.PortBindings
-    const exposedPortKey = Object.keys(data)[0]
-    const exposedPort = data[exposedPortKey][0].HostPort
+    if (status !== undefined && status !== null) {
+        const data = status.data.HostConfig.PortBindings
+        const exposedPortKey = Object.keys(data)[0]
+        const exposedPort = data[exposedPortKey][0].HostPort
 
-    if (status !== undefined || status !== null) {
         UserApp.findOneAndUpdate({ _id: mongoId }, {
             status: "running", port: exposedPort, containerId: status.data.Id
         }, (err, userApp) => {
@@ -119,7 +121,7 @@ exports.stopUserApp = async function(req, res) {
 
     const status = await docker.deleteContainer(containerId)
 
-    if (status !== undefined || status !== null) {
+    if (status !== undefined && status !== null) {
         UserApp.findOneAndUpdate({ _id: mongoId }, {
             status: "exited", port: null, containerId: null
         }, (err, doc) => {
@@ -146,7 +148,7 @@ exports.deleteUserApp = async function(req, res) {
 
     const status = await docker.deleteImage(imageId)
 
-    if (status !== undefined || status !== null) {
+    if (status !== undefined && status !== null) {
         UserApp.findOneAndDelete({ imageId: imageId }, (err, doc) => {
             if (err) {
                 console.log(err)

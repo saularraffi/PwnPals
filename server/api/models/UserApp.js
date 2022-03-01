@@ -8,6 +8,7 @@ const UserApp = mongoose.Schema({
     created: Date,
     imageId: String,
     containerId: String,
+    dockerExposedPort: String,
     description: String,
     port: Number,
     status: String,

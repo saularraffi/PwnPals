@@ -11,7 +11,7 @@ router.post(`${endpoint}/local`, passport.authenticate('local'), (req, res) => {
 })
 router.post(`${endpoint}/logout`, (req, res) => {
     req.session.destroy();
-    res.clearCookie('connect.sid');
+    res.clearCookie('connect.sid', { path: '/', domain: process.env.DOMAIN });
     res.send("OK")
 })
 

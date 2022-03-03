@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser')
 const MongoStore = require('connect-mongo')
 const fs = require('fs')
 const config = require('./config')
+require('dotenv').config()
 
 // requiring routes
 const testRoute = require("./api/routes/test")
@@ -22,8 +23,6 @@ const userAppRoute = require("./api/routes/userApp")
 // variable declarations
 const app = express()
 const basePath = "/api"
-
-require('dotenv').config()
 
 app.use(cors({
     origin: true,
@@ -44,7 +43,7 @@ app.use(session({
     secret: sessionSecret,
     saveUninitialized: false,
     resave: false,
-    cookie: { maxAge: oneDay, httpOnly: false },
+    cookie: { maxAge: oneDay, httpOnly: false, domain: process.env.DOMAIN },
     store: new MongoStore({
         mongoUrl: config.sessionStore.connectionString,
         autoRemove: 'native',

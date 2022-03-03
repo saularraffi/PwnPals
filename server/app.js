@@ -28,6 +28,7 @@ const UserApp = require("./api/models/UserApp")
 const proxy = require('http-proxy').createProxyServer();
 
 app.use((req, res, next) => {
+    console.log("hitting this")
     if (req.headers['x-origin'] === undefined) {
         next()
         return

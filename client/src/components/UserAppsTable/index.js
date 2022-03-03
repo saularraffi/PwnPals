@@ -82,8 +82,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
     }
 
     const openApp = function(id) {
-        console.log("opening app")
-        window.open(`${process.env.REACT_APP_BACKEND}/app/${id}`);
+        window.open(`http://${id}.${process.env.REACT_APP_DOMAIN}`);
     }
 
     useEffect(() => {

@@ -25,6 +25,36 @@ const basePath = "/api"
 
 require('dotenv').config()
 
+const UserApp = require("./api/models/UserApp")
+const proxy = require('http-proxy').createProxyServer();
+
+app.use((req, res, next) => {
+    if (req.headers['x-origin'] === undefined) {
+        next()
+        return
+    }
+
+    const subdomain = req.headers['x-origin'].split('.')[0]
+
+    if (mongoose.Types.ObjectId.isValid(subdomain)) {
+        const id = mongoose.Types.ObjectId(subdomain)
+        UserApp.findById(id, function(err, userApp) {
+            if (err) { 
+                console.log(err) 
+                res.send("Failed to get user app")
+            }
+            else {
+                proxy.web(req, res, {
+                    target: `http://localhost:${userApp.port}`
+                }, next);
+            }
+        })
+    }
+    else {
+        console.log("ID was not valid")
+    }
+})
+
 app.use(cors({
     origin: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -69,24 +99,6 @@ app.use(basePath, authRoute)
 app.use(basePath, bugReportRoute)
 app.use(basePath, commentRoute)
 app.use(basePath, userAppRoute)
-
-const UserApp = require("./api/models/UserApp")
-const proxy = require('http-proxy').createProxyServer();
-
-app.get(`/app/:appId`, (req, res, next) => {
-    const id = mongoose.Types.ObjectId(req.params.appId)
-    UserApp.findById(id, function(err, userApp) {
-        if (err) { 
-            console.log(err) 
-            res.send("Failed to get user app")
-        }
-        else {
-            proxy.web(req, res, {
-                target: `http://localhost:${userApp.port}`
-            }, next);
-        }
-    })
-})
 
 mongoose.connect(config.db.connectionString, config.db.options)
 .then((res) => {

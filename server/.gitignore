@@ -1,3 +1,4 @@
 node_modules
 sudo
 ca-certificate.crt
+.env

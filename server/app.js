@@ -74,7 +74,7 @@ app.use(session({
     secret: sessionSecret,
     saveUninitialized: false,
     resave: false,
-    cookie: { maxAge: oneDay, httpOnly: false, domain: process.env.DOMAIN },
+    cookie: { maxAge: oneDay, httpOnly: false, domain: `.${process.env.DOMAIN}` },
     store: new MongoStore({
         mongoUrl: config.sessionStore.connectionString,
         autoRemove: 'native',

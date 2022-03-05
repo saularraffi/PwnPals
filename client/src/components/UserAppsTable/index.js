@@ -47,13 +47,16 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
         fontSize: '1.2em'
     }
 
-    const toggleContainerState = async (mongoId, containerId, action) => {
+    // split this into 2 functions
+    const toggleContainerState = async (app, action) => {
         const data = {
-            mongoId: mongoId,
-            containerId: containerId
+            mongoId: app._id,
+            containerId: app.containerId,
+            appName: app.appName,
+            dockerExposedPort: app.dockerExposedPort
         }
 
-        const url = `${process.env.REACT_APP_BACKEND}/api/container/${action}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/user-app/${action}`
 
         await axios.post(url, data, { withCredentials: true }).then(res => {
             console.log(res.status);
@@ -63,12 +66,12 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
         })
     }
 
-    const deleteContainer = async (mongoId, containerId) => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/container`
+    const deleteApp = async (mongoId, imageId) => {
+        const url = `${process.env.REACT_APP_BACKEND}/api/user-app`
 
         const data = {
             mongoId: mongoId,
-            containerId: containerId
+            imageId: imageId
         }
 
         await axios.delete(url, { data: data, withCredentials: true }).then(res => {
@@ -79,8 +82,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
     }
 
     const openApp = function(id) {
-        console.log("opening app")
-        window.open(`${process.env.REACT_APP_BACKEND}/app/${id}`);
+        window.open(`http://${id}.${process.env.REACT_APP_DOMAIN}`);
     }
 
     useEffect(() => {
@@ -117,13 +119,13 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
                         }
                         { app.status === 'running'
                             ?   <Button variant="contained" color="error"
-                                    onClick={() => toggleContainerState(app._id, app.containerId, 'stop')}
+                                    onClick={() => toggleContainerState(app, 'stop')}
                                     sx={buttonStyles}
                                 >
                                     Stop
                                 </Button>
                             :   <Button variant="contained" color="success"
-                                    onClick={() => toggleContainerState(app._id, app.containerId, 'start')}
+                                    onClick={() => toggleContainerState(app, 'start')}
                                     sx={buttonStyles}
                                 >
                                     Start
@@ -143,7 +145,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
                         </Button>
                         { userId === app.userId &&
                             <Button variant="contained" color="error"
-                                onClick={() => deleteContainer(app._id, app.containerId)}
+                                onClick={() => deleteApp(app._id, app.imageId)}
                                 sx={buttonStyles}
                             >
                                 Delete
@@ -179,7 +181,7 @@ function AppsTable({ apps, fetchContainers, nav, isMyProfile, username }) {
                             }}
                         />
                     </TableCell>
-                    <TableCell sx={tableRowStyles}>{app.imageName}</TableCell>
+                    <TableCell sx={tableRowStyles}>{app.appName}</TableCell>
                     <TableCell sx={tableRowStyles}>{app.port}</TableCell>
                     <TableCell sx={tableRowStyles}>{app.status}</TableCell>
                     <TableCell sx={tableRowStyles}>{getReadableDateTime(app.created)}</TableCell>

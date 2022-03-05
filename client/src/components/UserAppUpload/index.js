@@ -33,11 +33,11 @@ function UserAppUploadPage(props) {
     }
 
     const apiBuildImage = () => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/build`
+        const url = `${process.env.REACT_APP_BACKEND}/api/user-app`
         const data = {
             "userId": userId,
             "username": getUser(),
-            "imageName": `${user}-${appName}`,
+            "appName": `${user}-${appName}`,
             "repo": githubUri,
             "description": description
         }

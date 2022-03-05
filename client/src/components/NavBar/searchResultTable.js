@@ -41,7 +41,7 @@ function SearchResultTable({ results }) {
                         <Typography 
                             sx={{ fontSize: 30,  color: '#1976d2', marginLeft: 2 }}
                         >
-                            {result.imageName}
+                            {result.appName}
                         </Typography>
                     </Link>
                 </TableCell>
@@ -50,7 +50,7 @@ function SearchResultTable({ results }) {
     }
 
     const Row = ({ result }) => {
-        if (result.imageName === undefined) {
+        if (result.appName === undefined) {
             return <UserRow result={result}/>
         }
         else {

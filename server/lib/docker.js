@@ -7,35 +7,6 @@ const portfinder = require('portfinder');
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 
-async function containerHelper(action, containerId) {
-    let listAll = true
-    if (action === 'stop') {
-        listAll = false
-    }
-
-    return docker.container.list({
-        all: listAll
-    })
-    .then(async (containers) => {
-        for (const c of containers) {
-            if (c.data.Id === containerId) {
-                if (action === 'start') {
-                    return c.start()
-                }
-                else if (action === 'stop') {
-                    return c.stop()
-                }
-                else if (action === 'delete') {
-                    return c.delete({ force: true })
-                }
-            }
-        }
-    })
-    .catch(error => {
-        console.log(error)
-        return null
-    });
-}
 
 exports.buildImage = async function(imageName, repo) {
     const repoOwner = repo.split('/')[3]
@@ -80,7 +51,9 @@ exports.buildImage = async function(imageName, repo) {
     })
     .then(status => {
         console.log('\n[+] Stream has ended')
-        return status.data.Id.split(':')[1]
+        const id = status.data.Id.split(':')[1]
+        const dockerExposedPort = Object.keys(status.data.ContainerConfig.ExposedPorts)[0]
+        return { id: id, dockerExposedPort: dockerExposedPort }
     })
     .then(id => {        
         fs.rm(path.join(cloneDir, '..'), { recursive: true, force: true }, (err) => {
@@ -108,23 +81,23 @@ exports.deleteImage = async function(imageId) {
     })
 }
 
-exports.createContainer = async function(imageName) {
+exports.createContainer = async function(appName, dockerExposedPort) {
     return portfinder.getPortPromise()
     .then(portFound => {
         const exposedPort = portFound
-        const exposedPortKey = `${exposedPort}/tcp`
 
-        console.log(`\n port found - ${portFound}\n`)
+        console.log(`\nport found - ${portFound}\n`)
 
         return docker.container.create({
-            Image: imageName,
-            name: imageName,
+            Image: appName,
+            name: appName,
             HostConfig: {
-                PortBindings: { "1234/tcp": [{ "HostPort": `${exposedPort}` }]}
+                PortBindings: { [dockerExposedPort]: [{ "HostPort": `${exposedPort}` }]}
             }
         })
-        .then(container => { return container.start() })
-        .then(container => { return container.stop() })
+        .then(container => {
+            return container.start()
+        })
         .then(container => { return container.status() })
         .catch(error => {
             console.log(error)
@@ -134,14 +107,19 @@ exports.createContainer = async function(imageName) {
     .catch(err => console.log(err));
 }
 
-exports.startContainer = function(containerId) {
-    return containerHelper('start', containerId)
-}
-
-exports.stopContainer = function(containerId) {
-    return containerHelper('stop', containerId)
-}
-
-exports.deleteContainer = function(containerId) {
-    return containerHelper('delete', containerId)
+exports.deleteContainer = async function(containerId) {
+    return docker.container.list({
+        all: true
+    })
+    .then(async (containers) => {
+        return await Promise.all(containers.map(container => {
+            if (container.data.Id === containerId) {
+                return container.delete({ force: true })
+            }
+        }))
+    })
+    .catch(error => {
+        console.log(error)
+        return null
+    });
 }

@@ -55,7 +55,7 @@ function BugReportsList() {
     }
 
     const fetchAppDetails = () => {
-        const url = `${process.env.REACT_APP_BACKEND}/api/container?id=${appId}`
+        const url = `${process.env.REACT_APP_BACKEND}/api/user-app?id=${appId}`
 
         axios.get(url, { withCredentials: true }).then(res => {
             console.log(res.data)
@@ -149,7 +149,7 @@ function BugReportsList() {
                 flexDirection={'column'}
                 alignItems={'center'}
             >
-                Bug Submission for <strong>{appDetails.imageName}</strong>
+                Bug Submissions for <strong>{appDetails.appName}</strong>
             </Typography>
             <Button variant="contained" color="success"
                 style={{paddingLeft: 5, marginBottom: 15}}

@@ -24,11 +24,17 @@ const userAppRoute = require("./api/routes/userApp")
 const app = express()
 const basePath = "/api"
 
+app.use(cors({
+    origin: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    exposedHeaders: ["set-cookie", "Set-Cookie", "test"]
+}))
+
 const UserApp = require("./api/models/UserApp")
 const proxy = require('http-proxy').createProxyServer();
 
 app.use((req, res, next) => {
-    console.log("hitting this")
     if (req.headers['x-origin'] === undefined) {
         next()
         return
@@ -54,13 +60,6 @@ app.use((req, res, next) => {
         console.log("ID was not valid")
     }
 })
-
-app.use(cors({
-    origin: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-    exposedHeaders: ["set-cookie", "Set-Cookie", "test"]
-}))
 
 // using body parser
 app.use(bodyParser.urlencoded({ extended: true }));
